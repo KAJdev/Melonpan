@@ -81,6 +81,7 @@ class Bakery(commands.Cog):
                 if o is None:
                     user['ovens'][user['ovens'].index(o)] = bake_obj
                     entered = True
+                    break
             if not entered:
                 user['ovens'].append(bake_obj)
             config.USERS.update_one({'id': user['id']}, {'$set': {'ovens': user['ovens']}})
