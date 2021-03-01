@@ -63,8 +63,9 @@ def get_user(id):
         user = {
             'id': id,
             'inventory': [],
-            'money': 0,
+            'money': 10,
             'baked': 0,
+            'bakery': []
         }
         USERS.insert_one(user)
     return user
