@@ -41,7 +41,7 @@ class Bakery(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def bake(self, ctx, bread:str=None):
+    async def bake(self, ctx, *, bread:str=None):
         user = config.get_user(ctx.author.id)
 
         active = 0
