@@ -125,7 +125,7 @@ class Market(commands.Cog):
                 if len(selling) >= amount:
                     break
             if len(selling) < amount:
-                await ctx.send(f"<:melonpan:815857424996630548> `It looks like you only have {len(selling)} items in yoru bag.`")
+                await ctx.send(f"<:melonpan:815857424996630548> `It looks like you only have {len(selling)} of that bread in your bag.`")
             else:
                 total = amount * today_price
 
