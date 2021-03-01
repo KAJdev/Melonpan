@@ -106,6 +106,9 @@ class Bakery(commands.Cog):
                     user['ovens'][user['ovens'].index(o)] = None
         
         config.USERS.update_one({'id': user['id']}, {'$set': {'inventory': user['inventory'], 'ovens': user['ovens']}})
+
+        if ending == "":
+            ending = "No bread was plated."
         
         embed = discord.Embed(color=config.MAINCOLOR, title="Plated Bread", description=ending)
         if cutoff:
