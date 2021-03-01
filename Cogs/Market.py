@@ -73,7 +73,7 @@ class Market(commands.Cog):
 
                 desc = f"```************\nCASH RECEIPT\n************\nDescription\n- {amount}x {selected['name']}\n\n============\nTOTAL AMOUNT: {total} BreadCoin\nTAX: 0 BreadCoin\n============\nTHANK YOU!```"
 
-                await ctx.send(embed=discord.Embed(
+                await ctx.reply(embed=discord.Embed(
                     title="Bread Market Exchange Receipt",
                     color=discord.Color(0xebeae8),
                     description=desc,
@@ -134,7 +134,7 @@ class Market(commands.Cog):
 
                 desc = f"```************\nSOLD RECEIPT\n************\nDescription\n- {amount}x {selected['name']}\n\n============\nTOTAL AMOUNT: {total} BreadCoin\nTAX: 0 BreadCoin\n============\nTHANK YOU!```"
 
-                await ctx.send(embed=discord.Embed(
+                await ctx.reply(embed=discord.Embed(
                     title="Bread Market Exchange Receipt",
                     color=discord.Color(0xebeae8),
                     description=desc,

@@ -85,7 +85,7 @@ class Bakery(commands.Cog):
             if not entered:
                 user['ovens'].append(bake_obj)
             config.USERS.update_one({'id': user['id']}, {'$set': {'ovens': user['ovens']}})
-            await ctx.send(f"{config.stove_burning[True]} Your **{bake_obj['name']}** is now baking! use `pan bakery` to check on it, and `pan plate` to take it out when it's done.")
+            await ctx.reply(f"{config.stove_burning[True]} Your **{bake_obj['name']}** is now baking! use `pan bakery` to check on it, and `pan plate` to take it out when it's done.")
 
     @commands.command()
     async def plate(self, ctx):
