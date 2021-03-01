@@ -84,14 +84,14 @@ oven_cost = 150
 breads = [
     {
         "name": "White Bread",
-        "price": 13,
+        "price": 20,
         "bake_time": 35,
         "image": "https://i.imgur.com/ZAyk2Te.png",
         "description": "White bread typically refers to breads made from wheat flour from which the bran and the germ layers have been removed from the whole wheatberry as part of the flour grinding or milling process, producing a light-colored flour."
     },
     {
         "name": "Whole Wheat",
-        "price": 15,
+        "price": 17,
         "bake_time": 30,
         "image": "https://i.imgur.com/ytSQ8Jb.png",
         "description": "Whole wheat bread or wholemeal bread is a type of bread made using flour that is partly or entirely milled from whole or almost-whole wheat grains, see whole-wheat flour and whole grain. It is one kind of brown bread."
@@ -105,7 +105,7 @@ breads = [
     },
     {
         "name": "Banana Bread",
-        "price": 21,
+        "price": 31,
         "bake_time": 60,
         "image": "https://i.imgur.com/k2syNWa.png",
         "description": "Banana bread is a type of bread made from mashed bananas. It is often a moist, sweet, cake-like quick bread; however there are some banana bread recipes that are traditional-style raised breads."
@@ -119,21 +119,21 @@ breads = [
     },
     {
         "name": "Pita Bread",
-        "price": 14,
+        "price": 10,
         "bake_time": 15,
         "image": "https://i.imgur.com/B9bc9YV.png",
         "description": "Pita or pitta, is a family of yeast-leavened round flatbreads baked from wheat flour, common in the Mediterranean, Middle East, and neighboring areas."
     },
     {
         "name": "Sourdough Bread",
-        "price": 41,
+        "price": 91,
         "bake_time": 120,
         "image": "https://i.imgur.com/K7ZhxD4.png",
         "description": "Sourdough bread is made by the fermentation of dough using naturally occurring lactobacilli and yeast. The lactic acid produced by the lactobacilli gives it a more sour taste and improved keeping qualities."
     },
     {
         "name": "Bagel",
-        "price": 2,
+        "price": 13,
         "bake_time": 35,
         "image": "https://i.imgur.com/CtxrhUn.png",
         "description": "A bagel, also historically spelled beigel, is a bread product originating in the Jewish communities of Poland. It is traditionally shaped by hand into the form of a ring from yeasted wheat dough, roughly hand-sized, that is first boiled for a short time in water and then baked."
