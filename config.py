@@ -66,7 +66,7 @@ def get_user(id):
             'money': 0,
             'baked': 0,
             'ovens': [],
-            'oven_count': 3
+            'oven_count': 2
         }
         USERS.insert_one(user)
     return user
@@ -79,6 +79,7 @@ def create_bread(bread):
 
 quality_levels = {1: "☆☆☆☆", 2: "★☆☆☆", 3: "★★☆☆", 4: "★★★☆", 5: "★★★★"}
 stove_burning = {True: "<:stove_burning:815877702410043432>", False: "<:stove:815875824376610837>"}
+oven_cost = 150
 
 breads = [
     {

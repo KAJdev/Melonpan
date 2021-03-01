@@ -36,9 +36,29 @@ class Bakery(commands.Cog):
                     embed.add_field(name=f"{config.stove_burning[True]}", value=f"**{current['name']}**\n{round(hours)}h {round(minutes)}m {round(seconds)}s")
                 else:
                     embed.add_field(name=f"{config.stove_burning[False]}", value=f"**{current['name']}**\nplate with `pan plate`.")
+
+        if user['oven_count'] < 24:
+            embed.add_field(name=f"<:BreadStaff:815484321590804491>", value=f"`pan build`\nCost: `{user['oven_count'] * config.oven_cost}` <:BreadCoin:815842873937100800>")
         
         embed.set_footer(text="pan bake <bread> | pan plate")
         await ctx.reply(embed=embed)
+
+    @commands.command()
+    async def build(self, ctx):
+        user = config.get_user(ctx.author.id)
+
+        if user['oven_count'] >= 24:
+            await ctx.reply("<:melonpan:815857424996630548> `You have built the maximum amount of ovens!`")
+            return
+
+        cost = user['oven_count'] * config.oven_cost
+
+        if user['money'] < cost:
+            await ctx.reply("<:melonpan:815857424996630548> `You don't have enough BreadCoin to build a new oven.`")
+            return
+        
+        config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -cost, 'oven_count': 1}})
+        await ctx.reply("<:melonpan:815857424996630548> You have built a new oven! View it with `pan bakery`.")
 
     @commands.command()
     async def bake(self, ctx, *, bread:str=None):
