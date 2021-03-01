@@ -6,7 +6,7 @@ import statcord
 class StatcordPost(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.key = os.eviron.get("STATCORD_TOKEN")
+        self.key = os.environ.get("STATCORD_TOKEN")
         self.api = statcord.Client(self.bot,self.key)
         self.api.start_loop()
 
