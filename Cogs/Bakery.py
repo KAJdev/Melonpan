@@ -38,7 +38,7 @@ class Bakery(commands.Cog):
                     embed.add_field(name=f"{config.stove_burning[False]}", value=f"**{current['name']}**\nplate with `pan plate`.")
         
         embed.set_footer(text="pan bake <bread> | pan plate")
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command()
     async def bake(self, ctx, *, bread:str=None):
