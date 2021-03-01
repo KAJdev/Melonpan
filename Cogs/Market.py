@@ -30,7 +30,7 @@ class Market(commands.Cog):
 
         today = datetime.datetime.now().timetuple().tm_yday
         random.seed(today)
-        display = random.sample(config.relics, k=6)
+        display = random.sample(config.breads, k=6)
         selected = None
         for r in display:
             if item.lower() in r['name'].lower():
@@ -92,7 +92,7 @@ class Market(commands.Cog):
 
         today = datetime.datetime.now().timetuple().tm_yday
         random.seed(today)
-        display = random.sample(config.relics, k=6)
+        display = random.sample(config.breads, k=6)
         selected = None
         for r in display:
             if item.lower() in r['name'].lower():
