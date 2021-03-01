@@ -54,7 +54,7 @@ async def invite(ctx):
     await ctx.send(embed=discord.Embed(description="[**Invite Link**](https://discord.com/api/oauth2/authorize?client_id=815835732979220501&permissions=314433&scope=bot) 🔗", color = config.MAINCOLOR))
 
 # Cogs
-cogs = ["Eval", "Prefix", "Information", "Bakery", "Market", "StatCord", "TopGG", "Leaderboards"]
+cogs = ["Eval", "Prefix", "Information", "Market", "StatCord", "TopGG", "Leaderboards"]
 
 # Starts all cogs
 for cog in cogs:
