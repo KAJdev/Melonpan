@@ -4,7 +4,6 @@ import config
 import traceback
 import datetime
 import random
-import time
 import asyncio
 import market
 import matplotlib
@@ -54,7 +53,7 @@ class Market(commands.Cog):
                 return
 
             item_price = market.ItemPrice(selected['price'], 5, config.breads.index(selected))
-            today_price = round(item_price.get_price())
+            today_price = round(item_price.get_price(today))
 
             if user['money'] < today_price * amount:
                 await ctx.send("<:melonpan:815857424996630548> `It doesn't look like you have enough for this item.`")
@@ -117,7 +116,7 @@ class Market(commands.Cog):
                 return
 
             item_price = market.ItemPrice(selected['price'], 5, config.breads.index(selected))
-            today_price = round(item_price.get_price())
+            today_price = round(item_price.get_price(today))
 
             selling = []
             for their_item in user['inventory']:
@@ -160,11 +159,11 @@ class Market(commands.Cog):
             )
             for i in display:
                 item = market.ItemPrice(i['price'], 5, config.breads.index(i))
-                yesterday = time.time() - 86400
-
+                yesterday = today - 1
+                if yesterday < 1: yesterday = 1
 
                 yesterday_price = round(item.get_price(yesterday))
-                today_price = round(item.get_price())
+                today_price = round(item.get_price(today))
 
                 last_price = ""
                 if today_price > yesterday_price:
@@ -199,9 +198,10 @@ class Market(commands.Cog):
                 item = market.ItemPrice(selected['price'], 5, config.breads.index(selected))
 
                 prices = []
-                now = time.time()
                 for _ in range(1, 31):
-                    day = now - (86400 * _)
+                    day = today - _
+                    if day < 1:
+                        day += 365
                     prices.append(item.get_price(day))
 
                 fig, ax = plt.subplots(figsize=(8, 2),frameon=False)
@@ -239,7 +239,7 @@ class Market(commands.Cog):
                 embed = discord.Embed(
                     title="Bread info",
                     color=config.MAINCOLOR,
-                    description=f"**{selected['name']}**\n```{selected['description']}```\nCurrent Price: **{round(item.get_price())}** <:BreadCoin:815842873937100800>\nBake Time: **{selected['bake_time']} min.**"
+                    description=f"**{selected['name']}**\n```{selected['description']}```\nCurrent Price: **{round(item.get_price(today))}** <:BreadCoin:815842873937100800>\nBake Time: **{selected['bake_time']} min.**"
                 )
                 embed.set_image(url="attachment://tempgraph.png")
                 embed.set_thumbnail(url=selected['image'])
