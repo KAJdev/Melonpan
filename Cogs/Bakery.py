@@ -49,7 +49,7 @@ class Bakery(commands.Cog):
             if o is not None:
                 active += 1
         if active >= user['oven_count']:
-            await ctx.send("<:melonpan:815857424996630548> `You have bread in all of your ovens already!")
+            await ctx.send("<:melonpan:815857424996630548> `You have bread in all of your ovens already!`")
             return
 
         if bread is None:
