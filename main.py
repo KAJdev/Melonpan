@@ -15,7 +15,8 @@ import inspect
 logging.basicConfig(level = logging.INFO, format="Melonpan [%(levelname)s] | %(message)s")
 
 async def get_prefix(bot, message):
-    return commands.when_mentioned_or("pan ")(bot, message)
+    li = ['pan ', 'Pan ', 'PaN ', 'pAn ', 'paN ', 'PAn ', 'PaN ', 'PAn ', 'PAN ']
+    return commands.when_mentioned_or(*li)(bot, message)
 
 intents = discord.Intents.default()
 #intents.members = True
