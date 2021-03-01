@@ -102,7 +102,7 @@ class Bakery(commands.Cog):
                         break
                     new_bread = config.create_bread(config.breads[o['index']])
                     user['inventory'].append(new_bread)
-                    ending += f"+ `{config.quality_levels[new_bread['quality']]}` **{new_bread['name']}**\n"
+                    ending += f"+ `{config.quality_levels[new_bread['quality']]}` **{o['name']}**\n"
                     user['ovens'][user['ovens'].index(o)] = None
         
         config.USERS.update_one({'id': user['id']}, {'$set': {'inventory': user['inventory'], 'ovens': user['ovens']}})
