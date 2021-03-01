@@ -28,7 +28,7 @@ class Information(commands.Cog):
             description=desc
         )
         embed.set_footer(text=f"Storing {len(user['inventory'])}/25 breads")
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command(aliases=['money', 'balance'])
     async def bal(self, ctx, member : discord.Member = None):
@@ -50,11 +50,12 @@ class Information(commands.Cog):
             color=config.MAINCOLOR
         )
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command(aliases=['s', 'stat', 'info', 'profile', 'user'])
     async def stats(self, ctx, member : discord.Member = None):
-        pass
+        await ctx.send("This command is still in the oven ;)")
+        return
         if member is None:
             member = ctx.author
 
