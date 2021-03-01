@@ -41,7 +41,7 @@ class Information(commands.Cog):
         for item in user['inventory']:
             r = config.breads[item['index']]
             item_price = market.ItemPrice(r['price'], 5, item['index'])
-            today_price = round(item_price.get_price(market.get_day_of_year()))
+            today_price = round(item_price.get_price())
             assets += today_price
 
         embed=discord.Embed(
