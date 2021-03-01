@@ -19,4 +19,4 @@ class ItemPrice():
         # s += random.random() * self.v
         # self.current = self.i + s
         noise = PerlinNoise(octaves=10, seed=self.seed)
-        return ((noise(time) + 1) / 2) * self.i * (random.random() * self.v)
+        return int(((noise(time) + 1.5) / 2) * self.i * (random.random() * self.v))
