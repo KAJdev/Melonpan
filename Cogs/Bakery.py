@@ -33,9 +33,9 @@ class Bakery(commands.Cog):
                 if s > 0:
                     hours, remainder = divmod(s, 3600)
                     minutes, seconds = divmod(remainder, 60)
-                    embed.add_field(name=f"{config.stove_burning[True]}", value=f"{current['name']}\n{hours}h {minutes}m {seconds}s")
+                    embed.add_field(name=f"{config.stove_burning[True]}", value=f"**{current['name']}**\n{round(hours)}h {round(minutes)}m {round(seconds)}s")
                 else:
-                    embed.add_field(name=f"{config.stove_burning[False]}", value=f"{current['name']}\nplate with `pan plate`.")
+                    embed.add_field(name=f"{config.stove_burning[False]}", value=f"**{current['name']}**\nplate with `pan plate`.")
         
         embed.set_footer(text="pan bake <bread> | pan plate")
         await ctx.send(embed=embed)
