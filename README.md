@@ -1,2 +1,2 @@
-# Anpan
+# Melonpan
 A discord bot for the discord.gg/bread server
