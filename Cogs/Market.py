@@ -50,6 +50,7 @@ class Market(commands.Cog):
                 amount = abs(int(amount))
             except:
                 await ctx.send("<:melonpan:815857424996630548> `Amount must be a number: e.g. 'buy 4 baguette'`")
+                return
 
             item_price = market.ItemPrice(selected['price'], 5, config.breads.index(selected))
             today_price = round(item_price.get_price(today))
@@ -112,6 +113,7 @@ class Market(commands.Cog):
                 amount = abs(int(amount))
             except:
                 await ctx.send("<:melonpan:815857424996630548> `Amount must be a number: e.g. 'sell 4 baguette'`")
+                return
 
             item_price = market.ItemPrice(selected['price'], 5, config.breads.index(selected))
             today_price = round(item_price.get_price(today))
