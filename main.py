@@ -38,7 +38,7 @@ async def help(ctx):
         inline=False
     ).add_field(
         name="Bakery",
-        value="`bakery`, `bake`, `plate`",
+        value="`bakery`, `bake`, `plate`, `build`",
         inline=False
     ).add_field(
         name="Market",
