@@ -4,6 +4,9 @@ import random
 import math
 from perlin_noise import PerlinNoise
 
+def get_day_of_year():
+    return datetime.datetime.now().timetuple().tm_yday
+
 class ItemPrice():
 
     def __init__(self, initial, volatilty, seed):
@@ -13,10 +16,15 @@ class ItemPrice():
         self.seed = seed
         self.cache = []
 
-    def get_price(self, time=time.time()):
-        # s = math.sin((time * 2) + random.random())
+    def get_price(self, time=get_day_of_year()):
+        # np.random.seed(self.seed)
+        # day_year = np.sqrt(1./365.)
+        # inner_expression = (self.interest - 0.5 * self.volatilty ** 2) * day_year
+        # self.current *= np.prod(np.exp(np.random.normal(0, 1, time) * self.volatilty * day_year + inner_expression))
         random.seed(self.seed)
-        # s += random.random() * self.v
-        # self.current = self.i + s
-        noise = PerlinNoise(octaves=10, seed=self.seed)
-        return int(((noise(time) + 1.5) / 2) * self.i * (random.random() * self.v))
+        s = math.sin((time * 2) + random.random())
+        random.seed(s)
+        s += random.random() * self.v
+        self.current = self.i + s
+
+        return self.current
