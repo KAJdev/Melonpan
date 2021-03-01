@@ -160,7 +160,8 @@ class Market(commands.Cog):
             )
             for i in display:
                 item = market.ItemPrice(i['price'], 5, config.breads.index(i))
-                yesterday = (time.time()/1000) - 86.4
+                yesterday = time.time() - 86400
+
 
                 yesterday_price = round(item.get_price(yesterday))
                 today_price = round(item.get_price())
