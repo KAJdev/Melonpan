@@ -38,6 +38,7 @@ class Bakery(commands.Cog):
                     embed.add_field(name=f"{config.stove_burning[False]}", value=f"{current['name']}\nplate with `pan plate`.")
         
         embed.set_footer(text="pan bake <bread> | pan plate")
+        await ctx.send(embed=embed)
 
     @commands.command()
     async def bake(self, ctx, bread:str=None):
@@ -109,6 +110,7 @@ class Bakery(commands.Cog):
         embed = discord.Embed(color=config.MAINCOLOR, title="Plated Bread", description=ending)
         if cutoff:
             embed.description += "\n*Some ovens were not emptied because your bread storage is full. Please sell some bread.*"
+        await ctx.send(embed=embed)
         
 
 
