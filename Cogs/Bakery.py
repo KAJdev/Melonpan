@@ -67,7 +67,7 @@ class Bakery(commands.Cog):
         do_all = action.lower() == "all"
 
         if not do_all:
-            bread = action + bread
+            bread = action + " " + bread
 
         active = 0
         for o in user['ovens']:
