@@ -34,7 +34,7 @@ class Eval(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command(self, ctx):
-        config.log("CMD:", ctx.message.content, " - ", msg.author)
+        config.log("CMD:", ctx.message.content, " - ", ctx.author)
 
     @commands.command(name="eval")
     async def eval_fn(self, ctx, *, cmd):
