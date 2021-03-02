@@ -58,7 +58,7 @@ class Badges(commands.Cog):
             await ctx.reply("<:melonpan:815857424996630548> `You already have this badge.`")
             return
 
-        config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -chose['price']}, '$push': {'badges': index}})
+        config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -chosen['price']}, '$push': {'badges': index}})
 
         await ctx.reply(f"Congratulations! You have purchased the {chosen['emoji']} **{chosen['name']}** Badge!")
 
