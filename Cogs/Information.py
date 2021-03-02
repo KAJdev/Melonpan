@@ -72,7 +72,7 @@ class Information(commands.Cog):
         for x, y in user['baked'].items():
             total += y
             if y > fav['amount']:
-                fav = {'name': config.breads[x]['name'], 'amount': y}
+                fav = {'name': config.breads[int(x)]['name'], 'amount': y}
 
         embed.add_field(name="Baking Stats", value=f"Favorite Bread: **{fav['name']}** ({fav['amount']} bakes)\nBreads Baked: **{total}**\nBreadCoin: **{user['money']}** <:BreadCoin:815842873937100800>")
 
