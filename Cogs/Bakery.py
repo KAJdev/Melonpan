@@ -61,8 +61,13 @@ class Bakery(commands.Cog):
         await ctx.reply("<:melonpan:815857424996630548> You have built a new oven! View it with `pan bakery`.")
 
     @commands.command()
-    async def bake(self, ctx, *, bread:str=None):
+    async def bake(self, ctx, action, *, bread:str=None):
         user = config.get_user(ctx.author.id)
+
+        do_all = action.lower() == "all"
+
+        if not do_all:
+            bread = action + bread
 
         active = 0
         for o in user['ovens']:
@@ -97,15 +102,21 @@ class Bakery(commands.Cog):
                 'done': datetime.datetime.utcnow() + datetime.timedelta(minutes=selected['bake_time'])
             }
             entered = False
+            amount = 0
             for o in user['ovens']:
                 if o is None:
                     user['ovens'][user['ovens'].index(o)] = bake_obj
                     entered = True
-                    break
+                    amount =+ 1
+                    if not do_all:
+                        break
             if not entered:
                 user['ovens'].append(bake_obj)
             config.USERS.update_one({'id': user['id']}, {'$set': {'ovens': user['ovens']}})
-            await ctx.reply(f"{config.stove_burning[True]} Your **{bake_obj['name']}** is now baking! use `pan bakery` to check on it, and `pan plate` to take it out when it's done.")
+            if do_all:
+                await ctx.reply(f"{config.stove_burning[True]} {amount} **{bake_obj['name']}** are now baking! use `pan bakery` to check on them, and `pan plate` to take them out when they are done.")
+            else:
+                await ctx.reply(f"{config.stove_burning[True]} Your **{bake_obj['name']}** is now baking! use `pan bakery` to check on it, and `pan plate` to take it out when it's done.")
 
     @commands.command()
     async def plate(self, ctx):
