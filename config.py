@@ -64,9 +64,10 @@ def get_user(id):
             'id': id,
             'inventory': [],
             'money': 0,
-            'baked': 0,
+            'baked': {},
             'ovens': [],
-            'oven_count': 2
+            'oven_count': 2,
+            'badges': []
         }
         USERS.insert_one(user)
     return user
@@ -80,6 +81,41 @@ def create_bread(bread):
 quality_levels = {1: "☆☆☆☆", 2: "★☆☆☆", 3: "★★☆☆", 4: "★★★☆", 5: "★★★★"}
 stove_burning = {True: "<:stove_burning:815877702410043432>", False: "<:stove:815875824376610837>"}
 oven_cost = 150
+
+badges = [
+    {
+        'name': "Bread Hunter",
+        'emoji': "<:BreatHunter:815484321573896212>"
+    },
+    {
+        'name': "Hype Bread",
+        'emoji': "<:BreadHype:815484321711521813>"
+    },
+    {
+        'name': "Bread Cap",
+        'emoji': "<:BreadCap:815775727084765216>"
+    },
+    {
+        'name': "Bread Developer",
+        'emoji': "<:BreadStaff:815484321590804491>"
+    },
+    {
+        'name': "Magic Bread",
+        'emoji': "<:BreadWand:816044739966140426>"
+    },
+    {
+        'name': "Bread Love",
+        'emoji': "<:BreadHeart:816044739865346068>"
+    },
+    {
+        'name': "Star Bread",
+        'emoji': "<:BreadStars:815776828932358204>"
+    },
+    {
+        'name': "Bread Booster",
+        'emoji': "<:BreadBooster:815484321371783229>"
+    }
+]
 
 breads = [
     {

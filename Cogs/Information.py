@@ -54,25 +54,28 @@ class Information(commands.Cog):
 
     @commands.command(aliases=['s', 'stat', 'info', 'profile', 'user'])
     async def stats(self, ctx, member : discord.Member = None):
-        await ctx.send("This command is still in the oven ;)")
-        return
         if member is None:
             member = ctx.author
 
         user = config.get_user(member.id)
-
-        desc = f"This delver has participated in **{user['dives']}** dives, and died **{user['deaths']}** times.\nThey have survived **{user['encounters']}** encounters with beings in the abyss.\nThey have found **{user['found_artifacts']}** artifacts and sold **{len(user['sold'])}** artifacts in Orth.\nThey have **{user['money']}** Orth to their name."
-        if user['current_action'] != None:
-            desc+= f"\nThey are currently exploring **{config.layers[config.calculate_layer(user['current_depth'])]['name']}**."
-        else:
-            desc+= f"\nThey are currently visiting Orth."
+        desc = discord.Embed.empty
+        if len(user.get('badges', [])) > 0:
+            desc = " ".join(config.badges[x]['emoji'] for x in user.get('badges', []))
 
         embed=discord.Embed(
-            title="Delver Info",
-            description="Information for the delver " + member.mention + f" {config.get_whistle(user['max_depth'])['emoji']}\n\n" + desc,
+            title="Baker Info",
+            description=desc,
             color=config.MAINCOLOR
         )
         embed.set_thumbnail(url=member.avatar_url)
+        fav = {'name': "None", 'amount': 0}
+        total = 0
+        for x, y in user['baked'].items():
+            total += y
+            if y > fav['amount']:
+                fav = {'name': config.breads[x]['name'], 'amount': y}
+
+        embed.add_field(name="Baking Stats", value=f"Favorite Bread: **{fav['name']}** ({fav['amount']} bakes)\nBreads Baked: **{total}**\nBreadCoin: **{user['money']}** <:BreadCoin:815842873937100800>")
 
         await ctx.send(embed=embed)
 
