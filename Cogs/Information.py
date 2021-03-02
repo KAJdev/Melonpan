@@ -58,16 +58,15 @@ class Information(commands.Cog):
             member = ctx.author
 
         user = config.get_user(member.id)
-        desc = discord.Embed.empty
-        if len(user.get('badges', [])) > 0:
-            desc = " ".join(config.badges[x]['emoji'] for x in user.get('badges', []))
-
         embed=discord.Embed(
             title="Baker Info",
-            description=desc,
             color=config.MAINCOLOR
         )
         embed.set_thumbnail(url=member.avatar_url)
+
+        if len(user.get('badges', [])) > 0:
+            embed.description = " ".join(config.badges[x]['emoji'] for x in user.get('badges', []))
+
         fav = {'name': "None", 'amount': 0}
         total = 0
         for x, y in user['baked'].items():
