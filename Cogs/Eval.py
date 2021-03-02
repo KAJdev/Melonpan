@@ -33,8 +33,8 @@ class Eval(commands.Cog):
         await ctx.send(f"debug logs toggled to `{str(config.DEBUG_PRINTS)}`")
 
     @commands.Cog.listener()
-    async def on_message(self, msg):
-        config.log(msg.author, ": ", msg.content)
+    async def on_command(self, ctx):
+        config.log("CMD:", msg.content, " - ", msg.author)
 
     @commands.command(name="eval")
     async def eval_fn(self, ctx, *, cmd):
