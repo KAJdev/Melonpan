@@ -29,8 +29,38 @@ class Badges(commands.Cog):
             await ctx.send(embed=embed)
 
     @badges.command()
-    async def buy(self, ctx, name:str=None):
-        pass
+    async def buy(self, ctx, index:str=None):
+        user = config.get_user(ctx.author.id)
+
+        try:
+            index = int(index)
+        except:
+            index = None
+
+        if index is None:
+            await ctx.reply("<:melonpan:815857424996630548> `You must tell me the badge index you would like to purchase: e.g. 'badge buy 0'`")
+            return
+
+        chosen = None
+        for x in config.current_collectables:
+            if x['index'] == index:
+                chosen = x
+        
+        if chosen is None:
+            await ctx.reply("<:melonpan:815857424996630548> `I don't see that badge on sale.`")
+            return
+
+        if user['money'] < chosen['price']:
+            await ctx.reply("<:melonpan:815857424996630548> `You don't have enough BreadCoin for this badge.`")
+            return
+        
+        if index in user['badges']:
+            await ctx.reply("<:melonpan:815857424996630548> `You already have this badge.`")
+            return
+
+        config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -chose['price']}, '$push': {'badges': index}})
+
+        await ctx.reply(f"Congratulations! You have purchased the {chosen['emoji']} **{chosen['name']}** Badge!")
 
 
 def setup(bot):

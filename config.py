@@ -83,10 +83,9 @@ stove_burning = {True: "<:stove_burning:815877702410043432>", False: "<:stove:81
 oven_cost = 150
 
 current_collectables = [
-    {'index': 0, 'price': 300},
-    {'index': 1, 'price': 300},
-    {'index': 2, 'price': 300},
-    {'index': 3, 'price': 300}
+    {'index': 1, 'price': 750},
+    {'index': 2, 'price': 750},
+    {'index': 4, 'price': 750}
 ]
 
 badges = [
