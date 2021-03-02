@@ -60,7 +60,9 @@ class Badges(commands.Cog):
 
         config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -chosen['price']}, '$push': {'badges': index}})
 
-        await ctx.reply(f"Congratulations! You have purchased the {chosen['emoji']} **{chosen['name']}** Badge!")
+        chosen_badge = config.badges[index]
+
+        await ctx.reply(f"Congratulations! You have purchased the {chosen_badge['emoji']} **{chosen_badge['name']}** Badge!")
 
 
 def setup(bot):
