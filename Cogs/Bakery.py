@@ -68,6 +68,7 @@ class Bakery(commands.Cog):
 
         if not do_all:
             bread = action + " " + bread
+            bread = bread.strip(" ")
 
         active = 0
         for o in user['ovens']:
