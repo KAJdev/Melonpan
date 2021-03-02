@@ -82,6 +82,13 @@ quality_levels = {1: "☆☆☆☆", 2: "★☆☆☆", 3: "★★☆☆", 4: "�
 stove_burning = {True: "<:stove_burning:815877702410043432>", False: "<:stove:815875824376610837>"}
 oven_cost = 150
 
+current_collectables = [
+    {'index': 0, 'price': 300},
+    {'index': 1, 'price': 300},
+    {'index': 2, 'price': 300},
+    {'index': 3, 'price': 300}
+]
+
 badges = [
     {
         'name': "Bread Hunter",
