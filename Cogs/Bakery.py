@@ -100,7 +100,7 @@ class Bakery(commands.Cog):
             for _ in range(user['oven_count']):
                 try:
                     if user['ovens'][_] is None:
-                        user['ovens'][user['ovens'].index(o)] = bake_obj
+                        user['ovens'][_] = bake_obj
                         amount += 1
                 except IndexError:
                     user['ovens'].append(bake_obj)
