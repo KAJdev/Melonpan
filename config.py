@@ -144,5 +144,12 @@ breads = [
         "bake_time": 30,
         "image": "https://i.imgur.com/WWcYes4.png",
         "description": "A melonpan is a type of sweet bun from Japan, that is also popular in Taiwan and China. They are made from an enriched dough covered in a thin layer of crisp cookie dough. Their appearance resembles a melon, such as a rock melon."
+    },
+    {
+        "name": "Garlic Bread",
+        "price": 11,
+        "bake_time": 15,
+        "image": "https://i.imgur.com/3am3Q5H.png",
+        "description": "Garlic bread consists of bread, topped with garlic and olive oil or butter and may include additional herbs, such as oregano or chives. It is then either grilled or broiled until toasted or baked in a conventional or bread oven."
     }
 ]
