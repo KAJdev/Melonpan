@@ -106,7 +106,7 @@ class Bakery(commands.Cog):
                     user['ovens'].append(bake_obj)
                     amount += 1
             
-            user['baked'][str(bake_obj['index'])] = user['baked'].get(str(bake_obj['index']), 0) + 1
+            user['baked'][str(bake_obj['index'])] = user['baked'].get(str(bake_obj['index']), 0) + amount
 
             config.USERS.update_one({'id': user['id']}, {'$set': {'ovens': user['ovens'], 'baked': user['baked']}})
             await ctx.reply(f"{config.stove_burning[True]} {amount} **{bake_obj['name']}s** are now baking! use `pan bakery` to check on them, and `pan plate` to take them out when they are done.")
