@@ -61,7 +61,7 @@ class Bakery(commands.Cog):
         await ctx.reply("<:melonpan:815857424996630548> You have built a new oven! View it with `pan bakery`.")
 
     @commands.command()
-    async def bake(self, ctx, action=None, *, bread:str=""):
+    async def bake(self, ctx, action="", *, bread:str=""):
         user = config.get_user(ctx.author.id)
 
         do_all = action.lower() == "all"
@@ -77,7 +77,7 @@ class Bakery(commands.Cog):
             await ctx.send("<:melonpan:815857424996630548> `You have bread in all of your ovens already!`")
             return
 
-        if bread is None:
+        if bread == "":
             await ctx.send("<:melonpan:815857424996630548> `You must tell me an item you wish to bake: e.g. 'bake baguette'`")
             return
         
