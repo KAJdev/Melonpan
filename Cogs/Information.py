@@ -74,7 +74,7 @@ class Information(commands.Cog):
             if y > fav['amount']:
                 fav = {'name': config.breads[int(x)]['name'], 'amount': y}
 
-        embed.add_field(name="Baking Stats", value=f"Favorite Bread: **{fav['name']}** ({fav['amount']} bakes)\nBreads Baked: **{total}**\nBreadCoin: **{user['money']}** <:BreadCoin:815842873937100800>")
+        embed.add_field(name="Baking Stats", value=f"Favorite Bread: **{fav['name']}** ({fav['amount']} bakes)\nBreads Baked: **{total}**\nBreadCoin: **{user['money']}** <:BreadCoin:815842873937100800>\nOvens: **{user['oven_count']}**")
 
         await ctx.send(embed=embed)
 
