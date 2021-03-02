@@ -63,12 +63,14 @@ class Information(commands.Cog):
             color=config.MAINCOLOR
         )
         embed.set_thumbnail(url=member.avatar_url)
-
-        guild = self.bot.get_guild(814958240009420830)
-        try:
-            mem = await guild.fetch_member(member.id)
-        except:
-            mem = None
+        if member.guild != 814958240009420830:
+            guild = self.bot.get_guild(814958240009420830)
+            try:
+                mem = await guild.fetch_member(member.id)
+            except:
+                mem = None
+        else:
+            mem = member
         if mem is not None:
             if 814964592076652554 in [x.id for x in mem.roles]:
                 if 7 not in user['badges']:
