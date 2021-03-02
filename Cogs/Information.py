@@ -64,6 +64,12 @@ class Information(commands.Cog):
         )
         embed.set_thumbnail(url=member.avatar_url)
 
+        guild = self.bot.get_guild(814958240009420830)
+        mem = guild.get_member(member.id)
+        if 814964592076652554 in [x.id for x in mem.roles]:
+            if 7 not in user['badges']:
+                user['badges'].append(7)
+
         if len(user.get('badges', [])) > 0:
             embed.description = " ".join(config.badges[x]['emoji'] for x in user.get('badges', []))
 
