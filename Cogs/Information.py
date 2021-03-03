@@ -89,6 +89,27 @@ class Information(commands.Cog):
 
         await ctx.reply(embed=embed)
 
+    @commands.command(aliases=['timers'])
+    async def reminders(self, ctx):
+        timers = config.TIMERS.find({'owner': ctx.author.id, 'expired': False})
+
+        desc = ""
+        for timer in timers:
+            msg = timer['message']
+            if len(msg) > 35:
+                msg = msg[:32] + "..."
+
+            s = (timer['time'] - datetime.datetime.utcnow()).total_seconds()
+            hours, remainder = divmod(s, 3600)
+            minutes, seconds = divmod(remainder, 60)
+
+            desc += f" • {msg} • **{hours}h {minutes}m {seconds}s**\n"
+        if desc == "":
+            desc = "You have no timers. Create one with `pan timer <time> <message>`, e.g. `pan timer 120m 30s take out the sourdough bread`"
+
+        embed = discord.Embed(color=config.MAINCOLOR, title="Timers", description = desc)
+
+        await ctx.reply(embed=embed)
 
     @commands.command(aliases=['money', 'balance'])
     async def bal(self, ctx, member : discord.Member = None):

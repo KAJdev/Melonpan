@@ -46,7 +46,7 @@ async def help(ctx):
         inline=False
     ).add_field(
         name="Misc",
-        value="`help`, `invite`, `top`, `remind`",
+        value="`help`, `invite`, `top`, `remind`, `reminders`",
         inline=False
     ).set_thumbnail(url=bot.user.avatar_url))
 
