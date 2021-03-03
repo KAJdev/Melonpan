@@ -74,7 +74,7 @@ class Information(commands.Cog):
         for word in splitted:
             if word[len(word) - 1].lower() in ['h', 'm', 's', 'd']:
                 try:
-                    time[word[len(word) - 1].lower()] += int(word[:len(word) - 2])
+                    time[word[len(word) - 1].lower()] += int(word[:len(word) - 1])
                 except Exception as e:
                     raise e
                     message.append(word)
