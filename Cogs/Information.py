@@ -103,7 +103,7 @@ class Information(commands.Cog):
             hours, remainder = divmod(s, 3600)
             minutes, seconds = divmod(remainder, 60)
 
-            desc += f" • {msg} • **{hours}h {minutes}m {seconds}s**\n"
+            desc += f" • {msg} - **{round(hours)}h {round(minutes)}m {round(seconds)}s**\n"
         if desc == "":
             desc = "You have no timers. Create one with `pan timer <time> <message>`, e.g. `pan timer 120m 30s take out the sourdough bread`"
 
