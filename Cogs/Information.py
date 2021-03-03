@@ -75,8 +75,7 @@ class Information(commands.Cog):
             if word[len(word) - 1].lower() in ['h', 'm', 's', 'd']:
                 try:
                     time[word[len(word) - 1].lower()] += int(word[:len(word) - 1])
-                except Exception as e:
-                    raise e
+                except:
                     message.append(word)
             else:
                 message.append(word)
