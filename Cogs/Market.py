@@ -81,7 +81,7 @@ class Market(commands.Cog):
                     timestamp=datetime.datetime.utcnow()
                 ))
 
-    @commands.command(aliases=['se', 'sold', 'give'])
+    @commands.command(aliases=['se'])
     async def sell(self, ctx, amount: str = None, *, item : str = None):
         user = config.get_user(ctx.author.id)
 
@@ -144,6 +144,88 @@ class Market(commands.Cog):
                 ))
 
 
+    @commands.command(aliases=['sa'])
+    async def sellall(self, ctx, *, item : str = None):
+        user = config.get_user(ctx.author.id)
+
+        if item is None:
+            today = datetime.datetime.now().timetuple().tm_yday
+            random.seed(today)
+            display = random.sample(config.breads, k=6)
+            selling = []
+            total = 0
+            desc = "```************\nSOLD RECEIPT\n************\nDescription"
+            for on_sale in display:
+                item_price = market.ItemPrice(selected['price'], 5, config.breads.index(selected))
+                today_price = round(item_price.get_price(today))
+
+                this_selling = []
+                for their_item in user['inventory']:
+                    if their_item['index'] == config.breads.index(on_sale):
+                        this_selling.append(their_item)
+                        selling.append(their_item)
+                total += len(this_selling) * today_price
+                if len(this_selling) > 0:
+                    desc += f"\n- {len(this_selling)}x {on_sale['name']}"
+
+            for selling_item in selling:
+                user['inventory'].remove(selling_item)
+
+            
+            if len(selling) > 0:
+                config.USERS.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
+
+                desc += f"\n\n============\nTOTAL AMOUNT: {total} BreadCoin\nTAX: 0 BreadCoin\n============\nTHANK YOU!```"
+
+                await ctx.reply(embed=discord.Embed(
+                    title="Bread Market Exchange Receipt",
+                    color=discord.Color(0xebeae8),
+                    description=desc,
+                    timestamp=datetime.datetime.utcnow()
+                ))
+            else:
+                await ctx.reply("<:melonpan:815857424996630548> `There was nothing sellable in your inventory.`")
+        else:
+            today = datetime.datetime.now().timetuple().tm_yday
+            random.seed(today)
+            display = random.sample(config.breads, k=6)
+            selected = None
+            for r in display:
+                if item.lower() in r['name'].lower():
+                    selected = r
+                    break
+                try:
+                    index = int(item)
+                    if index == config.breads.index(r):
+                        selected = r
+                        break
+                except:
+                    pass
+            if selected is None:
+                await ctx.send("<:melonpan:815857424996630548> `That bread doesn't look like it's on the market today...`")
+            else:
+                item_price = market.ItemPrice(selected['price'], 5, config.breads.index(selected))
+                today_price = round(item_price.get_price(today))
+
+                selling = []
+                for their_item in user['inventory']:
+                    if their_item['index'] == config.breads.index(selected):
+                        selling.append(their_item)
+                total = len(selling) * today_price
+
+                for selling_item in selling:
+                    user['inventory'].remove(selling_item)
+
+                config.USERS.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
+
+                desc = f"```************\nSOLD RECEIPT\n************\nDescription\n- {len(selling)}x {selected['name']}\n\n============\nTOTAL AMOUNT: {total} BreadCoin\nTAX: 0 BreadCoin\n============\nTHANK YOU!```"
+
+                await ctx.reply(embed=discord.Embed(
+                    title="Bread Market Exchange Receipt",
+                    color=discord.Color(0xebeae8),
+                    description=desc,
+                    timestamp=datetime.datetime.utcnow()
+                ))
 
     @commands.command(aliases=['sh', 'store', 'shopping'])
     async def shop(self, ctx, *, item : str = None):
