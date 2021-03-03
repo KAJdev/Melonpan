@@ -36,6 +36,8 @@ def get_avg_messages():
     total = 0
     for c in MESSAGES_PER_SECOND_AVG:
         total += c
+    if total == 0 or len(MESSAGES_PER_SECOND_AVG) == 0:
+        return 0
     return total/len(MESSAGES_PER_SECOND_AVG)
 
 def cache_member(member):
