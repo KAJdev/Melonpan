@@ -156,7 +156,7 @@ class Market(commands.Cog):
             total = 0
             desc = "```************\nSOLD RECEIPT\n************\nDescription"
             for on_sale in display:
-                item_price = market.ItemPrice(selected['price'], 5, config.breads.index(selected))
+                item_price = market.ItemPrice(on_sale['price'], 5, config.breads.index(on_sale))
                 today_price = round(item_price.get_price(today))
 
                 this_selling = []
