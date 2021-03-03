@@ -5,7 +5,7 @@ import traceback
 import datetime
 import market
 
-from discord.ext import commands
+from discord.ext import commands, tasks
 
 class Information(commands.Cog):
 
