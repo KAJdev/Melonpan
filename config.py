@@ -17,6 +17,9 @@ OWNERIDS = [245653078794174465,
 
 DEBUG_PRINTS = True
 
+MESSAGES_PER_SECOND_AVG = []
+CURRENT_MESSAGE_SECOND_COUNT = 0
+
 # MEMBER CACHE
 MEMBER_CACHE = []
 
@@ -28,6 +31,12 @@ ERRORCOLOR = 0xED4337
 
 def log(*args):
     if DEBUG_PRINTS: print(str(" ".join([str(elem) for elem in args])))
+
+def get_avg_messages():
+    total = 0
+    for c in MESSAGES_PER_SECOND_AVG:
+        total += c
+    return total/len(MESSAGES_PER_SECOND_AVG)
 
 def cache_member(member):
     for c_member in MEMBER_CACHE:

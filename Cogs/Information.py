@@ -4,6 +4,8 @@ import config
 import traceback
 import datetime
 import market
+import os
+import psutil
 
 from discord.ext import commands, tasks
 
@@ -133,7 +135,26 @@ class Information(commands.Cog):
 
         await ctx.reply(embed=embed)
 
-    @commands.command(aliases=['s', 'stat', 'info', 'profile', 'user'])
+    @commands.command(aliases=['about'])
+    async def info(self, ctx):
+        embed = discord.Embed(title="Melonpan Bot Info", color=config.MAINCOLOR, timestamp=datetime.datetime.utcnow())
+        embed.set_thumbnail(url=str(self.bot.user.avatar_url))
+
+        u = 0
+        for g in self.bot.guilds:
+            u+=g.member_count
+        embed.add_field(name="Discord Stats", value=f"Guilds: `{len(self.bot.guilds)}`\nUsers: `{u}`\nAvg MSG/s: `{round(config.get_avg_messages(), 3)}`")
+
+        pid = os.getpid()
+        py = psutil.Process(pid)
+        memoryUse = py.memory_info()[0]/2.**30  # memory use in GB...I think
+        cpuUse = py.cpu_percent()
+        embed.add_field(name="System Usage", value=f"Memory: `{round(memoryUse*1000, 3)} MB`\nCPU: `{round(cpuUse, 3)} %`")
+
+        embed.set_footer(text=f"discord.py v{discord.__version__}")
+        await ctx.send(embed=embed)
+
+    @commands.command(aliases=['s', 'stat', 'profile', 'user'])
     async def stats(self, ctx, member : discord.Member = None):
         if member is None:
             member = ctx.author

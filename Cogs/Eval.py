@@ -3,12 +3,19 @@ import discord
 import config
 import traceback
 
-from discord.ext import commands
+from discord.ext import commands, tasks
 
 class Eval(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+
+    @tasks.loop(seconds=1)
+    async def message_reset(self):
+        if len(config.MESSAGES_PER_SECOND_AVG) > 120:
+            config.MESSAGES_PER_SECOND_AVG.pop(0)
+        config.MESSAGES_PER_SECOND_AVG.append(config.CURRENT_MESSAGE_SECOND_COUNT)
+        config.CURRENT_MESSAGE_SECOND_COUNT = 0
 
     def insert_returns(self, body):
         # insert return stmt if the last expression is a expression statement
@@ -35,6 +42,10 @@ class Eval(commands.Cog):
     @commands.Cog.listener()
     async def on_command(self, ctx):
         config.log("CMD:", ctx.message.content, " - ", ctx.author)
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        config.CURRENT_MESSAGE_SECOND_COUNT += 1
 
     @commands.command(name="eval")
     async def eval_fn(self, ctx, *, cmd):
