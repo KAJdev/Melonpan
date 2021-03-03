@@ -60,7 +60,7 @@ class Information(commands.Cog):
         embed.set_footer(text=f"Storing {len(user['inventory'])}/25 breads")
         await ctx.reply(embed=embed)
 
-    @commands.command(aliases=['timer', 'time', 'r', 't'])
+    @commands.command(aliases=['timer', 'time', 'r'])
     async def remind(self, ctx, *, args:str=None):
         user = config.get_user(ctx.author.id)
 
