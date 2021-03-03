@@ -105,7 +105,7 @@ class Information(commands.Cog):
 
             desc += f" • {msg} - **{round(hours)}h {round(minutes)}m {round(seconds)}s**\n"
         if desc == "":
-            desc = "You have no timers. Create one with `pan timer <time> <message>`, e.g. `pan timer 120m 30s take out the sourdough bread`"
+            desc = "You have no timers. Create one with `pan timer <time> <message>`\ne.g. `pan timer 120m 30s take out the sourdough bread`"
 
         embed = discord.Embed(color=config.MAINCOLOR, title="Timers", description = desc)
 
