@@ -9,6 +9,7 @@ myclient = pymongo.MongoClient(os.environ.get("MELONPAN_MONGO"))
 
 USERS = myclient["main"]['users']
 PREFIXES = myclient["main"]["prefixes"]
+TIMERS = myclient["main"]["timers"]
 
 # Owner IDS (People who have access to restart the bot)
 OWNERIDS = [245653078794174465,

@@ -11,6 +11,36 @@ class Information(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+    
+    @commands.Cog.listener()
+    async def on_ready(self):
+        self.timer_loop.start()
+    
+    def cog_unload(self):
+        self.timer_loop.cancel()
+
+    @tasks.loop(minutes=1)
+    async def timer_loop(self):
+        sent_timers = []
+        expired_timers = []
+        for timer in config.TIMERS.find({'time': {'$lte': datetime.datetime.utcnow()}, 'expired': False}):
+            expired_timers.append(timer)
+            user = self.bot.get_user(timer['owner'])
+            if user is None:
+                try:
+                    user = await self.bot.fetch_user(timer['owner'])
+                except:
+                    continue
+            embed = discord.Embed(color=config.MAINCOLOR, title="Time's up!", description=timer['message'], timestamp=timer['created'])
+            embed.set_footer(text="This timer was scheduled at >")
+
+            try:
+                await user.send(embed=embed)
+                sent_timers.append(timer)
+            except:
+                continue
+        config.TIMERS.update_many({'_id': {'$in': list(x['_id'] for x in expired_timers)}}, {'$set': {'expired': True}})
+        config.TIMERS.update_many({'_id': {'$in': list(x['_id'] for x in sent_timers)}}, {'$set': {'sent': True}})
 
     @commands.command(aliases=['i', 'inv', 'items', 'in', 'bag', 'breads', 'bread'])
     async def inventory(self, ctx):
@@ -29,6 +59,36 @@ class Information(commands.Cog):
         )
         embed.set_footer(text=f"Storing {len(user['inventory'])}/25 breads")
         await ctx.reply(embed=embed)
+
+    @commands.command(aliases=['timer', 'time', 'r', 't'])
+    async def remind(self, ctx, *, args:str=None):
+        user = config.get_user(ctx.author.id)
+
+        if args is None:
+            await ctx.reply("<:melonpan:815857424996630548> `Please tell me the timer length and note: e.g. 'remind 1h 2m 4s take out the bread'`")
+            return
+
+        splitted = args.split(" ")
+        time = {"h": 0, "m": 0, "s": 0, "d": 0}
+        message = []
+        for word in splitted:
+            if word[len(word) - 1].lower() in ['h', 'm', 's', 'd']:
+                try:
+                    time[word[len(word) - 1].lower()] += int(word[:len(word) - 2])
+                except:
+                    message.append(word)
+            else:
+                message.append(word)
+        remind_time = datetime.datetime.utcnow() + datetime.timedelta(days=time['d'], hours=time['h'], minutes=time['m'], seconds=time['s'])
+        message = " ".join(message)
+
+        embed = discord.Embed(color=config.MAINCOLOR, timestamp=remind_time)
+        embed.set_footer(text=f"I will send you a DM to remind you to: '{message}' at >")
+
+        config.TIMERS.insert_one({'owner': ctx.author.id, 'time': remind_time, 'created': datetime.datetime.utcnow(), 'message': message, 'id': ctx.message.id, 'sent': False, 'expired': False})
+
+        await ctx.reply(embed=embed)
+
 
     @commands.command(aliases=['money', 'balance'])
     async def bal(self, ctx, member : discord.Member = None):
