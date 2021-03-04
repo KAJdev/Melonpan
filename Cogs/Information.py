@@ -33,6 +33,8 @@ class Information(commands.Cog):
                     user = await self.bot.fetch_user(timer['owner'])
                 except:
                     continue
+            if timer['message'].strip(" ") == "":
+                timer['message'] = "No message provided."
             embed = discord.Embed(color=config.MAINCOLOR, title="Time's up!", description=timer['message'], timestamp=timer['created'])
             embed.set_footer(text="This timer was scheduled at >")
 

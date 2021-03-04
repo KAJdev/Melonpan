@@ -38,7 +38,6 @@ class Leaderboards(commands.Cog):
                 user['user_object'] = found
                 self.user_cache[user['id']] = found
             x.add_row([f"#{amount}", user['user_object'].name, f"{user['money']} BreadCoin"])
-            #desc += f"`#{amount}` **{user['user_object'].name}**#{user['user_object'].discriminator}      {user['money']} Orth      {user['found_artifacts']} Relics Collected\n"
             amount += 1
 
         x.header = False
