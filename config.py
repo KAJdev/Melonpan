@@ -8,7 +8,7 @@ import os
 myclient = pymongo.MongoClient(os.environ.get("MELONPAN_MONGO"))
 
 USERS = myclient["main"]['users']
-PREFIXES = myclient["main"]["prefixes"]
+SERVERS = myclient["main"]["servers"]
 TIMERS = myclient["main"]["timers"]
 
 # Owner IDS (People who have access to restart the bot)
@@ -83,6 +83,17 @@ def get_user(id):
         }
         USERS.insert_one(user)
     return user
+
+def get_server(id):
+    server = SERVERS.find_one({'id': id})
+    if server is None:
+        server = {
+            'id': id,
+            'blacklist': [],
+            'prefix': 'pan '
+        }
+        SERVERS.insert_one(server)
+    return server
 
 def create_bread(bread):
     return {

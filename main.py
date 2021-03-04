@@ -65,6 +65,11 @@ for cog in cogs:
 def owner(ctx):
     return int(ctx.author.id) in config.OWNERIDS
 
+@bot.check
+def check_for_blacklist(ctx):
+    server = config.get_server(ctx.guild.id)
+    return not ctx.channel.id in server['blacklist']
+
 # Restarts and reloads all cogs
 @bot.command()
 @commands.check(owner)
@@ -109,6 +114,8 @@ async def on_guild_remove(guild):
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
+        pass
+    elif isinstance(error, commands.errors.CheckFailure):
         pass
     elif isinstance(error, commands.errors.MemberNotFound):
         embed = discord.Embed(
