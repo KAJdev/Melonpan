@@ -261,6 +261,6 @@ breads = [
         "price": 1,
         "bake_time": None,
         "image": "https://i.imgur.com/TNdRcis.png",
-        "description": "Charcoal is a lightweight black carbon residue produced by strongly heating wood (or other animal and plant materials) in minimal oxygen to remove all water and volatile constituents."
+        "description": "Charcoal is a lightweight black carbon residue produced by strongly heating wood (or other animal and plant materials) in minimal oxygen to remove all water and volatile constituents. Created when bread burns."
     }
 ]

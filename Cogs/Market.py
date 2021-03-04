@@ -379,10 +379,15 @@ class Market(commands.Cog):
 
                 file = discord.File("tempgraph.png") # an image in the same folder as the main bot file
 
+                if selected['bake_time'] is not None:
+                    bake_time_string = f"Bake Time: **{selected['bake_time']} min.**"
+                else:
+                    bake_time_string = "Bake Time: **None**"
+
                 embed = discord.Embed(
                     title="Bread info",
                     color=config.MAINCOLOR,
-                    description=f"**{selected['name']}**\n```{selected['description']}```\nCurrent Price: **{round(item.get_price(today))}** <:BreadCoin:815842873937100800>\nBake Time: **{selected['bake_time']} min.**"
+                    description=f"**{selected['name']}**\n```{selected['description']}```\nCurrent Price: **{round(item.get_price(today))}** <:BreadCoin:815842873937100800>\n{bake_time_string}"
                 )
                 embed.set_image(url="attachment://tempgraph.png")
                 embed.set_thumbnail(url=selected['image'])
