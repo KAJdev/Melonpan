@@ -227,7 +227,7 @@ class Market(commands.Cog):
                     timestamp=datetime.datetime.utcnow()
                 ))
 
-    @commands.command(aliases=['sh', 'store', 'shopping'])
+    @commands.command(aliases=['sh', 'store', 'shopping', 'market', 'markets'])
     async def shop(self, ctx, *, item : str = None):
         today = datetime.datetime.now().timetuple().tm_yday
         if item is None:
