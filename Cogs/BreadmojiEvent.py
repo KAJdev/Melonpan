@@ -46,7 +46,7 @@ class BreadmojiEvent(commands.Cog):
         if message.channel.id == self.channel.id:
             for w in message.content:
                 if w == " ":
-                    return
+                    continue
                 if w not in self.allowed:
                     self.to_delete.append(message.id)
                     print(self.to_delete)
