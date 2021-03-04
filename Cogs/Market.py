@@ -259,6 +259,13 @@ class Market(commands.Cog):
                     name=f"{i['name']}",
                     value=f"`{today_price}` <:BreadCoin:815842873937100800>\n{last_price}"
                 )
+            reset_time = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) + datetime.timedelta(days=1)
+            change = reset_time - reset_time
+
+            hours, remainder = divmod(change.total_seconds(), 3600)
+            minutes, seconds = divmod(remainder, 60)
+
+            embed.set_footer(text=f"Shop changes in {hours}h {minutes}m {seconds}s")
             await ctx.send(embed=embed)
         else:
             random.seed(today)
