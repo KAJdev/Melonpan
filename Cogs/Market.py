@@ -53,7 +53,7 @@ class Market(commands.Cog):
                 return
 
             item_price = market.ItemPrice(selected['price'], 5, config.breads.index(selected))
-            today_price = round(item_price.get_price(today))
+            today_price = round(item_price.get_price(market.get_day_of_year_active()))
 
             if user['money'] < today_price * amount:
                 await ctx.send("<:melonpan:815857424996630548> `It doesn't look like you have enough for this item.`")
@@ -170,7 +170,7 @@ class Market(commands.Cog):
                 return
 
             item_price = market.ItemPrice(selected['price'], 5, config.breads.index(selected))
-            today_price = round(item_price.get_price(today))
+            today_price = round(item_price.get_price(market.get_day_of_year_active()))
 
             selling = []
             for their_item in user['inventory']:
@@ -211,7 +211,7 @@ class Market(commands.Cog):
             desc = "```************\nSOLD RECEIPT\n************\nDescription"
             for on_sale in display:
                 item_price = market.ItemPrice(on_sale['price'], 5, config.breads.index(on_sale))
-                today_price = round(item_price.get_price(today))
+                today_price = round(item_price.get_price(market.get_day_of_year_active()))
 
                 this_selling = []
                 for their_item in user['inventory']:
@@ -259,7 +259,7 @@ class Market(commands.Cog):
                 await ctx.send("<:melonpan:815857424996630548> `That bread doesn't look like it's on the market today...`")
             else:
                 item_price = market.ItemPrice(selected['price'], 5, config.breads.index(selected))
-                today_price = round(item_price.get_price(today))
+                today_price = round(item_price.get_price(market.get_day_of_year_active()))
 
                 selling = []
                 for their_item in user['inventory']:
@@ -295,11 +295,11 @@ class Market(commands.Cog):
             )
             for i in display:
                 item = market.ItemPrice(i['price'], 5, config.breads.index(i))
-                yesterday = today - 1
+                yesterday = market.get_day_of_year_active() - 1
                 if yesterday < 1: yesterday = 1
 
                 yesterday_price = round(item.get_price(yesterday))
-                today_price = round(item.get_price(today))
+                today_price = round(item.get_price(market.get_day_of_year_active()))
 
                 last_price = ""
                 if today_price > yesterday_price:
@@ -314,7 +314,7 @@ class Market(commands.Cog):
                     value=f"`{today_price}` <:BreadCoin:815842873937100800>\n{last_price}"
                 )
             reset_time = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) + datetime.timedelta(days=1)
-            change = reset_time - reset_time
+            change = reset_time - datetime.datetime.now()
 
             hours, remainder = divmod(change.total_seconds(), 3600)
             minutes, seconds = divmod(remainder, 60)
@@ -341,8 +341,8 @@ class Market(commands.Cog):
                 item = market.ItemPrice(selected['price'], 5, config.breads.index(selected))
 
                 prices = []
-                for _ in range(1, 31):
-                    day = today - _
+                for _ in range(1, 61):
+                    day = market.get_day_of_year_active() - _
                     if day < 1:
                         day += 365
                     prices.append(item.get_price(day))
@@ -351,7 +351,7 @@ class Market(commands.Cog):
                 #ax.axis('off')
                 fig.patch.set_visible(False)
 
-                x = np.array(list(range(1, 31)))
+                x = np.array(list(range(1, 61)))
                 y = np.array(prices)
 
                 #define x as 200 equally spaced values between the min and max of original x

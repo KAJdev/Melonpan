@@ -6,6 +6,20 @@ import math
 def get_day_of_year():
     return datetime.datetime.now().timetuple().tm_yday
 
+def get_minute_of_year():
+    day = get_day_of_year()
+    midnight = datetime.datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+    delta = datetime.datetime.utcnow() - midnight
+    minute = (delta.total_seconds()/60) * day
+    return minute
+
+def get_day_of_year_active():
+    day = get_day_of_year()
+    midnight = datetime.datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+    delta = datetime.datetime.utcnow() - midnight
+    minute = (delta.total_seconds()/60/60/24) + day
+    return minute
+
 class ItemPrice():
 
     def __init__(self, initial, volatilty, seed):
