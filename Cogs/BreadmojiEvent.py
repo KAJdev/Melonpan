@@ -29,6 +29,7 @@ class BreadmojiEvent(commands.Cog):
                 self.channel = g.get_channel(self.channel)
                 if self.channel is None:
                     self.channel = t
+                    print("couldn't get channel")
                     return
         
         if len(self.to_delete) > 0:
@@ -38,12 +39,14 @@ class BreadmojiEvent(commands.Cog):
             await self.channel.purge(limit=100, check=check, bulk=True)
 
             self.to_delete = []
+        print(self.to_delete)
 
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.channel.id == self.channel:
             if message.content not in self.allowed:
                 self.to_delete.append(message.id)
+                print("appended message")
 
 
 def setup(bot):
