@@ -45,7 +45,7 @@ class BreadmojiEvent(commands.Cog):
     async def on_message(self, message):
         if message.channel.id == self.channel.id:
             for w in message.content:
-                if w == " ":
+                if w in [" ", "\n"]:
                     continue
                 if w not in self.allowed:
                     self.to_delete.append(message.id)
@@ -56,7 +56,7 @@ class BreadmojiEvent(commands.Cog):
     async def on_message_edit(self, before, after):
         if after.channel.id == self.channel.id:
             for w in after.content:
-                if w == " ":
+                if w in [" ", "\n"]:
                     continue
                 if w not in self.allowed:
                     self.to_delete.append(after.id)
