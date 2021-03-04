@@ -2,7 +2,7 @@ import numpy as np
 import datetime
 import random
 import math
-import perlin-noise
+from perlin_noise import PerlinNoise
 
 def get_day_of_year():
     return datetime.datetime.now().timetuple().tm_yday
@@ -32,8 +32,8 @@ class ItemPrice():
     def get_price(self, time):
         s = math.sin(time)
         noise = PerlinNoise(octaves=10, seed=self.s)
-        s += noise(time)
-        s *= (self.v * self.i)
+        s += (noise(time) - 0.5) * 2
+        s *= (self.v * self.i) * 0.5
         self.c = self.i + s
 
         #self.c = (self.i * 2) * (sum([PerlinNoise(octaves=8**j,seed=j + 69)(i/100)/(3**j) for j in range(10)]) + 0.5)
