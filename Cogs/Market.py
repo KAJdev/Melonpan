@@ -81,6 +81,60 @@ class Market(commands.Cog):
                     timestamp=datetime.datetime.utcnow()
                 ))
 
+    @commands.command(aliases=['d', 'give', 'trash'])
+    async def donate(self, ctx, amount: str = None, *, item : str = None):
+        user = config.get_user(ctx.author.id)
+
+        if amount is None:
+            amount = "1"
+        if item is None:
+            await ctx.send("<:melonpan:815857424996630548> `You must tell me an item you wish to donate: e.g. 'donate 4 baguette'`")
+            return
+
+        selected = None
+        for r in config.breads:
+            if item.lower() in r['name'].lower():
+                selected = r
+                break
+            try:
+                index = int(item)
+                if index == config.breads.index(r):
+                    selected = r
+                    break
+            except:
+                pass
+        if selected is None:
+            await ctx.send("<:melonpan:815857424996630548> `That bread doesn't look like it exists...`")
+        else:
+            try:
+                amount = abs(int(amount))
+            except:
+                await ctx.send("<:melonpan:815857424996630548> `Amount must be a number: e.g. 'donate 4 baguette'`")
+                return
+
+            selling = []
+            for their_item in user['inventory']:
+                if their_item['index'] == config.breads.index(selected):
+                    selling.append(their_item)
+                if len(selling) >= amount:
+                    break
+            if len(selling) < amount:
+                await ctx.send(f"<:melonpan:815857424996630548> `It looks like you only have {len(selling)} of that bread in your bag.`")
+            else:
+                for selling_item in selling:
+                    user['inventory'].remove(selling_item)
+
+                config.USERS.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}})
+
+                desc = f"```************\DONATE RECEIPT\n************\nDescription\n- {amount}x {selected['name']}\n\nTHANK YOU!```"
+
+                await ctx.reply(embed=discord.Embed(
+                    title="Bread Market Donation Receipt",
+                    color=discord.Color(0xebeae8),
+                    description=desc,
+                    timestamp=datetime.datetime.utcnow()
+                ))
+
     @commands.command(aliases=['se', 's'])
     async def sell(self, ctx, amount: str = None, *, item : str = None):
         user = config.get_user(ctx.author.id)
