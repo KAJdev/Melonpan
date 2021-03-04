@@ -342,7 +342,7 @@ class Market(commands.Cog):
 
                 prices = []
                 for _ in range(1, 61):
-                    day = market.get_day_of_year_active() - (_/2)
+                    day = market.get_day_of_year_active() - _
                     if day < 1:
                         day += 365
                     prices.append(item.get_price(day))
@@ -351,7 +351,7 @@ class Market(commands.Cog):
                 #ax.axis('off')
                 fig.patch.set_visible(False)
 
-                x = np.array(list(_/2 for x in range(1, 61)))
+                x = np.array(list(range(1, 61)))
                 y = np.array(prices)
 
                 #define x as 200 equally spaced values between the min and max of original x
