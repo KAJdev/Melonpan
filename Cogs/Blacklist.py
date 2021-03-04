@@ -36,7 +36,7 @@ class Blacklist(commands.Cog):
                 config.SERVERS.update_one({'id': server['id']}, {'$push': {'blacklist': channel.id}})
                 await ctx.reply(f"{channel.mention} was blacklisted. Commands will **no longer** work there.")
     
-    @blacklist.error()
+    @blacklist.error
     async def blacklist_error(self, ctx, error):
         if isinstance(error, commands.errors.UserInputError):
             await ctx.reply("You must specify a channel.")
