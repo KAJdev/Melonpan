@@ -30,7 +30,7 @@ class Market(commands.Cog):
 
         today = datetime.datetime.now().timetuple().tm_yday
         random.seed(today)
-        display = random.sample(config.breads, k=6)
+        display = random.sample(config.breads, k=9)
         selected = None
         for r in display:
             if item.lower() in r['name'].lower():
@@ -93,7 +93,7 @@ class Market(commands.Cog):
 
         today = datetime.datetime.now().timetuple().tm_yday
         random.seed(today)
-        display = random.sample(config.breads, k=6)
+        display = random.sample(config.breads, k=9)
         selected = None
         for r in display:
             if item.lower() in r['name'].lower():
@@ -151,7 +151,7 @@ class Market(commands.Cog):
         if item is None:
             today = datetime.datetime.now().timetuple().tm_yday
             random.seed(today)
-            display = random.sample(config.breads, k=6)
+            display = random.sample(config.breads, k=9)
             selling = []
             total = 0
             desc = "```************\nSOLD RECEIPT\n************\nDescription"
@@ -188,7 +188,7 @@ class Market(commands.Cog):
         else:
             today = datetime.datetime.now().timetuple().tm_yday
             random.seed(today)
-            display = random.sample(config.breads, k=6)
+            display = random.sample(config.breads, k=9)
             selected = None
             for r in display:
                 if item.lower() in r['name'].lower():
@@ -232,7 +232,7 @@ class Market(commands.Cog):
         today = datetime.datetime.now().timetuple().tm_yday
         if item is None:
             random.seed(today)
-            display = random.sample(config.breads, k=6)
+            display = random.sample(config.breads, k=9)
 
             embed = discord.Embed(
                 title="Bread Market",
