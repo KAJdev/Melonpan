@@ -38,7 +38,7 @@ class ItemPrice():
         s = math.sin(time)
         s += math.sin(s)
         random.seed(self.seed)
-        s == random.random() * self.v
+        s += random.random() * self.v
         self.current = self.i + s
 
         if self.current < 1:
