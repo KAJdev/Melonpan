@@ -20,7 +20,7 @@ class BreadmojiEvent(commands.Cog):
     def cog_unload(self):
         self.delete.cancel()
 
-    @tasks.loop(seconds=1)
+    @tasks.loop(seconds=0.5)
     async def delete(self):
         if isinstance(self.channel, int):
             g = self.bot.get_guild(self.guild)
