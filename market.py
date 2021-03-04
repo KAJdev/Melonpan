@@ -37,7 +37,7 @@ class ItemPrice():
         # self.current *= np.prod(np.exp(np.random.normal(0, 1, time) * self.volatilty * day_year + inner_expression))
         random.seed(self.seed)
         s = math.sin((time * 2) + random.random())
-        random.seed(s)
+        random.seed(self.seed)
         s += random.random() * self.v
         self.current = self.i + s
 
