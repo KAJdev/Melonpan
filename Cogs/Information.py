@@ -167,9 +167,13 @@ class Information(commands.Cog):
             color=config.MAINCOLOR
         )
         embed.set_thumbnail(url=member.avatar_url)
-        if not isinstance(member, discord.Member) and member is not None:
-            member.guild = None
-        if member.guild != 814958240009420830:
+        if isinstance(member, discord.Member) and member.guild != 814958240009420830:
+            guild = self.bot.get_guild(814958240009420830)
+            try:
+                mem = await guild.fetch_member(member.id)
+            except:
+                mem = None
+        elif isinstance(member, discord.User):
             guild = self.bot.get_guild(814958240009420830)
             try:
                 mem = await guild.fetch_member(member.id)
