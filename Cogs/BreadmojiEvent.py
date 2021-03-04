@@ -39,14 +39,13 @@ class BreadmojiEvent(commands.Cog):
             await self.channel.purge(limit=100, check=check, bulk=True)
 
             self.to_delete = []
-        print(self.to_delete)
 
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.channel.id == self.channel.id:
             if message.content not in self.allowed:
                 self.to_delete.append(message.id)
-                print("appended message")
+                print(self.to_delete)
 
 
 def setup(bot):
