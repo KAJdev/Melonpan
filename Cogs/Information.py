@@ -87,7 +87,7 @@ class Information(commands.Cog):
         message = " ".join(message)
 
         embed = discord.Embed(color=config.MAINCOLOR, timestamp=remind_time)
-        embed.set_footer(text=f"I will send you a DM to remind you to: '{message}' at >")
+        embed.set_footer(text=f"I will DM you about '{message}' at >")
 
         config.TIMERS.insert_one({'owner': ctx.author.id, 'time': remind_time, 'created': datetime.datetime.utcnow(), 'message': message, 'id': ctx.message.id, 'sent': False, 'expired': False})
 
