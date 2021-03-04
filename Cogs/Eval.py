@@ -20,7 +20,6 @@ class Eval(commands.Cog):
             config.MESSAGES_PER_SECOND_AVG.pop(0)
         config.MESSAGES_PER_SECOND_AVG.append(config.CURRENT_MESSAGE_SECOND_COUNT)
         config.CURRENT_MESSAGE_SECOND_COUNT = 0
-        print(config.MESSAGES_PER_SECOND_AVG)
 
     def insert_returns(self, body):
         # insert return stmt if the last expression is a expression statement
@@ -51,7 +50,6 @@ class Eval(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         config.CURRENT_MESSAGE_SECOND_COUNT += 1
-        print(config.CURRENT_MESSAGE_SECOND_COUNT)
 
     @commands.command(name="eval")
     async def eval_fn(self, ctx, *, cmd):
