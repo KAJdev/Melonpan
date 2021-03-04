@@ -18,7 +18,7 @@ class Market(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=['b', 'p', 'purchase'])
+    @commands.command(aliases=['b', 'purchase'])
     async def buy(self, ctx, amount: str = None, *, item : str = None):
         user = config.get_user(ctx.author.id)
 
@@ -81,7 +81,7 @@ class Market(commands.Cog):
                     timestamp=datetime.datetime.utcnow()
                 ))
 
-    @commands.command(aliases=['se'])
+    @commands.command(aliases=['se', 's'])
     async def sell(self, ctx, amount: str = None, *, item : str = None):
         user = config.get_user(ctx.author.id)
 

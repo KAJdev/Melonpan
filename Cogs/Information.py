@@ -115,7 +115,7 @@ class Information(commands.Cog):
 
         await ctx.reply(embed=embed)
 
-    @commands.command(aliases=['money', 'balance'])
+    @commands.command(aliases=['money', 'balance', 'm'])
     async def bal(self, ctx, member : discord.Member = None):
         if member is None:
             member = ctx.author
@@ -156,7 +156,7 @@ class Information(commands.Cog):
         embed.set_footer(text=f"discord.py v{discord.__version__}")
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=['s', 'stat', 'profile', 'user'])
+    @commands.command(aliases=['stat', 'profile', 'user'])
     async def stats(self, ctx, member : discord.Member = None):
         if member is None:
             member = ctx.author

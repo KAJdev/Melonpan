@@ -60,7 +60,7 @@ class Bakery(commands.Cog):
         config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -cost, 'oven_count': 1}})
         await ctx.reply("<:melonpan:815857424996630548> You have built a new oven! View it with `pan bakery`.")
 
-    @commands.command()
+    @commands.command(aliases=['ba'])
     async def bakeall(self, ctx, *, bread:str=None):
         user = config.get_user(ctx.author.id)
 
@@ -162,7 +162,7 @@ class Bakery(commands.Cog):
             config.USERS.update_one({'id': user['id']}, {'$set': {'ovens': user['ovens']}})
             await ctx.reply(f"{config.stove_burning[True]} Your **{bake_obj['name']}** is now baking! use `pan bakery` to check on it, and `pan plate` to take it out when it's done.")
 
-    @commands.command()
+    @commands.command(aliases=['p'])
     async def plate(self, ctx):
         user = config.get_user(ctx.author.id)
 
