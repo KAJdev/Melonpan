@@ -355,7 +355,7 @@ class Market(commands.Cog):
                 y = np.array(prices)
 
                 #define x as 200 equally spaced values between the min and max of original x
-                xnew = np.linspace(x.min(), x.max(), 65)
+                xnew = np.linspace(x.min(), x.max(), 125)
 
                 #define spline
                 spl = make_interp_spline(x, y, k=3)
