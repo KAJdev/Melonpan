@@ -23,6 +23,9 @@ CURRENT_MESSAGE_SECOND_COUNT = 0
 # MEMBER CACHE
 MEMBER_CACHE = []
 
+# SERVER CACHE
+SERVER_CACHE = {}
+
 # Main Color (Replace the part after 0x with a hex code)
 MAINCOLOR = discord.Colour(0xe0ffba)
 
@@ -84,7 +87,14 @@ def get_user(id):
         USERS.insert_one(user)
     return user
 
+def update_server_cache(id):
+    del SERVER_CACHE[id]
+
 def get_server(id):
+    cached = SERVER_CACHE.get(id, None)
+    if cached is not None:
+        return cached
+
     server = SERVERS.find_one({'id': id})
     if server is None:
         server = {
@@ -93,6 +103,7 @@ def get_server(id):
             'prefix': 'pan '
         }
         SERVERS.insert_one(server)
+    SERVER_CACHE[id] = server
     return server
 
 def create_bread(bread):

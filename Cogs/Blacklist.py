@@ -35,6 +35,7 @@ class Blacklist(commands.Cog):
             else:
                 config.SERVERS.update_one({'id': server['id']}, {'$push': {'blacklist': channel.id}})
                 await ctx.reply(f"{channel.mention} was blacklisted. Commands will **no longer** work there.")
+            config.update_server_cache()
     
     @blacklist.error
     async def blacklist_error(self, ctx, error):
