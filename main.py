@@ -70,6 +70,8 @@ def check_for_blacklist(ctx):
     if ctx.guild is not None:
         server = config.get_server(ctx.guild.id)
         return not ctx.channel.id in server['blacklist']
+    else:
+        return True
 
 # Restarts and reloads all cogs
 @bot.command()
