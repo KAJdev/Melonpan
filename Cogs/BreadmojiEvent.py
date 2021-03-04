@@ -43,7 +43,7 @@ class BreadmojiEvent(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.channel.id == self.channel:
+        if message.channel.id == self.channel.id:
             if message.content not in self.allowed:
                 self.to_delete.append(message.id)
                 print("appended message")
