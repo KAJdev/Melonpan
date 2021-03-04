@@ -115,6 +115,7 @@ def create_bread(bread):
 quality_levels = {1: "☆☆☆☆", 2: "★☆☆☆", 3: "★★☆☆", 4: "★★★☆", 5: "★★★★"}
 stove_burning = {True: "<:stove_burning:815877702410043432>", False: "<:stove:815875824376610837>"}
 oven_cost = 150
+burn_time_multipier = 1.5
 
 current_collectables = [
     {'index': 1, 'price': 750},
@@ -160,6 +161,7 @@ badges = [
 breads = [
     {
         "name": "White Bread",
+        "bakeable": True,
         "price": 20,
         "bake_time": 35,
         "image": "https://i.imgur.com/ZAyk2Te.png",
@@ -167,6 +169,7 @@ breads = [
     },
     {
         "name": "Whole Wheat",
+        "bakeable": True,
         "price": 17,
         "bake_time": 30,
         "image": "https://i.imgur.com/ytSQ8Jb.png",
@@ -174,6 +177,7 @@ breads = [
     },
     {
         "name": "Toast",
+        "bakeable": True,
         "price": 5,
         "bake_time": 5,
         "image": "https://i.imgur.com/Aw3he0x.png",
@@ -181,6 +185,7 @@ breads = [
     },
     {
         "name": "Banana Bread",
+        "bakeable": True,
         "price": 31,
         "bake_time": 60,
         "image": "https://i.imgur.com/k2syNWa.png",
@@ -188,6 +193,7 @@ breads = [
     },
     {
         "name": "Baguette",
+        "bakeable": True,
         "price": 25,
         "bake_time": 30,
         "image": "https://i.imgur.com/S374hRf.png",
@@ -195,6 +201,7 @@ breads = [
     },
     {
         "name": "Pita Bread",
+        "bakeable": True,
         "price": 10,
         "bake_time": 15,
         "image": "https://i.imgur.com/B9bc9YV.png",
@@ -202,6 +209,7 @@ breads = [
     },
     {
         "name": "Sourdough Bread",
+        "bakeable": True,
         "price": 91,
         "bake_time": 120,
         "image": "https://i.imgur.com/K7ZhxD4.png",
@@ -209,6 +217,7 @@ breads = [
     },
     {
         "name": "Bagel",
+        "bakeable": True,
         "price": 13,
         "bake_time": 35,
         "image": "https://i.imgur.com/CtxrhUn.png",
@@ -216,6 +225,7 @@ breads = [
     },
     {
         "name": "Melonpan",
+        "bakeable": True,
         "price": 45,
         "bake_time": 30,
         "image": "https://i.imgur.com/WWcYes4.png",
@@ -223,6 +233,7 @@ breads = [
     },
     {
         "name": "Garlic Bread",
+        "bakeable": True,
         "price": 11,
         "bake_time": 15,
         "image": "https://i.imgur.com/3am3Q5H.png",
@@ -230,6 +241,7 @@ breads = [
     },
     {
         "name": "Blueberry Muffin",
+        "bakeable": True,
         "price": 16,
         "bake_time": 24,
         "image": "https://i.imgur.com/jnHigb4.png",
@@ -237,9 +249,18 @@ breads = [
     },
     {
         "name": "Chocolate Muffin",
+        "bakeable": True,
         "price": 16,
         "bake_time": 24,
         "image": "https://i.imgur.com/efw2edL.png",
         "description": "A muffin is an individual-sized, baked product. It can refer to two distinct items, a part-raised flatbread that is baked and then cooked on a griddle and a cupcake-like quickbread that is chemically leavened and then baked in a mold."
+    },
+    {
+        "name": "Charcoal",
+        "bakeable": False,
+        "price": 1,
+        "bake_time": None,
+        "image": "https://i.imgur.com/TNdRcis.png",
+        "description": "Charcoal is a lightweight black carbon residue produced by strongly heating wood (or other animal and plant materials) in minimal oxygen to remove all water and volatile constituents."
     }
 ]

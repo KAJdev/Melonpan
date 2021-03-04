@@ -30,12 +30,18 @@ class Bakery(commands.Cog):
                 embed.add_field(name=f"{config.stove_burning[False]}", value=f"Oven is empty.\n-")
             else:
                 s = (current['done'] - datetime.datetime.utcnow()).total_seconds()
-                if s > 0:
+                if 'burn' in current.keys():
+                    b = (current['burn'] - datetime.datetime.utcnow()).total_seconds()
+                else:
+                    b = 1
+                if s > 0 and b > 0:
                     hours, remainder = divmod(s, 3600)
                     minutes, seconds = divmod(remainder, 60)
                     embed.add_field(name=f"{config.stove_burning[True]}", value=f"**{current['name']}**\n{round(hours)}h {round(minutes)}m {round(seconds)}s")
-                else:
-                    embed.add_field(name=f"{config.stove_burning[False]}", value=f"**{current['name']}**\nplate with `pan plate`.")
+                elif s <= 0 and b > 0:
+                    embed.add_field(name=f"{config.stove_burning[True]}", value=f"**{current['name']}**\nplate with `pan plate`.")
+                elif s <= 0 and b <= 0:
+                    embed.add_field(name=f"{config.stove_burning[False]} <:BreadWarning:815842874226245643> `BURNED`", value=f"**{current['name']}**\nplate with `pan plate`.")
 
         if user['oven_count'] < 24:
             embed.add_field(name=f"<:BreadStaff:815484321590804491>", value=f"`pan build`\nCost: `{user['oven_count'] * config.oven_cost}` <:BreadCoin:815842873937100800>")
@@ -90,11 +96,14 @@ class Bakery(commands.Cog):
                 pass
         if selected is None:
             await ctx.send("<:melonpan:815857424996630548> `That bread doesn't look like it exists...`")
+        elif not selected['bakeable']:
+            await ctx.send("<:melonpan:815857424996630548> `You can't bake this.`")
         else:
             bake_obj = {
                 'name': selected['name'],
                 'index': config.breads.index(selected),
-                'done': datetime.datetime.utcnow() + datetime.timedelta(minutes=selected['bake_time'])
+                'done': datetime.datetime.utcnow() + datetime.timedelta(minutes=selected['bake_time']),
+                'burn': datetime.datetime.utcnow() + datetime.timedelta(minutes=selected['bake_time'] * config.burn_time_multipier)
             }
             amount = 0
             for _ in range(user['oven_count']):
@@ -142,11 +151,14 @@ class Bakery(commands.Cog):
                 pass
         if selected is None:
             await ctx.send("<:melonpan:815857424996630548> `That bread doesn't look like it exists...`")
+        elif not selected['bakeable']:
+            await ctx.send("<:melonpan:815857424996630548> `You can't bake this.`")
         else:
             bake_obj = {
                 'name': selected['name'],
                 'index': config.breads.index(selected),
-                'done': datetime.datetime.utcnow() + datetime.timedelta(minutes=selected['bake_time'])
+                'done': datetime.datetime.utcnow() + datetime.timedelta(minutes=selected['bake_time']),
+                'burn': datetime.datetime.utcnow() + datetime.timedelta(minutes=selected['bake_time'] * config.burn_time_multipier)
             }
             entered = False
             for o in user['ovens']:
@@ -172,7 +184,11 @@ class Bakery(commands.Cog):
         for o in user['ovens']:
             if o is not None:
                 s = (o['done'] - datetime.datetime.utcnow()).total_seconds()
-                if s < 0:
+                if 'burn' in current.keys():
+                    b = (current['burn'] - datetime.datetime.utcnow()).total_seconds()
+                else:
+                    b = 1
+                if s <= 0 and b > 0:
                     if len(user['inventory']) >= 25:
                         cutoff = True
                         break
@@ -180,6 +196,15 @@ class Bakery(commands.Cog):
                     user['inventory'].append(new_bread)
                     ending += f"+ `{config.quality_levels[new_bread['quality']]}` **{o['name']}**\n"
                     user['ovens'][user['ovens'].index(o)] = None
+                elif s <= 0 and b <= 0:
+                    if len(user['inventory']) >= 25:
+                        cutoff = True
+                        break
+                    new_bread = config.create_bread(config.breads[12])
+                    user['inventory'].append(new_bread)
+                    ending += f"+ `{config.quality_levels[new_bread['quality']]}` **Burned {o['name']}** (Charcoal)\n"
+                    user['ovens'][user['ovens'].index(o)] = None
+
         
         config.USERS.update_one({'id': user['id']}, {'$set': {'inventory': user['inventory'], 'ovens': user['ovens']}})
 
