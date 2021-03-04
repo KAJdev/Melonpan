@@ -36,9 +36,8 @@ class ItemPrice():
         # inner_expression = (self.interest - 0.5 * self.volatilty ** 2) * day_year
         # self.current *= np.prod(np.exp(np.random.normal(0, 1, time) * self.volatilty * day_year + inner_expression))
         random.seed(self.seed)
-        s = math.sin((time * 2) + random.random())
-        random.seed(self.seed)
-        s += random.random() * self.v
+        s = math.sin(time) + (random.random() * self.v)
+        random.seed(s)
         self.current = self.i + s
 
         if self.current < 1:
