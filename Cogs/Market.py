@@ -265,7 +265,7 @@ class Market(commands.Cog):
             hours, remainder = divmod(change.total_seconds(), 3600)
             minutes, seconds = divmod(remainder, 60)
 
-            embed.set_footer(text=f"Shop changes in {hours}h {minutes}m {seconds}s")
+            embed.set_footer(text=f"Shop changes in {round(hours)}h {round(minutes)}m {round(seconds)}s")
             await ctx.send(embed=embed)
         else:
             random.seed(today)
