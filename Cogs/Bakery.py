@@ -184,8 +184,8 @@ class Bakery(commands.Cog):
         for o in user['ovens']:
             if o is not None:
                 s = (o['done'] - datetime.datetime.utcnow()).total_seconds()
-                if 'burn' in current.keys():
-                    b = (current['burn'] - datetime.datetime.utcnow()).total_seconds()
+                if 'burn' in o.keys():
+                    b = (o['burn'] - datetime.datetime.utcnow()).total_seconds()
                 else:
                     b = 1
                 if s <= 0 and b > 0:
