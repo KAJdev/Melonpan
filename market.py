@@ -2,6 +2,7 @@ import numpy as np
 import datetime
 import random
 import math
+import perlin-noise
 
 def get_day_of_year():
     return datetime.datetime.now().timetuple().tm_yday
@@ -24,26 +25,19 @@ class ItemPrice():
 
     def __init__(self, initial, volatilty, seed):
         self.i = initial  # Item default price
-        self.current = initial  # Item default price
-        #self.interest = interest
+        self.c = initial
         self.v = volatilty
-        self.seed = seed
-        self.cache = []
+        self.s = seed
 
     def get_price(self, time):
-        # np.random.seed(self.seed)
-        # day_year = np.sqrt(1./365.)
-        # inner_expression = (self.interest - 0.5 * self.volatilty ** 2) * day_year
-        # self.current *= np.prod(np.exp(np.random.normal(0, 1, time) * self.volatilty * day_year + inner_expression))
         s = math.sin(time)
-        s += math.sin(s)
-        random.seed(self.seed)
-        s += random.random() * self.v
-        self.current = self.i + s
+        noise = PerlinNoise(octaves=10, seed=self.s)
+        s += noise(time)
+        s *= (self.v * self.i)
+        self.c = self.i + s
 
-        if self.current < 1:
-            self.current = 1
-        return self.current
+        #self.c = (self.i * 2) * (sum([PerlinNoise(octaves=8**j,seed=j + 69)(i/100)/(3**j) for j in range(10)]) + 0.5)
 
-    def get_graph(self, time):
-        pass
+        if self.c < 1:
+            self.c = 1
+        return self.c

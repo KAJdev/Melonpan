@@ -125,8 +125,8 @@ class Information(commands.Cog):
         assets = 0
         for item in user['inventory']:
             r = config.breads[item['index']]
-            item_price = market.ItemPrice(r['price'], 5, item['index'])
-            today_price = round(item_price.get_price(market.get_day_of_year()))
+            item_price = market.ItemPrice(r['price'], r['volitility'], item['index'])
+            today_price = round(item_price.get_price(market.get_day_of_year_active()))
             assets += today_price
 
         embed=discord.Embed(

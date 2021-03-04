@@ -52,7 +52,7 @@ class Market(commands.Cog):
                 await ctx.send("<:melonpan:815857424996630548> `Amount must be a number: e.g. 'buy 4 baguette'`")
                 return
 
-            item_price = market.ItemPrice(selected['price'], 5, config.breads.index(selected))
+            item_price = market.ItemPrice(selected['price'], selected['volitility'], config.breads.index(selected))
             today_price = round(item_price.get_price(market.get_day_of_year_active()))
 
             if user['money'] < today_price * amount:
@@ -169,7 +169,7 @@ class Market(commands.Cog):
                 await ctx.send("<:melonpan:815857424996630548> `Amount must be a number: e.g. 'sell 4 baguette'`")
                 return
 
-            item_price = market.ItemPrice(selected['price'], 5, config.breads.index(selected))
+            item_price = market.ItemPrice(selected['price'], selected['volitility'], config.breads.index(selected))
             today_price = round(item_price.get_price(market.get_day_of_year_active()))
 
             selling = []
@@ -210,7 +210,7 @@ class Market(commands.Cog):
             total = 0
             desc = "```************\nSOLD RECEIPT\n************\nDescription"
             for on_sale in display:
-                item_price = market.ItemPrice(on_sale['price'], 5, config.breads.index(on_sale))
+                item_price = market.ItemPrice(on_sale['price'], on_sale['volitility'], config.breads.index(on_sale))
                 today_price = round(item_price.get_price(market.get_day_of_year_active()))
 
                 this_selling = []
@@ -258,7 +258,7 @@ class Market(commands.Cog):
             if selected is None:
                 await ctx.send("<:melonpan:815857424996630548> `That bread doesn't look like it's on the market today...`")
             else:
-                item_price = market.ItemPrice(selected['price'], 5, config.breads.index(selected))
+                item_price = market.ItemPrice(selected['price'], selected['volitility'], config.breads.index(selected))
                 today_price = round(item_price.get_price(market.get_day_of_year_active()))
 
                 selling = []
@@ -294,7 +294,7 @@ class Market(commands.Cog):
                 description="Use the `buy` and `sell` commands to exchange Breads.\n*These are the tradable breads for today*\n\nuse `shop <item>` to view a specific item"
             )
             for i in display:
-                item = market.ItemPrice(i['price'], 5, config.breads.index(i))
+                item = market.ItemPrice(i['price'], i['volitility'], config.breads.index(i))
                 yesterday = market.get_day_of_year_active() - 1
                 if yesterday < 1: yesterday = 1
 
@@ -338,7 +338,7 @@ class Market(commands.Cog):
             if selected is None:
                 await ctx.send("<:melonpan:815857424996630548> `That bread hasn't been heard of before...`")
             else:
-                item = market.ItemPrice(selected['price'], 5, config.breads.index(selected))
+                item = market.ItemPrice(selected['price'], selected['volitility'], config.breads.index(selected))
 
                 prices = []
                 for _ in range(1, 61):
