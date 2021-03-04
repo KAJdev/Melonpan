@@ -27,6 +27,8 @@ class ItemPrice():
         s += random.random() * self.v
         self.current = self.i + s
 
+        if self.current < 1:
+            self.current = 1
         return self.current
 
     def get_graph(self, time):
