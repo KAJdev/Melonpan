@@ -44,6 +44,7 @@ class BreadmojiEvent(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.channel.id == self.channel.id:
+            print(message.content)
             for w in message.content:
                 if w in [" ", "\n"]:
                     continue
