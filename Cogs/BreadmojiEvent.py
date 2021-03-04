@@ -44,16 +44,20 @@ class BreadmojiEvent(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.channel.id == self.channel.id:
-            if message.content not in self.allowed:
-                self.to_delete.append(message.id)
-                print(self.to_delete)
+            for w in message.conten.split(""):
+                if w not in self.allowed:
+                    self.to_delete.append(message.id)
+                    print(self.to_delete)
+                    return
     
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
         if after.channel.id == self.channel.id:
-            if after.content not in self.allowed:
-                self.to_delete.append(after.id)
-                print(self.to_delete)
+            for w in after.content.split(""):
+                if w not in self.allowed:
+                    self.to_delete.append(after.id)
+                    print(self.to_delete)
+                    return
 
 
 def setup(bot):
