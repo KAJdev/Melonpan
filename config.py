@@ -205,5 +205,19 @@ breads = [
         "bake_time": 15,
         "image": "https://i.imgur.com/3am3Q5H.png",
         "description": "Garlic bread consists of bread, topped with garlic and olive oil or butter and may include additional herbs, such as oregano or chives. It is then either grilled or broiled until toasted or baked in a conventional or bread oven."
+    },
+    {
+        "name": "Blueberry Muffin",
+        "price": 16,
+        "bake_time": 24,
+        "image": "https://i.imgur.com/jnHigb4.png",
+        "description": "A muffin is an individual-sized, baked product. It can refer to two distinct items, a part-raised flatbread that is baked and then cooked on a griddle and a cupcake-like quickbread that is chemically leavened and then baked in a mold."
+    },
+    {
+        "name": "Chocolate Muffin",
+        "price": 16,
+        "bake_time": 24,
+        "image": "https://i.imgur.com/efw2edL.png",
+        "description": "A muffin is an individual-sized, baked product. It can refer to two distinct items, a part-raised flatbread that is baked and then cooked on a griddle and a cupcake-like quickbread that is chemically leavened and then baked in a mold."
     }
 ]
