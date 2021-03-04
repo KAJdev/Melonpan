@@ -67,8 +67,9 @@ def owner(ctx):
 
 @bot.check
 def check_for_blacklist(ctx):
-    server = config.get_server(ctx.guild.id)
-    return not ctx.channel.id in server['blacklist']
+    if ctx.guild is not None:
+        server = config.get_server(ctx.guild.id)
+        return not ctx.channel.id in server['blacklist']
 
 # Restarts and reloads all cogs
 @bot.command()
