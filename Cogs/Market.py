@@ -126,7 +126,7 @@ class Market(commands.Cog):
 
                 config.USERS.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}})
 
-                desc = f"```************\DONATE RECEIPT\n************\nDescription\n- {amount}x {selected['name']}\n\nTHANK YOU!```"
+                desc = f"```**********\nDONATE RECEIPT\n**********\nDescription\n- {amount}x {selected['name']}\n\nTHANK YOU!```"
 
                 await ctx.reply(embed=discord.Embed(
                     title="Bread Market Donation Receipt",
