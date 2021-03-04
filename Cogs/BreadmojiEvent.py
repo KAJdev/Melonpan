@@ -38,8 +38,8 @@ class BreadmojiEvent(commands.Cog):
 
             deleted = await self.channel.purge(limit=100, check=check, bulk=True)
             for msg in deleted:
-             if msg.id in self.to_delete:
-                 self.to_delete.remove(msg.id)
+                if msg.id in self.to_delete:
+                    self.to_delete.remove(msg.id)
 
     @commands.Cog.listener()
     async def on_message(self, message):
