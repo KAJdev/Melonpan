@@ -27,7 +27,7 @@ class InventoryMenu(menus.ListPageSource):
             description=desc
         )
         e_cost = int((self.max/config.expand_amount) * config.expand_cost)
-        embed.add_field(name="<:BreadStaff:815484321590804491> Storage Expansion", value=f"`pan expand`\nCost: `{e_cost}` <:BreadCoin:815842873937100800>\n*(+{config.expand_amount} slots)*")
+        embed.add_field(name="<:BreadStaff:815484321590804491> Storage Expansion", value=f"`pan expand`\nCost: `{e_cost}` <:BreadCoin:815842873937100800>\n*+{config.expand_amount} slots*")
         embed.set_footer(text=f"Showing {menu.current_page + 1}/{menu._source.get_max_pages()} | Storage Capacity: {len(self.og)}/{self.max}")
         return embed
 
