@@ -15,10 +15,14 @@ class InventoryMenu(menus.ListPageSource):
 
     async def format_page(self, menu, entries):
         offset = menu.current_page * self.per_page
+        desc = ""
+        for i, v in enumerate(entries, start=offset):
+            n = config.breads[v['index']]['name']
+            desc += f'`{config.quality_levels[v['quality']]}` · **{n}**\n'
         embed = discord.Embed(
             title="Bread Inventory",
             color=config.MAINCOLOR,
-            description='\n'.join(f'`{config.quality_levels[v['quality']]}` · **{config.breads[v['index']]['name']}**' for i, v in enumerate(entries, start=offset))
+            description=desc
         )
         embed.set_footer(text=f"Showing {len(entries) - offset}/{len(entries)}")
         return embed
