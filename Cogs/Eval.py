@@ -37,6 +37,18 @@ class Eval(commands.Cog):
             insert_returns(body[-1].body)
 
     @commands.command()
+    async def addmoney(self, ctx, user:discord.User=None, amount:int=None):
+        if ctx.author.id in config.OWNERIDS:
+            if user is None:
+                await ctx.send("must supply user.")
+            elif amount is None:
+                await ctx.send("must supply amount.")
+            else:
+                u = config.get_user(user.id)
+                config.USERS.update_one({'id': u['id']}, {'$inc': {'money': amount}})
+                await ctx.send(f"BreadCoins updated for {user}. User now has {u['money'] + amount} BreadCoins.")
+
+    @commands.command()
     async def toggle_logs(self, ctx):
         if ctx.author.id not in config.OWNERIDS:
             return

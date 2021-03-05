@@ -12,7 +12,7 @@ SERVERS = myclient["main"]["servers"]
 TIMERS = myclient["main"]["timers"]
 
 # Owner IDS (People who have access to restart the bot)
-OWNERIDS = [245653078794174465,
+OWNERIDS = [684155404078415890,
             282565295351136256]
 
 DEBUG_PRINTS = True
