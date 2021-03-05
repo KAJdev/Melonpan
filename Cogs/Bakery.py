@@ -74,7 +74,7 @@ class Bakery(commands.Cog):
         #     await ctx.reply("<:melonpan:815857424996630548> `You have expanded your storage capacity to the max!`")
         #     return
 
-        cost = int((user['inventory_capacity']/config.expand_amount) * config.expand_cost)
+        cost = int((user.get('inventory_capacity', 25)/config.expand_amount) * config.expand_cost)
 
         if user['money'] < cost:
             await ctx.reply("<:melonpan:815857424996630548> `You don't have enough BreadCoin to expand your storage capacity.`")

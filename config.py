@@ -78,6 +78,7 @@ def get_user(id):
         user = {
             'id': id,
             'inventory': [],
+            'inventory_capacity': 25,
             'money': 0,
             'baked': {},
             'ovens': [],
