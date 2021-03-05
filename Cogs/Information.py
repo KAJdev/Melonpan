@@ -18,7 +18,7 @@ class InventoryMenu(menus.ListPageSource):
         desc = ""
         for i, v in enumerate(entries, start=offset):
             n = config.breads[v['index']]['name']
-            desc += f'`{config.quality_levels[v['quality']]}` · **{n}**\n'
+            desc += f"`{config.quality_levels[v['quality']]}` · **{n}**\n"
         embed = discord.Embed(
             title="Bread Inventory",
             color=config.MAINCOLOR,
