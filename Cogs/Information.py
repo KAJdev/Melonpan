@@ -10,8 +10,10 @@ import psutil
 from discord.ext import commands, tasks, menus
 
 class InventoryMenu(menus.ListPageSource):
-    def __init__(self, data):
+    def __init__(self, data, max=25):
         super().__init__(data, per_page=10)
+        self.max = max
+        self.og = data
 
     async def format_page(self, menu, entries):
         offset = menu.current_page * self.per_page
@@ -24,7 +26,7 @@ class InventoryMenu(menus.ListPageSource):
             color=config.MAINCOLOR,
             description=desc
         )
-        embed.set_footer(text=f"Showing {len(entries)}/{offset + len(entries)}")
+        embed.set_footer(text=f"Showing {len(entries)}/{len(self.og)} | Storage Capacity: {self.max}")
         return embed
 
 class Information(commands.Cog):
@@ -78,7 +80,7 @@ class Information(commands.Cog):
             embed.set_footer(text=f"Showing 0/0")
             await ctx.reply(embed=embed)
         else:
-            pages = menus.MenuPages(source=InventoryMenu(user['inventory']), clear_reactions_after=True)
+            pages = menus.MenuPages(source=InventoryMenu(user['inventory']), clear_reactions_after=True, max=user.get('inventory_capacity', 25))
             await pages.start(ctx)
 
     @commands.command(aliases=['timer', 'time', 'r'])
