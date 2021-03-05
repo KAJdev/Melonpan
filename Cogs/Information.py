@@ -25,7 +25,7 @@ class InventoryMenu(menus.ListPageSource):
             description=desc
         )
         print(entries, offset)
-        embed.set_footer(text=f"Showing {len(entries)}/{len(menu._source)}")
+        embed.set_footer(text=f"Showing {len(entries)}/{len(menu.source)}")
         return embed
 
 class Information(commands.Cog):
