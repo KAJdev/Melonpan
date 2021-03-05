@@ -10,10 +10,11 @@ import psutil
 from discord.ext import commands, tasks, menus
 
 class InventoryMenu(menus.ListPageSource):
-    def __init__(self, data, max=25):
+    def __init__(self, data, max=25, user=None):
         super().__init__(data, per_page=10)
         self.max = max
         self.og = data
+        self.user = user
 
     async def format_page(self, menu, entries):
         offset = menu.current_page * self.per_page
@@ -26,6 +27,7 @@ class InventoryMenu(menus.ListPageSource):
             color=config.MAINCOLOR,
             description=desc
         )
+        embed.add_field(name="<:BreadStaff:815484321590804491> Storage Expansion", value=f"`pan expand`\nCost: `{int((user.get('inventory_capacity', 25)/config.expand_amount) * config.expand_cost)}` <:BreadCoin:815842873937100800>")
         embed.set_footer(text=f"Showing {menu.current_page + 1}/{menu._source.get_max_pages()} | Storage Capacity: {len(self.og)}/{self.max}")
         return embed
 
@@ -215,7 +217,7 @@ class Information(commands.Cog):
             if y > fav['amount']:
                 fav = {'name': config.breads[int(x)]['name'], 'amount': y}
 
-        embed.add_field(name="Baking Stats", value=f"Favorite Bread: **{fav['name']}** ({fav['amount']} bakes)\nBreads Baked: **{total}**\nBreadCoin: **{user['money']}** <:BreadCoin:815842873937100800>\nOvens: **{user['oven_count']}**")
+        embed.add_field(name="Baking Stats", value=f"Favorite Bread: **{fav['name']}** ({fav['amount']} bakes)\nBreads Baked: **{total}**\nBreadCoin: **{user['money']}** <:BreadCoin:815842873937100800>\nOvens: **{user['oven_count']}**\nInventory Capacity: **{user.get('inventory_capacity', 25)}**")
 
         await ctx.send(embed=embed)
 

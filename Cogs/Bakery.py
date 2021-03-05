@@ -66,6 +66,26 @@ class Bakery(commands.Cog):
         config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -cost, 'oven_count': 1}})
         await ctx.reply("<:melonpan:815857424996630548> You have built a new oven! View it with `pan bakery`.")
 
+    @commands.command()
+    async def expand(self, ctx):
+        user = config.get_user(ctx.author.id)
+
+        # if user.get('inventory_capacity', 25) >= 100:
+        #     await ctx.reply("<:melonpan:815857424996630548> `You have expanded your storage capacity to the max!`")
+        #     return
+
+        cost = int((user['inventory_capacity']/config.expand_amount) * config.expand_cost)
+
+        if user['money'] < cost:
+            await ctx.reply("<:melonpan:815857424996630548> `You don't have enough BreadCoin to expand your storage capacity.`")
+            return
+
+        if 'inventory_capacity' in user.keys():
+            config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -cost, 'inventory_capacity': config.expand_amount}})
+        else:
+            config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -cost}, '$set': {'inventory_capacity': 25 + config.expand_amount}})
+        await ctx.reply(f"<:melonpan:815857424996630548> You have expanded your inventory capacity by `{config.expand_amount}` slots. You can now store `{user.get('inventory_capacity', 25) + config.expand_amount}` items.")
+
     @commands.command(aliases=['ba'])
     async def bakeall(self, ctx, *, bread:str=None):
         user = config.get_user(ctx.author.id)
@@ -189,7 +209,7 @@ class Bakery(commands.Cog):
                 else:
                     b = 1
                 if s <= 0 and b > 0:
-                    if len(user['inventory']) >= 25:
+                    if len(user['inventory']) >= user.get('inventory_capacity', 25):
                         cutoff = True
                         break
                     new_bread = config.create_bread(config.breads[o['index']])
@@ -197,7 +217,7 @@ class Bakery(commands.Cog):
                     ending += f"+ `{config.quality_levels[new_bread['quality']]}` **{o['name']}**\n"
                     user['ovens'][user['ovens'].index(o)] = None
                 elif s <= 0 and b <= 0:
-                    if len(user['inventory']) >= 25:
+                    if len(user['inventory']) >= user.get('inventory_capacity', 25):
                         cutoff = True
                         break
                     new_bread = config.create_bread(config.breads[12])

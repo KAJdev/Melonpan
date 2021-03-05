@@ -115,6 +115,8 @@ def create_bread(bread):
 quality_levels = {1: "☆☆☆☆", 2: "★☆☆☆", 3: "★★☆☆", 4: "★★★☆", 5: "★★★★"}
 stove_burning = {True: "<:stove_burning:815877702410043432>", False: "<:stove:815875824376610837>"}
 oven_cost = 150
+expand_cost = 250
+expand_amount = 5
 burn_time_multipier = 1.5
 
 current_collectables = [

@@ -57,7 +57,7 @@ class Market(commands.Cog):
 
             if user['money'] < today_price * amount:
                 await ctx.send("<:melonpan:815857424996630548> `It doesn't look like you have enough for this item.`")
-            elif len(user['inventory']) + amount > 25:
+            elif len(user['inventory']) + amount > user.get('inventory_capacity', 25):
                 await ctx.send("<:melonpan:815857424996630548> `It doesn't look like you have enough space in your bag.`")
             else:
                 new_relics = []
