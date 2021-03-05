@@ -14,9 +14,12 @@ class Blacklist(commands.Cog):
 
     @commands.command(aliases=['bl'], ignore_extra=True)
     async def blacklist(self, ctx, channel:discord.TextChannel=None):
+        if ctx.guild is None:
+            await ctx.reply("<:melonpan:815857424996630548> `This command can only be used in a guild.`")
+            return
         if not ctx.author.guild_permissions.manage_guild:
-                await ctx.reply("<:melonpan:815857424996630548> `You must have the 'manage guild' permission to use this command.`")
-                return
+            await ctx.reply("<:melonpan:815857424996630548> `You must have the 'manage guild' permission to use this command.`")
+            return
         server = config.get_server(ctx.guild.id)
         if channel is None:
             desc = ""

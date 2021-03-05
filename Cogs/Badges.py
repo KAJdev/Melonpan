@@ -19,7 +19,7 @@ class Badges(commands.Cog):
 
             embed = discord.Embed(
                 title="Badge Shop",
-                description="Badges will be displayed on your `stats` page, and are only available for a limited amount of time.",
+                description="Badges will be displayed on your `pan stats` page, and are only available for a limited amount of time.",
                 color=config.MAINCOLOR
             )
 
@@ -38,7 +38,7 @@ class Badges(commands.Cog):
             index = None
 
         if index is None:
-            await ctx.reply("<:melonpan:815857424996630548> `You must tell me the badge index you would like to purchase: e.g. 'badge buy 0'`")
+            await ctx.reply("<:melonpan:815857424996630548> `You must tell me the badge index you would like to purchase: e.g. 'pan badge buy 0'`")
             return
 
         chosen = None

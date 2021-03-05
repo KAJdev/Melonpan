@@ -79,7 +79,7 @@ class Bakery(commands.Cog):
             return
 
         if bread is None:
-            await ctx.send("<:melonpan:815857424996630548> `You must tell me an item you wish to bake: e.g. 'bakeall baguette'`")
+            await ctx.send("<:melonpan:815857424996630548> `You must tell me an item you wish to bake: e.g. 'pan bakeall baguette'`")
             return
         
         selected = None
@@ -134,7 +134,7 @@ class Bakery(commands.Cog):
             return
 
         if bread is None:
-            await ctx.send("<:melonpan:815857424996630548> `You must tell me an item you wish to bake: e.g. 'bake baguette'`")
+            await ctx.send("<:melonpan:815857424996630548> `You must tell me an item you wish to bake: e.g. 'pan bake baguette'`")
             return
         
         selected = None

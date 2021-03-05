@@ -25,7 +25,7 @@ class InventoryMenu(menus.ListPageSource):
             description=desc
         )
         print(entries, offset)
-        embed.set_footer(text=f"Showing {len(entries)}/{len(self._source)}")
+        embed.set_footer(text=f"Showing {len(entries)}/{len(menu._source)}")
         return embed
 
 class Information(commands.Cog):
@@ -70,13 +70,13 @@ class Information(commands.Cog):
         user = config.get_user(ctx.author.id)
         desc = ""
         if len(user['inventory']) < 1:
-            desc = "You have no bread. Try managing your bakery with `bakery`."
+            desc = "You have no bread. Try managing your bakery with `pan bakery`."
             embed = discord.Embed(
                 title="Bread Inventory",
                 color=config.MAINCOLOR,
                 description=desc
             )
-            embed.set_footer(text=f"Storing {len(user['inventory'])}/25 breads")
+            embed.set_footer(text=f"Showing 0/0")
             await ctx.reply(embed=embed)
         else:
             pages = menus.MenuPages(source=InventoryMenu(user['inventory']), clear_reactions_after=True)
@@ -87,7 +87,7 @@ class Information(commands.Cog):
         user = config.get_user(ctx.author.id)
 
         if args is None:
-            await ctx.reply("<:melonpan:815857424996630548> `Please tell me the timer length and note: e.g. 'remind 1h 2m 4s take out the bread'`")
+            await ctx.reply("<:melonpan:815857424996630548> `Please tell me the timer length and note: e.g. 'pan remind 1h 2m 4s take out the bread'`")
             return
 
         splitted = args.split(" ")

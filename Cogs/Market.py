@@ -25,7 +25,7 @@ class Market(commands.Cog):
         if amount is None:
             amount = "1"
         if item is None:
-            await ctx.send("<:melonpan:815857424996630548> `You must tell me an item you wish to buy: e.g. 'buy 4 baguette'`")
+            await ctx.send("<:melonpan:815857424996630548> `You must tell me an item you wish to buy: e.g. 'pan buy 4 baguette'`")
             return
 
         today = datetime.datetime.now().timetuple().tm_yday
@@ -49,7 +49,7 @@ class Market(commands.Cog):
             try:
                 amount = abs(int(amount))
             except:
-                await ctx.send("<:melonpan:815857424996630548> `Amount must be a number: e.g. 'buy 4 baguette'`")
+                await ctx.send("<:melonpan:815857424996630548> `Amount must be a number: e.g. 'pan buy 4 baguette'`")
                 return
 
             item_price = market.ItemPrice(selected['price'], selected['volitility'], config.breads.index(selected))
@@ -88,7 +88,7 @@ class Market(commands.Cog):
         if amount is None:
             amount = "1"
         if item is None:
-            await ctx.send("<:melonpan:815857424996630548> `You must tell me an item you wish to donate: e.g. 'donate 4 baguette'`")
+            await ctx.send("<:melonpan:815857424996630548> `You must tell me an item you wish to donate: e.g. 'pan donate 4 baguette'`")
             return
 
         selected = None
@@ -109,7 +109,7 @@ class Market(commands.Cog):
             try:
                 amount = abs(int(amount))
             except:
-                await ctx.send("<:melonpan:815857424996630548> `Amount must be a number: e.g. 'donate 4 baguette'`")
+                await ctx.send("<:melonpan:815857424996630548> `Amount must be a number: e.g. 'pan donate 4 baguette'`")
                 return
 
             selling = []
@@ -142,7 +142,7 @@ class Market(commands.Cog):
         if amount is None:
             amount = "1"
         if item is None:
-            await ctx.send("<:melonpan:815857424996630548> `You must tell me an item you wish to sell: e.g. 'sell 4 baguette'`")
+            await ctx.send("<:melonpan:815857424996630548> `You must tell me an item you wish to sell: e.g. 'pan sell 4 baguette'`")
             return
 
         today = datetime.datetime.now().timetuple().tm_yday
@@ -166,7 +166,7 @@ class Market(commands.Cog):
             try:
                 amount = abs(int(amount))
             except:
-                await ctx.send("<:melonpan:815857424996630548> `Amount must be a number: e.g. 'sell 4 baguette'`")
+                await ctx.send("<:melonpan:815857424996630548> `Amount must be a number: e.g. 'pan sell 4 baguette'`")
                 return
 
             item_price = market.ItemPrice(selected['price'], selected['volitility'], config.breads.index(selected))
@@ -291,7 +291,7 @@ class Market(commands.Cog):
             embed = discord.Embed(
                 title="Bread Market",
                 color=config.MAINCOLOR,
-                description="Use the `buy` and `sell` commands to exchange Breads.\n*These are the tradable breads for today*\n\nuse `shop <item>` to view a specific item"
+                description="Use the `pan buy` and `pan sell` commands to exchange Breads.\n*These are the tradable breads for today*\n\nuse `pan shop <item>` to view a specific item"
             )
             for i in display:
                 item = market.ItemPrice(i['price'], i['volitility'], config.breads.index(i))
