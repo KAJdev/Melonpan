@@ -26,7 +26,7 @@ class InventoryMenu(menus.ListPageSource):
             color=config.MAINCOLOR,
             description=desc
         )
-        embed.set_footer(text=f"Showing {menu.current_page}/{menu._source.get_max_pages()} | Storage Capacity: {self.max}")
+        embed.set_footer(text=f"Showing {menu.current_page}/{menu._source.get_max_pages()} | Storage Capacity: {len(self.og)}/{self.max}")
         return embed
 
 class Information(commands.Cog):
