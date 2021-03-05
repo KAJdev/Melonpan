@@ -7,7 +7,21 @@ import market
 import os
 import psutil
 
-from discord.ext import commands, tasks
+from discord.ext import commands, tasks, menus
+
+class InventoryMenu(menus.ListPageSource):
+    def __init__(self, data):
+        super().__init__(data, per_page=10)
+
+    async def format_page(self, menu, entries):
+        offset = menu.current_page * self.per_page
+        embed = discord.Embed(
+            title="Bread Inventory",
+            color=config.MAINCOLOR,
+            description='\n'.join(f'`{config.quality_levels[v['quality']]}` · **{config.breads[v['index']]['name']}**' for i, v in enumerate(entries, start=offset))
+        )
+        embed.set_footer(text=f"Showing {len(entries) - offset}/{len(entries)}")
+        return embed
 
 class Information(commands.Cog):
 
@@ -52,17 +66,16 @@ class Information(commands.Cog):
         desc = ""
         if len(user['inventory']) < 1:
             desc = "You have no bread. Try managing your bakery with `bakery`."
+            embed = discord.Embed(
+                title="Bread Inventory",
+                color=config.MAINCOLOR,
+                description=desc
+            )
+            embed.set_footer(text=f"Storing {len(user['inventory'])}/25 breads")
+            await ctx.reply(embed=embed)
         else:
-            for a in user['inventory']:
-                item = config.breads[a['index']]
-                desc+=f"`{config.quality_levels[a['quality']]}` · **{item['name']}**\n"
-        embed = discord.Embed(
-            title="Bread Inventory",
-            color=config.MAINCOLOR,
-            description=desc
-        )
-        embed.set_footer(text=f"Storing {len(user['inventory'])}/25 breads")
-        await ctx.reply(embed=embed)
+            pages = menus.MenuPages(source=InventoryMenu(user['inventory']), clear_reactions_after=True)
+            await pages.start(ctx)
 
     @commands.command(aliases=['timer', 'time', 'r'])
     async def remind(self, ctx, *, args:str=None):
