@@ -120,6 +120,8 @@ async def on_command_error(ctx, error):
         pass
     elif isinstance(error, commands.errors.CheckFailure):
         pass
+    elif isinstance(error, commands.errors.UserInputError):
+        pass
     elif isinstance(error, commands.errors.MemberNotFound):
         embed = discord.Embed(
             title = "User not found",

@@ -387,7 +387,7 @@ class Market(commands.Cog):
                 embed = discord.Embed(
                     title="Bread info",
                     color=config.MAINCOLOR,
-                    description=f"**{selected['name']}**\n```{selected['description']}```\nCurrent Price: **{round(item.get_price(today))}** <:BreadCoin:815842873937100800>\n{bake_time_string}"
+                    description=f"**{selected['name']}**\n```{selected['description']}```\nCurrent Price: **{round(item.get_price(market.get_day_of_year_active()))}** <:BreadCoin:815842873937100800>\n{bake_time_string}"
                 )
                 embed.set_image(url="attachment://tempgraph.png")
                 embed.set_thumbnail(url=selected['image'])
