@@ -85,7 +85,7 @@ class Information(commands.Cog):
             pages = menus.MenuPages(source=InventoryMenu(user['inventory'], max=user.get('inventory_capacity', 25)), clear_reactions_after=True)
             await pages.start(ctx)
 
-    @commands.command(aliases=['timer', 'time', 'r'])
+    @commands.command(aliases=['timer', 'time', 'r', 'remindme', 'rm'])
     async def remind(self, ctx, *, args:str=None):
         user = config.get_user(ctx.author.id)
 
