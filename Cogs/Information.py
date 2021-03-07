@@ -106,7 +106,11 @@ class Information(commands.Cog):
                     message.append(word)
             else:
                 message.append(word)
-        remind_time = datetime.datetime.utcnow() + datetime.timedelta(days=time['d'], hours=time['h'], minutes=time['m'], seconds=time['s'])
+        length = datetime.timedelta(days=time['d'], hours=time['h'], minutes=time['m'], seconds=time['s'])
+        if length.total_seconds() < 1:
+            await ctx.reply("<:melonpan:815857424996630548> `Please tell me the timer length and note: e.g. 'pan remind 1h 2m 4s take out the bread'`")
+            return
+        remind_time = datetime.datetime.utcnow() + length
         message = " ".join(message)
 
         embed = discord.Embed(color=config.MAINCOLOR, timestamp=remind_time)
