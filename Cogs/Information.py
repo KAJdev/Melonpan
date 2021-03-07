@@ -58,7 +58,9 @@ class Information(commands.Cog):
             if timer['message'].strip(" ") == "":
                 timer['message'] = "No message provided."
             embed = discord.Embed(color=config.MAINCOLOR, title="Time's up!", description=timer['message'], timestamp=timer['created'])
-            embed.set_footer(text="This timer was scheduled at >")
+            if 'link' in timer:
+                embed.url = timer['link']
+            embed.set_footer(text="This timer was scheduled for")
 
             try:
                 await user.send(embed=embed)
@@ -108,9 +110,9 @@ class Information(commands.Cog):
         message = " ".join(message)
 
         embed = discord.Embed(color=config.MAINCOLOR, timestamp=remind_time)
-        embed.set_footer(text=f"I will DM you about '{message}' at >")
+        embed.set_footer(text=f"I will remind you about {message} at >")
 
-        config.TIMERS.insert_one({'owner': ctx.author.id, 'time': remind_time, 'created': datetime.datetime.utcnow(), 'message': message, 'id': ctx.message.id, 'sent': False, 'expired': False})
+        config.TIMERS.insert_one({'owner': ctx.author.id, 'link': ctx.message.jump_url, 'time': remind_time, 'created': datetime.datetime.utcnow(), 'message': message, 'id': ctx.message.id, 'sent': False, 'expired': False})
 
         await ctx.reply(embed=embed)
 
