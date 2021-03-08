@@ -113,12 +113,20 @@ def create_bread(bread):
         'quality': random.randint(1, 5)
     }
 
+def create_drop():
+    return random.choice(config.breads)
+
 quality_levels = {1: "☆☆☆☆", 2: "★☆☆☆", 3: "★★☆☆", 4: "★★★☆", 5: "★★★★"}
 stove_burning = {True: "<:stove_burning:815877702410043432>", False: "<:stove:815875824376610837>"}
 oven_cost = 150
 expand_cost = 250
 expand_amount = 5
 burn_time_multipier = 1.5
+drop_message_count = 80
+drop_time_constraint = 2
+drop_cooldown_min = 10
+special_drop = {True: 0xfcba03, False: 0xd3e647}
+
 
 current_collectables = [
     {'index': 1, 'price': 750},
@@ -165,6 +173,7 @@ breads = [
     {
         "name": "White Bread",
         "bakeable": True,
+        "special": False,
         "price": 20,
         "volitility": 0.5,
         "bake_time": 35,
@@ -174,6 +183,7 @@ breads = [
     {
         "name": "Whole Wheat",
         "bakeable": True,
+        "special": False,
         "price": 17,
         "volitility": 0.5,
         "bake_time": 30,
@@ -183,6 +193,7 @@ breads = [
     {
         "name": "Toast",
         "bakeable": True,
+        "special": False,
         "price": 5,
         "volitility": 0.8,
         "bake_time": 5,
@@ -192,6 +203,7 @@ breads = [
     {
         "name": "Banana Bread",
         "bakeable": True,
+        "special": False,
         "price": 31,
         "volitility": 0.4,
         "bake_time": 60,
@@ -201,6 +213,7 @@ breads = [
     {
         "name": "Baguette",
         "bakeable": True,
+        "special": False,
         "price": 25,
         "volitility": 0.3,
         "bake_time": 30,
@@ -210,6 +223,7 @@ breads = [
     {
         "name": "Pita Bread",
         "bakeable": True,
+        "special": False,
         "price": 10,
         "volitility": 0.5,
         "bake_time": 15,
@@ -219,6 +233,7 @@ breads = [
     {
         "name": "Sourdough Bread",
         "bakeable": True,
+        "special": False,
         "price": 91,
         "volitility": 0.2,
         "bake_time": 120,
@@ -228,6 +243,7 @@ breads = [
     {
         "name": "Bagel",
         "bakeable": True,
+        "special": False,
         "price": 13,
         "volitility": 0.4,
         "bake_time": 35,
@@ -237,6 +253,7 @@ breads = [
     {
         "name": "Melonpan",
         "bakeable": True,
+        "special": False,
         "price": 45,
         "volitility": 0.45,
         "bake_time": 30,
@@ -246,6 +263,7 @@ breads = [
     {
         "name": "Garlic Bread",
         "bakeable": True,
+        "special": False,
         "price": 11,
         "volitility": 0.5,
         "bake_time": 15,
@@ -255,6 +273,7 @@ breads = [
     {
         "name": "Blueberry Muffin",
         "bakeable": True,
+        "special": False,
         "price": 16,
         "volitility": 0.3,
         "bake_time": 24,
@@ -264,6 +283,7 @@ breads = [
     {
         "name": "Chocolate Muffin",
         "bakeable": True,
+        "special": False,
         "price": 16,
         "volitility": 0.8,
         "bake_time": 24,
@@ -273,10 +293,21 @@ breads = [
     {
         "name": "Charcoal",
         "bakeable": False,
+        "special": False,
         "price": 1,
         "volitility": 5,
         "bake_time": None,
         "image": "https://i.imgur.com/TNdRcis.png",
         "description": "Charcoal is a lightweight black carbon residue produced by strongly heating wood (or other animal and plant materials) in minimal oxygen to remove all water and volatile constituents. Created when bread burns."
+    },
+    {
+        "name": "Brioche",
+        "bakeable": False,
+        "special": True,
+        "price": 153,
+        "volitility": 0.5,
+        "bake_time": None,
+        "image": "https://i.imgur.com/9JMqhd2.png",
+        "description": "Brioche is a bread of French origin and whose high egg and butter content gives it a rich and tender crumb. Chef Joël Robuchon described it as \"light and slightly puffy, more or less fine, according to the proportion of butter and eggs.\""
     }
 ]
