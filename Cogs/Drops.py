@@ -64,11 +64,12 @@ class Drops(commands.Cog):
         if len(self.cache[message.channel.id][0]) > config.drop_message_count:
             self.cache[message.channel.id][0].pop(0)
         
-        if datetime.datetime.utcnow() - self.cache[message.channel.id][1] > datetime.timedelta(minutes=config.drop_cooldown_min):
+        if datetime.datetime.utcnow() - self.cache[message.channel.id][1] >= datetime.timedelta(minutes=config.drop_cooldown_min):
             count = 0
             for x in self.cache[message.channel.id][0]:
                 if datetime.datetime.utcnow() - x[1] > datetime.timedelta(minutes=config.drop_time_constraint):
                     count += 1
+            print(count)
             
             if count >= config.drop_message_count:
                 await self.send_drop_message(message)

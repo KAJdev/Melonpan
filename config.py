@@ -122,9 +122,9 @@ oven_cost = 150
 expand_cost = 250
 expand_amount = 5
 burn_time_multipier = 1.5
-drop_message_count = 80
+drop_message_count = 10
 drop_time_constraint = 2
-drop_cooldown_min = 10
+drop_cooldown_min = 0
 special_drop = {True: 0xfcba03, False: 0xd3e647}
 
 
