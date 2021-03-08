@@ -26,9 +26,11 @@ class Drops(commands.Cog):
         await msg.add_reaction("<:BreatHunter:815484321573896212>")
 
         def check(reaction, user):
+            if user.id == self.bot.user.id:
+                return false
             if reaction.message.id == msg.id and str(reaction.emoji) == "<:BreatHunter:815484321573896212>":
                 u = config.get_user(user.id)
-                if len(u['inventory']) >= u['inventory_capacity']:
+                if len(u['inventory']) >= u.get('inventory_capacity', 25):
                     return True
                 return False
             return False
