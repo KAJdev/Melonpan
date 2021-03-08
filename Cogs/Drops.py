@@ -18,7 +18,7 @@ class Drops(commands.Cog):
         await asyncio.sleep(5)
         drop = config.create_drop()
         embed = discord.Embed(color=config.special_drop[drop['special']], title=drop['name'])
-        embed.set_footer(text="React first to claim the free bread!")
+        embed.set_footer(text="React first to claim the free bread! | Disable commands/drops with pan blacklist")
         embed.set_author(name="Bread Drop")
         embed.set_image(url=drop['image'])
 
@@ -49,7 +49,7 @@ class Drops(commands.Cog):
 
         winner = config.get_user(member.id)
         config.USERS.update_one({'id': member.id}, {'$push': {'inventory': config.create_bread(drop)}})
-        embed.set_footer(text="This bread has already been claimed.")
+        embed.set_footer(text="This bread has already been claimed. | Disable commands/drops with pan blacklist")
         embed.description = f"{member.mention} has claimed the **{drop['name']}**!"
         await msg.edit(embed=embed)
 
