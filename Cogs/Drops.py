@@ -4,6 +4,7 @@ import config
 import traceback
 import datetime
 import market
+import asyncio
 
 from discord.ext import commands
 
@@ -14,6 +15,7 @@ class Drops(commands.Cog):
         self.cache = {}
     
     async def send_drop_message(self, message):
+        await asyncio.sleep(5)
         drop = config.create_drop()
         embed = discord.Embed(color=config.special_drop[drop['special']], title=drop['name'])
         embed.set_footer(text="React first to claim the free bread!")
@@ -72,8 +74,9 @@ class Drops(commands.Cog):
             print(count)
             
             if count >= config.drop_message_count:
-                await self.send_drop_message(message)
                 self.cache[message.channel.id][1] = datetime.datetime.utcnow()
+                await self.send_drop_message(message)
+                
         print(len(self.cache), len(self.cache[message.channel.id][0]))
 
 def setup(bot):
