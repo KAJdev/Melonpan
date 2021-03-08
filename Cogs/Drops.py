@@ -67,7 +67,8 @@ class Drops(commands.Cog):
         if datetime.datetime.utcnow() - self.cache[message.channel.id][1] >= datetime.timedelta(minutes=config.drop_cooldown_min):
             count = 0
             for x in self.cache[message.channel.id][0]:
-                if datetime.datetime.utcnow() - x[1] > datetime.timedelta(minutes=config.drop_time_constraint):
+                print(x)
+                if datetime.datetime.utcnow() - x[1] >= datetime.timedelta(minutes=config.drop_time_constraint):
                     count += 1
             print(count)
             
