@@ -73,7 +73,7 @@ class Drops(commands.Cog):
             if count >= config.drop_message_count:
                 await self.send_drop_message(message)
                 self.cache[message.channel.id][1] = datetime.datetime.utcnow()
-        print(self.cache)
+        print(len(self.cache))
 
 def setup(bot):
     bot.add_cog(Drops(bot))
