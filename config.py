@@ -114,7 +114,7 @@ def create_bread(bread):
     }
 
 def create_drop():
-    return random.choice(config.breads)
+    return random.choice(breads)
 
 quality_levels = {1: "☆☆☆☆", 2: "★☆☆☆", 3: "★★☆☆", 4: "★★★☆", 5: "★★★★"}
 stove_burning = {True: "<:stove_burning:815877702410043432>", False: "<:stove:815875824376610837>"}
@@ -122,7 +122,7 @@ oven_cost = 150
 expand_cost = 250
 expand_amount = 5
 burn_time_multipier = 1.5
-drop_message_count = 10
+drop_message_count = 80
 drop_time_constraint = 2
 drop_cooldown_min = 0
 special_drop = {True: 0xfcba03, False: 0xd3e647}
