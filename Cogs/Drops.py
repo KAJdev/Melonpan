@@ -74,7 +74,7 @@ class Drops(commands.Cog):
             print(count)
             
             if count >= config.drop_message_count:
-                self.cache[message.channel.id][1] = datetime.datetime.utcnow()
+                self.cache[message.channel.id] = ([], datetime.datetime.utcnow())
                 await self.send_drop_message(message)
                 
         print(len(self.cache), len(self.cache[message.channel.id][0]))
