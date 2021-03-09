@@ -169,6 +169,8 @@ class Information(commands.Cog):
         embed = discord.Embed(title="Melonpan Bot Info", color=config.MAINCOLOR, timestamp=datetime.datetime.utcnow())
         embed.set_thumbnail(url=str(self.bot.user.avatar_url))
 
+        embed.description = f"[Github Repo](https://github.com/kajdev/melonpan)\n[Home Server](https://discord.gg/bread)"
+
         u = 0
         for g in self.bot.guilds:
             u+=g.member_count
