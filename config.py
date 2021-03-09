@@ -308,6 +308,6 @@ breads = [
         "volitility": 0.5,
         "bake_time": None,
         "image": "https://i.imgur.com/9JMqhd2.png",
-        "description": "Brioche is a bread of French origin and whose high egg and butter content gives it a rich and tender crumb. Chef Joël Robuchon described it as \"light and slightly puffy, more or less fine, according to the proportion of butter and eggs.\""
+        "description": "Brioche is a bread of French origin and whose high egg and butter content gives it a rich and tender crumb. Can only be optained from bread drops in active channels."
     }
 ]
