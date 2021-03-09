@@ -113,6 +113,9 @@ class Information(commands.Cog):
         remind_time = datetime.datetime.utcnow() + length
         message = " ".join(message)
 
+        if message in [" ", "", None]:
+            message = "something"
+
         embed = discord.Embed(color=config.MAINCOLOR, timestamp=remind_time)
         embed.set_footer(text=f"I will remind you about {message} at >")
 
