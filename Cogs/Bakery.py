@@ -18,7 +18,12 @@ class Bakery(commands.Cog):
     async def bakery(self, ctx):
         user = config.get_user(ctx.author.id)
 
-        embed = discord.Embed(title="Your Bakery", color=config.MAINCOLOR, description = f"{config.stove_burning[False]} `{user['oven_count']}` Total Ovens\n{config.stove_burning[True]} `{len(user['ovens'])}` Baking Ovens\n{config.stove_burning[False]} `{user['oven_count'] - len(user['ovens'])}` Free Ovens")
+        baking = user['oven_count'] - len(user['ovens'])
+        for o in user['ovens']:
+            if o is None:
+                baking -= 1
+
+        embed = discord.Embed(title="Your Bakery", color=config.MAINCOLOR, description = f"{config.stove_burning[False]} `{user['oven_count']}` Total Ovens\n{config.stove_burning[True]} `{baking}` Baking Ovens\n{config.stove_burning[False]} `{user['oven_count'] - baking}` Free Ovens")
 
         for _ in range(user['oven_count']):
             try:
