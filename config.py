@@ -129,7 +129,7 @@ special_drop = {True: 0xfcba03, False: 0xd3e647}
 
 
 current_collectables = [
-    {'index': 1, 'price': 750},
+    {'index': 6, 'price': 1500},
     {'index': 2, 'price': 750},
     {'index': 4, 'price': 750}
 ]
