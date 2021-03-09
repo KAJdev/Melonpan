@@ -18,7 +18,7 @@ class Bakery(commands.Cog):
     async def bakery(self, ctx):
         user = config.get_user(ctx.author.id)
 
-        baking = user['oven_count'] - len(user['ovens'])
+        baking = len(user['ovens'])
         for o in user['ovens']:
             if o is None:
                 baking -= 1
