@@ -59,7 +59,7 @@ class Information(commands.Cog):
                 timer['message'] = "No message provided."
             embed = discord.Embed(color=config.MAINCOLOR, title="Time's up!", description=timer['message'], timestamp=timer['created'])
             if 'link' in timer:
-                embed.url = timer['link']
+                embed.description += f"\n\n[message link]({timer['link']})"
             embed.set_footer(text="This timer was scheduled for")
 
             try:
