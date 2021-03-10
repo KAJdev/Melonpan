@@ -18,9 +18,9 @@ class Drops(commands.Cog):
         await asyncio.sleep(5)
         drop = config.create_drop()
         embed = discord.Embed(color=config.special_drop[drop['special']], title=drop['name'])
-        embed.set_footer(text="React first to claim the free bread! | Disable commands/drops with pan blacklist")
+        embed.set_footer(text="React first to claim the free bread!\n\nDisable commands/drops with pan blacklist")
         embed.set_author(name="Bread Drop")
-        embed.set_image(url=drop['image'])
+        embed.set_thumbnail(url=drop['image'])
 
         msg = await message.channel.send(embed=embed)
         await msg.add_reaction("<:BreatHunter:815484321573896212>")
@@ -28,7 +28,6 @@ class Drops(commands.Cog):
         def check(reaction, user):
             if user.id == self.bot.user.id:
                 return False
-            print(str(reaction.emoji))
             if reaction.message.id == msg.id and str(reaction.emoji) == "<:BreatHunter:815484321573896212>":
                 u = config.get_user(user.id)
                 if len(u['inventory']) < u.get('inventory_capacity', 25):
@@ -48,8 +47,9 @@ class Drops(commands.Cog):
             pass
 
         winner = config.get_user(member.id)
+        print(f"DROP_CLAIM: #{message.channel.name} ({member})")
         config.USERS.update_one({'id': member.id}, {'$push': {'inventory': config.create_bread(drop)}})
-        embed.set_footer(text="This bread has already been claimed. | Disable commands/drops with pan blacklist")
+        embed.set_footer(text="This bread has already been claimed.\n\nDisable commands/drops with pan blacklist")
         embed.description = f"{member.mention} has claimed the **{drop['name']}**!"
         await msg.edit(embed=embed)
 
@@ -74,13 +74,11 @@ class Drops(commands.Cog):
             for x in self.cache[message.channel.id][0]:
                 if datetime.datetime.utcnow() - x[1] <= datetime.timedelta(minutes=config.drop_time_constraint):
                     count += 1
-            print(count)
             
             if count >= config.drop_message_count:
                 self.cache[message.channel.id] = ([], datetime.datetime.utcnow())
+                print(f"DROP: #{message.channel.name} ({message.guild.name})")
                 await self.send_drop_message(message)
-                
-        print(len(self.cache), len(self.cache[message.channel.id][0]))
 
 def setup(bot):
     bot.add_cog(Drops(bot))
