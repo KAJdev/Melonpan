@@ -7,27 +7,22 @@ import random
 import asyncio
 import market
 
-from discord.ext import commands, tasks
+from discord.ext import commands, tasks, menus
 
-class Bakery(commands.Cog):
+class BakeryMenu(menus.ListPageSource):
+    def __init__(self, data, total, baking, user):
+        super().__init__(data, per_page=9)
+        self.total = total
+        self.baking = baking
+        self.free = total - baking
+        self.user = user
 
-    def __init__(self, bot):
-        self.bot = bot
-    
-    @commands.command()
-    async def bakery(self, ctx):
-        user = config.get_user(ctx.author.id)
-
-        baking = len(user['ovens'])
-        for o in user['ovens']:
-            if o is None:
-                baking -= 1
-
-        embed = discord.Embed(title="Your Bakery", color=config.MAINCOLOR, description = f"{config.stove_burning[False]} `{user['oven_count']}` Total Ovens\n{config.stove_burning[True]} `{baking}` Baking Ovens\n{config.stove_burning[False]} `{user['oven_count'] - baking}` Free Ovens")
-
-        for _ in range(user['oven_count']):
+    async def format_page(self, menu, entries):
+        offset = menu.current_page * self.per_page
+        embed = discord.Embed(title="Your Bakery", color=config.MAINCOLOR, description = f"{config.stove_burning[False]} `{self.total}` Total Ovens\n{config.stove_burning[True]} `{self.baking}` Baking Ovens\n{config.stove_burning[False]} `{self.free}` Free Ovens")
+        for i, v in enumerate(entries, start=offset):
             try:
-                current = user['ovens'][_]
+                current = self.user['ovens'][i]
             except IndexError:
                 current = None
 
@@ -47,20 +42,40 @@ class Bakery(commands.Cog):
                     embed.add_field(name=f"{config.stove_burning[True]}", value=f"**{current['name']}**\nplate with `pan plate`.")
                 elif s <= 0 and b <= 0:
                     embed.add_field(name=f"{config.stove_burning[False]} <:BreadWarning:815842874226245643> `BURNED`", value=f"**{current['name']}**\nplate with `pan plate`.")
-
-        if user['oven_count'] < 24:
-            embed.add_field(name=f"<:BreadStaff:815484321590804491>", value=f"`pan build`\nCost: `{user['oven_count'] * config.oven_cost}` <:BreadCoin:815842873937100800>")
-        
+        embed.add_field(name=f"<:BreadStaff:815484321590804491>", value=f"`pan build`\nCost: `{self.user['oven_count'] * config.oven_cost}` <:BreadCoin:815842873937100800>", inline=False)
         embed.set_footer(text="pan bake <bread> | pan plate")
-        await ctx.reply_safe(embed=embed)
+        return embed
+
+class Bakery(commands.Cog):
+
+    def __init__(self, bot):
+        self.bot = bot
+    
+    @commands.command()
+    async def bakery(self, ctx):
+        user = config.get_user(ctx.author.id)
+
+        baking = len(user['ovens'])
+        for o in user['ovens']:
+            if o is None:
+                baking -= 1
+
+        for _ in range(user.get('oven_count', 2)):
+            try:
+                x = user['ovens'][_]
+            except IndexError:
+                user['ovens'].append(None)
+
+        pages = menus.MenuPages(source=BakeryMenu(user['ovens'], user['oven_count'], baking, user), clear_reactions_after=True)
+        await pages.start(ctx)
 
     @commands.command()
     async def build(self, ctx):
         user = config.get_user(ctx.author.id)
 
-        if user['oven_count'] >= 24:
-            await ctx.reply_safe("<:melonpan:815857424996630548> `You have built the maximum amount of ovens!`")
-            return
+        # if user['oven_count'] >= 24:
+        #     await ctx.reply_safe("<:melonpan:815857424996630548> `You have built the maximum amount of ovens!`")
+        #     return
 
         cost = user['oven_count'] * config.oven_cost
 
