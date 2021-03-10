@@ -18,6 +18,15 @@ async def get_prefix(bot, message):
     li = ['pan ', 'Pan ', 'PaN ', 'pAn ', 'paN ', 'PAn ', 'PaN ', 'PAn ', 'PAN ']
     return commands.when_mentioned_or(*li)(bot, message)
 
+intents = discord.Intents.default()
+#intents.members = True
+
+# Set prefix and set case insensitive to true so the a command will work if miscapitlized
+bot = commands.Bot(command_prefix = get_prefix, case_insensitive = True, intents=intents)
+
+# Remove default help command
+bot.remove_command("help")
+
 class CustomContext(commands.Context):
     async def reply_safe(self, content=None, **kwargs):
         try:
@@ -29,16 +38,6 @@ class CustomContext(commands.Context):
 async def on_message(message):
     ctx = await self.get_context(message, cls=CustomContext)
     await self.invoke(ctx)
-
-
-intents = discord.Intents.default()
-#intents.members = True
-
-# Set prefix and set case insensitive to true so the a command will work if miscapitlized
-bot = commands.Bot(command_prefix = get_prefix, case_insensitive = True, intents=intents)
-
-# Remove default help command
-bot.remove_command("help")
 
 @bot.command(aliases=['settings', 'h'])
 async def help(ctx):
