@@ -347,7 +347,7 @@ breads = [
         "sellable": False,
         "buyable": True,
         "price": 45,
-        "volitility": 2,
+        "volitility": 0.5,
         "bake_time": None,
         "image": "https://i.imgur.com/7Vl2q0y.png",
         "description": "A container that holds bread. Can be opened with 'pan open'"
