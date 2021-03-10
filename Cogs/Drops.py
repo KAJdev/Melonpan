@@ -51,6 +51,7 @@ class Drops(commands.Cog):
         config.USERS.update_one({'id': member.id}, {'$push': {'inventory': config.create_bread(drop)}})
         embed.set_footer(text="This bread has already been claimed.\n\nDisable commands/drops with pan blacklist")
         embed.description = f"{member.mention} has claimed the **{drop['name']}**!"
+        embed.color = 0x2f3136
         await msg.edit(embed=embed)
 
     @commands.command()
