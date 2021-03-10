@@ -39,6 +39,11 @@ async def on_message(message):
     ctx = await bot.get_context(message, cls=CustomContext)
     await bot.invoke(ctx)
 
+@bot.event
+async def on_message_edit(before, after):
+    ctx = await bot.get_context(after, cls=CustomContext)
+    await bot.invoke(ctx)
+
 @bot.command(aliases=['settings', 'h'])
 async def help(ctx):
     await ctx.send(embed=discord.Embed(
