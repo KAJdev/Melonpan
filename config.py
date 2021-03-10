@@ -1,5 +1,6 @@
 # Imports
 import pymongo
+import datetime
 import discord
 import random
 import os
@@ -110,7 +111,8 @@ def get_server(id):
 def create_bread(bread):
     return {
         'index': breads.index(bread),
-        'quality': random.randint(1, 5)
+        'quality': random.randint(1, 5),
+        'created': datetime.datetime.utcnow()
     }
 
 def create_drop():
@@ -345,7 +347,7 @@ breads = [
         "sellable": False,
         "buyable": True,
         "price": 45,
-        "volitility": 0.8,
+        "volitility": 2,
         "bake_time": None,
         "image": "https://i.imgur.com/7Vl2q0y.png",
         "description": "A container that holds bread. Can be opened with 'pan open'"

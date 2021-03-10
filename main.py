@@ -38,7 +38,7 @@ async def help(ctx):
         inline=False
     ).add_field(
         name="Bakery",
-        value="`bakery`, `bake`, `bakeall`, `plate`, `build`, `expand`",
+        value="`bakery`, `bake`, `bakeall`, `plate`, `build`, `expand`, `open`",
         inline=False
     ).add_field(
         name="Market",
@@ -55,7 +55,7 @@ async def invite(ctx):
     await ctx.send(embed=discord.Embed(description="[**Invite Link**](https://discord.com/api/oauth2/authorize?client_id=815835732979220501&permissions=314433&scope=bot) 🔗", color = config.MAINCOLOR))
 
 # Cogs
-cogs = ["Eval", "Information", "Market", "Bakery", "StatCord", "Leaderboards", "Badges", "Blacklist", "Drops"]
+cogs = ["Eval", "Information", "Market", "Bakery", "StatCord", "Leaderboards", "Badges", "Blacklist", "Drops", "LootBoxes"]
 
 # Starts all cogs
 for cog in cogs:
