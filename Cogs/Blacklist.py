@@ -15,10 +15,10 @@ class Blacklist(commands.Cog):
     @commands.command(aliases=['bl'], ignore_extra=True)
     async def blacklist(self, ctx, channel:discord.TextChannel=None):
         if ctx.guild is None:
-            await ctx.reply("<:melonpan:815857424996630548> `This command can only be used in a guild.`")
+            await ctx.reply_safe("<:melonpan:815857424996630548> `This command can only be used in a guild.`")
             return
         if not ctx.author.guild_permissions.manage_guild:
-            await ctx.reply("<:melonpan:815857424996630548> `You must have the 'manage guild' permission to use this command.`")
+            await ctx.reply_safe("<:melonpan:815857424996630548> `You must have the 'manage guild' permission to use this command.`")
             return
         server = config.get_server(ctx.guild.id)
         if channel is None:
@@ -30,20 +30,20 @@ class Blacklist(commands.Cog):
             if desc == "":
                 desc = "No blacklisted channels. Add/Remove one with `pan blacklist <channel>`"
             embed = discord.Embed(title="Blacklisted Channels", color=config.MAINCOLOR, description=desc)
-            await ctx.reply(embed=embed)
+            await ctx.reply_safe(embed=embed)
         else:
             if channel.id in server['blacklist']:
                 config.SERVERS.update_one({'id': server['id']}, {'$pull': {'blacklist': channel.id}})
-                await ctx.reply(f"{channel.mention} was unblacklisted. Commands **will** work there once again.")
+                await ctx.reply_safe(f"{channel.mention} was unblacklisted. Commands **will** work there once again.")
             else:
                 config.SERVERS.update_one({'id': server['id']}, {'$push': {'blacklist': channel.id}})
-                await ctx.reply(f"{channel.mention} was blacklisted. Commands will **no longer** work there.")
+                await ctx.reply_safe(f"{channel.mention} was blacklisted. Commands will **no longer** work there.")
             config.update_server_cache(ctx.guild.id)
     
     @blacklist.error
     async def blacklist_error(self, ctx, error):
         if isinstance(error, commands.errors.UserInputError):
-            await ctx.reply("You must specify a channel.")
+            await ctx.reply_safe("You must specify a channel.")
         else:
             raise error
 

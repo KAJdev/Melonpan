@@ -23,10 +23,10 @@ class LootBoxes(commands.Cog):
                 box = i
                 break
         if box is None:
-            await ctx.reply("<:melonpan:815857424996630548> `You do not have any BreadBoxes. Buy some from the 'pan shop'.`")
+            await ctx.reply_safe("<:melonpan:815857424996630548> `You do not have any BreadBoxes. Buy some from the 'pan shop'.`")
             return
         
-        msg = await ctx.reply(embed=discord.Embed(title="Opening a breadbox...", color=config.MAINCOLOR))
+        msg = await ctx.reply_safe(embed=discord.Embed(title="Opening a breadbox...", color=config.MAINCOLOR))
 
         await asyncio.sleep(1.5)
 

@@ -82,7 +82,7 @@ class Information(commands.Cog):
                 description=desc
             )
             embed.set_footer(text=f"Showing 0/0")
-            await ctx.reply(embed=embed)
+            await ctx.reply_safe(embed=embed)
         else:
             pages = menus.MenuPages(source=InventoryMenu(user['inventory'], max=user.get('inventory_capacity', 25)), clear_reactions_after=True)
             await pages.start(ctx)
@@ -92,7 +92,7 @@ class Information(commands.Cog):
         user = config.get_user(ctx.author.id)
 
         if args is None:
-            await ctx.reply("<:melonpan:815857424996630548> `Please tell me the timer length and note: e.g. 'pan remind 1h 2m 4s take out the bread'`")
+            await ctx.reply_safe("<:melonpan:815857424996630548> `Please tell me the timer length and note: e.g. 'pan remind 1h 2m 4s take out the bread'`")
             return
 
         splitted = args.split(" ")
@@ -108,7 +108,7 @@ class Information(commands.Cog):
                 message.append(word)
         length = datetime.timedelta(days=time['d'], hours=time['h'], minutes=time['m'], seconds=time['s'])
         if length.total_seconds() < 1:
-            await ctx.reply("<:melonpan:815857424996630548> `Please tell me the timer length and note: e.g. 'pan remind 1h 2m 4s take out the bread'`")
+            await ctx.reply_safe("<:melonpan:815857424996630548> `Please tell me the timer length and note: e.g. 'pan remind 1h 2m 4s take out the bread'`")
             return
         remind_time = datetime.datetime.utcnow() + length
         message = " ".join(message)
@@ -121,7 +121,7 @@ class Information(commands.Cog):
 
         config.TIMERS.insert_one({'owner': ctx.author.id, 'link': ctx.message.jump_url, 'time': remind_time, 'created': datetime.datetime.utcnow(), 'message': message, 'id': ctx.message.id, 'sent': False, 'expired': False})
 
-        await ctx.reply(embed=embed)
+        await ctx.reply_safe(embed=embed)
 
     @commands.command(aliases=['timers'])
     async def reminders(self, ctx):
@@ -143,7 +143,7 @@ class Information(commands.Cog):
 
         embed = discord.Embed(color=config.MAINCOLOR, title="Timers", description = desc)
 
-        await ctx.reply(embed=embed)
+        await ctx.reply_safe(embed=embed)
 
     @commands.command(aliases=['money', 'balance', 'm'])
     async def bal(self, ctx, member : discord.Member = None):
@@ -165,7 +165,7 @@ class Information(commands.Cog):
             color=config.MAINCOLOR
         )
 
-        await ctx.reply(embed=embed)
+        await ctx.reply_safe(embed=embed)
 
     @commands.command(aliases=['about'])
     async def info(self, ctx):

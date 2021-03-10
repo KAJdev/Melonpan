@@ -18,6 +18,19 @@ async def get_prefix(bot, message):
     li = ['pan ', 'Pan ', 'PaN ', 'pAn ', 'paN ', 'PAn ', 'PaN ', 'PAn ', 'PAN ']
     return commands.when_mentioned_or(*li)(bot, message)
 
+class CustomContext(commands.Context):
+    async def reply_safe(self, content=None, **kwargs):
+        try:
+            return await self.reply(content=content, **kwargs)
+        except discord.errors.HTTPException:
+            return await self.send(content=content, **kwargs)
+
+@bot.event
+async def on_message(self, message):
+    ctx = await self.get_context(message, cls=CustomContext)
+    await self.invoke(ctx)
+
+
 intents = discord.Intents.default()
 #intents.members = True
 

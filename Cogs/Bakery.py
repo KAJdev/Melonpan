@@ -52,44 +52,44 @@ class Bakery(commands.Cog):
             embed.add_field(name=f"<:BreadStaff:815484321590804491>", value=f"`pan build`\nCost: `{user['oven_count'] * config.oven_cost}` <:BreadCoin:815842873937100800>")
         
         embed.set_footer(text="pan bake <bread> | pan plate")
-        await ctx.reply(embed=embed)
+        await ctx.reply_safe(embed=embed)
 
     @commands.command()
     async def build(self, ctx):
         user = config.get_user(ctx.author.id)
 
         if user['oven_count'] >= 24:
-            await ctx.reply("<:melonpan:815857424996630548> `You have built the maximum amount of ovens!`")
+            await ctx.reply_safe("<:melonpan:815857424996630548> `You have built the maximum amount of ovens!`")
             return
 
         cost = user['oven_count'] * config.oven_cost
 
         if user['money'] < cost:
-            await ctx.reply("<:melonpan:815857424996630548> `You don't have enough BreadCoin to build a new oven.`")
+            await ctx.reply_safe("<:melonpan:815857424996630548> `You don't have enough BreadCoin to build a new oven.`")
             return
         
         config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -cost, 'oven_count': 1}})
-        await ctx.reply("<:melonpan:815857424996630548> You have built a new oven! View it with `pan bakery`.")
+        await ctx.reply_safe("<:melonpan:815857424996630548> You have built a new oven! View it with `pan bakery`.")
 
     @commands.command()
     async def expand(self, ctx):
         user = config.get_user(ctx.author.id)
 
         # if user.get('inventory_capacity', 25) >= 100:
-        #     await ctx.reply("<:melonpan:815857424996630548> `You have expanded your storage capacity to the max!`")
+        #     await ctx.reply_safe("<:melonpan:815857424996630548> `You have expanded your storage capacity to the max!`")
         #     return
 
         cost = int((user.get('inventory_capacity', 25)/config.expand_amount) * config.expand_cost)
 
         if user['money'] < cost:
-            await ctx.reply("<:melonpan:815857424996630548> `You don't have enough BreadCoin to expand your storage capacity.`")
+            await ctx.reply_safe("<:melonpan:815857424996630548> `You don't have enough BreadCoin to expand your storage capacity.`")
             return
 
         if 'inventory_capacity' in user.keys():
             config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -cost, 'inventory_capacity': config.expand_amount}})
         else:
             config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -cost}, '$set': {'inventory_capacity': 25 + config.expand_amount}})
-        await ctx.reply(f"<:melonpan:815857424996630548> You have expanded your inventory capacity by `{config.expand_amount}` slots. You can now store `{user.get('inventory_capacity', 25) + config.expand_amount}` items.")
+        await ctx.reply_safe(f"<:melonpan:815857424996630548> You have expanded your inventory capacity by `{config.expand_amount}` slots. You can now store `{user.get('inventory_capacity', 25) + config.expand_amount}` items.")
 
     @commands.command(aliases=['ba'])
     async def bakeall(self, ctx, *, bread:str=None):
@@ -143,7 +143,7 @@ class Bakery(commands.Cog):
             user['baked'][str(bake_obj['index'])] = user['baked'].get(str(bake_obj['index']), 0) + amount
 
             config.USERS.update_one({'id': user['id']}, {'$set': {'ovens': user['ovens'], 'baked': user['baked']}})
-            await ctx.reply(f"{config.stove_burning[True]} {amount} **{bake_obj['name']}s** are now baking! use `pan bakery` to check on them, and `pan plate` to take them out when they are done.")
+            await ctx.reply_safe(f"{config.stove_burning[True]} {amount} **{bake_obj['name']}s** are now baking! use `pan bakery` to check on them, and `pan plate` to take them out when they are done.")
 
 
     @commands.command()
@@ -197,7 +197,7 @@ class Bakery(commands.Cog):
             user['baked'][str(bake_obj['index'])] = user['baked'].get(str(bake_obj['index']), 0) + 1
             
             config.USERS.update_one({'id': user['id']}, {'$set': {'ovens': user['ovens']}})
-            await ctx.reply(f"{config.stove_burning[True]} Your **{bake_obj['name']}** is now baking! use `pan bakery` to check on it, and `pan plate` to take it out when it's done.")
+            await ctx.reply_safe(f"{config.stove_burning[True]} Your **{bake_obj['name']}** is now baking! use `pan bakery` to check on it, and `pan plate` to take it out when it's done.")
 
     @commands.command(aliases=['p'])
     async def plate(self, ctx):
@@ -239,7 +239,7 @@ class Bakery(commands.Cog):
         embed = discord.Embed(color=config.MAINCOLOR, title="Plated Bread", description=ending)
         if cutoff:
             embed.description += "\n*Some ovens were not emptied because your bread storage is full. Please sell some bread.*"
-        await ctx.reply(embed=embed)
+        await ctx.reply_safe(embed=embed)
         
 
 
