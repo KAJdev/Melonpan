@@ -174,6 +174,7 @@ badges = [
 breads = [
     {
         "name": "White Bread",
+        "emoji": "<:white_bread:819129168850583552>",
         "bakeable": True,
         "special": False,
         "sellable": True,
@@ -186,6 +187,7 @@ breads = [
     },
     {
         "name": "Whole Wheat",
+        "emoji": "<:whole_wheat:819131214594048030>",
         "bakeable": True,
         "special": False,
         "sellable": True,
@@ -198,6 +200,7 @@ breads = [
     },
     {
         "name": "Toast",
+        "emoji": "<:toast:819129414793166868>",
         "bakeable": True,
         "special": False,
         "sellable": True,
@@ -210,6 +213,7 @@ breads = [
     },
     {
         "name": "Banana Bread",
+        "emoji": "<:banana_bread:819131489433419817>",
         "bakeable": True,
         "special": False,
         "sellable": True,
@@ -222,6 +226,7 @@ breads = [
     },
     {
         "name": "Baguette",
+        "emoji": "<:baguette:819131667037159464>",
         "bakeable": True,
         "special": False,
         "sellable": True,
@@ -234,6 +239,7 @@ breads = [
     },
     {
         "name": "Pita Bread",
+        "emoji": "<:pita_bread:819131735010574337>",
         "bakeable": True,
         "special": False,
         "sellable": True,
@@ -246,6 +252,7 @@ breads = [
     },
     {
         "name": "Sourdough Bread",
+        "emoji": "<:sourdough_bread:819131758300627014>",
         "bakeable": True,
         "special": False,
         "sellable": True,
@@ -258,6 +265,7 @@ breads = [
     },
     {
         "name": "Bagel",
+        "emoji": "<:bagel:819131780820107264>",
         "bakeable": True,
         "special": False,
         "sellable": True,
@@ -270,6 +278,7 @@ breads = [
     },
     {
         "name": "Melonpan",
+        "emoji": "<:melonpan:819131804178055179>",
         "bakeable": True,
         "special": False,
         "sellable": True,
@@ -282,6 +291,7 @@ breads = [
     },
     {
         "name": "Garlic Bread",
+        "emoji": "<:garlic_bread:819131821094338611>",
         "bakeable": True,
         "special": False,
         "sellable": True,
@@ -294,6 +304,7 @@ breads = [
     },
     {
         "name": "Blueberry Muffin",
+        "emoji": "<:blueberry_muffin:819132025176850445>",
         "bakeable": True,
         "special": False,
         "sellable": True,
@@ -306,6 +317,7 @@ breads = [
     },
     {
         "name": "Chocolate Muffin",
+        "emoji": "<:chocolate_muffin:819132090820853760>",
         "bakeable": True,
         "special": False,
         "sellable": True,
@@ -318,6 +330,7 @@ breads = [
     },
     {
         "name": "Charcoal",
+        "emoji": "<:charcoal:819132229044928552>",
         "bakeable": False,
         "special": False,
         "sellable": True,
@@ -330,6 +343,7 @@ breads = [
     },
     {
         "name": "Brioche",
+        "emoji": "<:brioche:819132331977736213>",
         "bakeable": False,
         "special": True,
         "sellable": True,
@@ -342,6 +356,7 @@ breads = [
     },
     {
         "name": "BreadBox",
+        "emoji": "<:breadbox:819132627843416074>",
         "bakeable": False,
         "special": True,
         "sellable": False,

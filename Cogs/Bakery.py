@@ -221,6 +221,9 @@ class Bakery(commands.Cog):
         ending = ""
         cutoff = False
 
+        regular = {}
+        burned = {}
+
         for o in user['ovens']:
             if o is not None:
                 s = (o['done'] - datetime.datetime.utcnow()).total_seconds()
@@ -234,7 +237,7 @@ class Bakery(commands.Cog):
                         break
                     new_bread = config.create_bread(config.breads[o['index']])
                     user['inventory'].append(new_bread)
-                    ending += f"+ `{config.quality_levels[new_bread['quality']]}` **{o['name']}**\n"
+                    regular[o['index']] = regular.get(o['index'], 0) + 1
                     user['ovens'][user['ovens'].index(o)] = None
                 elif s <= 0 and b <= 0:
                     if len(user['inventory']) >= user.get('inventory_capacity', 25):
@@ -242,9 +245,13 @@ class Bakery(commands.Cog):
                         break
                     new_bread = config.create_bread(config.breads[12])
                     user['inventory'].append(new_bread)
-                    ending += f"+ `{config.quality_levels[new_bread['quality']]}` **Burned {o['name']}** (Charcoal)\n"
+                    burned[o['index']] = burned.get(o['index'], 0) + 1
                     user['ovens'][user['ovens'].index(o)] = None
 
+        for index, amount in regular.items():
+            ending += f"+ `{amount}x` {config.breads[index]['emoji']} **{config.breads[index]['name']}**\n"
+        for index, amount in burned.items():
+            ending += f"+ `{amount}x` {config.breads[12]['emoji']} **Burned {config.breads[index]['name']}** (Charcoal)\n"
         
         config.USERS.update_one({'id': user['id']}, {'$set': {'inventory': user['inventory'], 'ovens': user['ovens']}})
 

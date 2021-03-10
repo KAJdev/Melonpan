@@ -56,7 +56,7 @@ class LootBoxes(commands.Cog):
         to_add = []
         for _ in loot:
             b = config.create_bread(_)
-            desc += f"+ `{config.quality_levels[b['quality']]}` **{_['name']}**\n"
+            desc += f"+ {_['emoji']} **{_['name']}**\n"
             to_add.append(b)
 
         config.USERS.update_one({'id': user['id']}, {'$push': {'inventory': {'$each': to_add}}})
