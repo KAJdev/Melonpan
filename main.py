@@ -36,8 +36,8 @@ class CustomContext(commands.Context):
 
 @bot.event
 async def on_message(message):
-    ctx = await self.get_context(message, cls=CustomContext)
-    await self.invoke(ctx)
+    ctx = await bot.get_context(message, cls=CustomContext)
+    await bot.invoke(ctx)
 
 @bot.command(aliases=['settings', 'h'])
 async def help(ctx):
