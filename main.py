@@ -26,7 +26,7 @@ class CustomContext(commands.Context):
             return await self.send(content=content, **kwargs)
 
 @bot.event
-async def on_message(self, message):
+async def on_message(message):
     ctx = await self.get_context(message, cls=CustomContext)
     await self.invoke(ctx)
 
