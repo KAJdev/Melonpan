@@ -43,7 +43,7 @@ class BakeryMenu(menus.ListPageSource):
                 elif s <= 0 and b <= 0:
                     embed.add_field(name=f"{config.stove_burning[False]} <:BreadWarning:815842874226245643> `BURNED`", value=f"**{current['name']}**\nplate with `pan plate`.")
         embed.add_field(name=f"<:BreadStaff:815484321590804491>", value=f"`pan build`\nCost: `{self.user['oven_count'] * config.oven_cost}` <:BreadCoin:815842873937100800>", inline=False)
-        embed.set_footer(text="pan bake <bread> | pan plate")
+        embed.set_footer(text=f"Showing {menu.current_page + 1}/{menu._source.get_max_pages()}\n\npan bake <bread> | pan plate")
         return embed
 
 class Bakery(commands.Cog):
