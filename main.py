@@ -36,11 +36,15 @@ class CustomContext(commands.Context):
 
 @bot.event
 async def on_message(message):
+    if message.content.lower().startswith("pan sell all"):
+        message.content = "pan sellall" + message.content[12:]
     ctx = await bot.get_context(message, cls=CustomContext)
     await bot.invoke(ctx)
 
 @bot.event
 async def on_message_edit(before, after):
+    if after.content.lower().startswith("pan sell all"):
+        after.content = "pan sellall" + after.content[12:]
     ctx = await bot.get_context(after, cls=CustomContext)
     await bot.invoke(ctx)
 
