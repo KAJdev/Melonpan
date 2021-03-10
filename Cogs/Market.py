@@ -45,6 +45,8 @@ class Market(commands.Cog):
                 pass
         if selected is None:
             await ctx.send("<:melonpan:815857424996630548> `That bread doesn't look like it's on sale today...`")
+        elif not selected['buyable']:
+            await ctx.send("<:melonpan:815857424996630548> `That cannot be purchased.`")
         else:
             try:
                 amount = abs(int(amount))
@@ -162,6 +164,8 @@ class Market(commands.Cog):
                 pass
         if selected is None:
             await ctx.send("<:melonpan:815857424996630548> `That bread doesn't look like it's on the market today...`")
+        elif not selected['sellable']:
+            await ctx.send("<:melonpan:815857424996630548> `That cannot be sold.`")
         else:
             try:
                 amount = abs(int(amount))
@@ -210,6 +214,8 @@ class Market(commands.Cog):
             total = 0
             desc = "```************\nSOLD RECEIPT\n************\nDescription"
             for on_sale in display:
+                if not on_sale['sellable']:
+                    continue
                 item_price = market.ItemPrice(on_sale['price'], on_sale['volitility'], config.breads.index(on_sale))
                 today_price = round(item_price.get_price(market.get_day_of_year_active()))
 
@@ -257,6 +263,8 @@ class Market(commands.Cog):
                     pass
             if selected is None:
                 await ctx.send("<:melonpan:815857424996630548> `That bread doesn't look like it's on the market today...`")
+            elif not selected['sellable']:
+                await ctx.send("<:melonpan:815857424996630548> `That cannot be sold.`")
             else:
                 item_price = market.ItemPrice(selected['price'], selected['volitility'], config.breads.index(selected))
                 today_price = round(item_price.get_price(market.get_day_of_year_active()))
@@ -338,58 +346,70 @@ class Market(commands.Cog):
             if selected is None:
                 await ctx.send("<:melonpan:815857424996630548> `That bread hasn't been heard of before...`")
             else:
-                item = market.ItemPrice(selected['price'], selected['volitility'], config.breads.index(selected))
-
-                prices = []
-                for _ in range(1, 61):
-                    day = market.get_day_of_year_active() - _
-                    if day < 1:
-                        day += 365
-                    prices.append(item.get_price(day))
-
-                fig, ax = plt.subplots(figsize=(8, 2),frameon=False)
-                #ax.axis('off')
-                fig.patch.set_visible(False)
-
-                x = np.array(list(range(1, 61)))
-                y = np.array(prices)
-
-                #define x as 200 equally spaced values between the min and max of original x
-                xnew = np.linspace(x.min(), x.max(), 125)
-
-                #define spline
-                spl = make_interp_spline(x, y, k=3)
-                y_smooth = spl(xnew)
-
-                ax.plot(xnew, y_smooth)
-                #ax.plot(x, y)
-
-                #ax.set(ylabel='Price (Orth)')
-
-                ax.spines['bottom'].set_color('white')
-                ax.spines['top'].set_color('white')
-                ax.spines['right'].set_color('white')
-                ax.spines['left'].set_color('white')
-                ax.yaxis.label.set_color('white')
-                ax.xaxis.label.set_color('white')
-                ax.tick_params(axis='x', colors='white')
-                ax.tick_params(axis='y', colors='white')
-
-                fig.savefig("tempgraph.png", transparent=True, bbox_inches='tight')
-
-                file = discord.File("tempgraph.png") # an image in the same folder as the main bot file
-
                 if selected['bake_time'] is not None:
                     bake_time_string = f"Bake Time: **{selected['bake_time']} min.**"
                 else:
-                    bake_time_string = "Bake Time: **None**"
+                    bake_time_string = "This cannot be baked."
 
                 embed = discord.Embed(
                     title="Bread info",
                     color=config.MAINCOLOR,
-                    description=f"**{selected['name']}**\n```{selected['description']}```\nCurrent Price: **{round(item.get_price(market.get_day_of_year_active()))}** <:BreadCoin:815842873937100800>\n{bake_time_string}"
+                    description=f"**{selected['name']}**\n```{selected['description']}```\n{bake_time_string}"
                 )
-                embed.set_image(url="attachment://tempgraph.png")
+
+                if selected['buyable'] or selected['sellable']:
+                    item = market.ItemPrice(selected['price'], selected['volitility'], config.breads.index(selected))
+
+                    prices = []
+                    for _ in range(1, 61):
+                        day = market.get_day_of_year_active() - _
+                        if day < 1:
+                            day += 365
+                        prices.append(item.get_price(day))
+
+                    fig, ax = plt.subplots(figsize=(8, 2),frameon=False)
+                    #ax.axis('off')
+                    fig.patch.set_visible(False)
+
+                    x = np.array(list(range(1, 61)))
+                    y = np.array(prices)
+
+                    #define x as 200 equally spaced values between the min and max of original x
+                    xnew = np.linspace(x.min(), x.max(), 125)
+
+                    #define spline
+                    spl = make_interp_spline(x, y, k=3)
+                    y_smooth = spl(xnew)
+
+                    ax.plot(xnew, y_smooth)
+                    #ax.plot(x, y)
+
+                    #ax.set(ylabel='Price (Orth)')
+
+                    ax.spines['bottom'].set_color('white')
+                    ax.spines['top'].set_color('white')
+                    ax.spines['right'].set_color('white')
+                    ax.spines['left'].set_color('white')
+                    ax.yaxis.label.set_color('white')
+                    ax.xaxis.label.set_color('white')
+                    ax.tick_params(axis='x', colors='white')
+                    ax.tick_params(axis='y', colors='white')
+
+                    fig.savefig("tempgraph.png", transparent=True, bbox_inches='tight')
+
+                    file = discord.File("tempgraph.png") # an image in the same folder as the main bot file
+                    embed.set_image(url="attachment://tempgraph.png")
+                    embed.description += f"\nCurrent Price: **{round(item.get_price(market.get_day_of_year_active()))}** <:BreadCoin:815842873937100800>"
+
+                    random.seed(today)
+                    display = random.sample(config.breads, k=9)
+                    if selected not in display:
+                        embed.description += "\n*Currently not for sale.*"
+
+                    if not selected['buyable']:
+                        embed.description += "\n\n**Can only be sold**"
+                    elif not selected['sellable']:
+                        embed.description += "\n\n**Can only be purchased**"    
                 embed.set_thumbnail(url=selected['image'])
 
                 await ctx.send(embed=embed, file=file)
