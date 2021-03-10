@@ -53,6 +53,11 @@ class Drops(commands.Cog):
         embed.description = f"{member.mention} has claimed the **{drop['name']}**!"
         await msg.edit(embed=embed)
 
+    @commands.command()
+    async def forcedrop(self, ctx):
+        if ctx.author.id in config.OWNERIDS:
+            await self.send_drop_message(ctx.message)
+
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.guild is not None:
