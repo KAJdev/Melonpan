@@ -223,6 +223,7 @@ class Bakery(commands.Cog):
 
         regular = {}
         special = []
+        special_burned = []
         burned = {}
 
         for o in user['ovens']:
@@ -248,8 +249,11 @@ class Bakery(commands.Cog):
                         cutoff = True
                         break
                     new_bread = config.create_bread(config.breads[12])
+                    if 'special' in new_bread.keys():
+                        special_burned.append(new_bread)
+                    else:
+                        burned[o['index']] = burned.get(o['index'], 0) + 1
                     user['inventory'].append(new_bread)
-                    burned[o['index']] = burned.get(o['index'], 0) + 1
                     user['ovens'][user['ovens'].index(o)] = None
 
         for index, amount in regular.items():
@@ -263,6 +267,13 @@ class Bakery(commands.Cog):
             else:
                 special_string = ""
             ending += f"+ {config.breads[index]['emoji']} **{config.breads[index]['name']}**{special_string}\n"
+        for b in special_burned:
+            special_string = b.get('special', None)
+            if special_string is not None:
+                special_string = f" `{special_string}`"
+            else:
+                special_string = ""
+            ending += f"+ {config.breads[12]['emoji']} **Burned {config.breads[index]['name']}** (Charcoal){special_string}\n"
         
         config.USERS.update_one({'id': user['id']}, {'$set': {'inventory': user['inventory'], 'ovens': user['ovens']}})
 
