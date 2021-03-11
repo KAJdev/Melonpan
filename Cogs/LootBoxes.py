@@ -5,6 +5,7 @@ import traceback
 import datetime
 import random
 import asyncio
+import uuid
 
 from discord.ext import commands
 
@@ -44,6 +45,8 @@ class LootBoxes(commands.Cog):
         seed = box.get('uuid', box.get('created', box.get('quality', 0)))
         if isinstance(seed, datetime.datetime):
             seed = seed.timestamp()
+        if isinstance(seed, str):
+            seed = uuid.UUID(seed)
         seed = int(seed)
 
         random.seed(seed)
