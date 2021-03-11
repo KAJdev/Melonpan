@@ -1,0 +1,11 @@
+pymongo[srv]
+discord.py[voice]
+random-word
+numpy
+scipy
+matplotlib
+perlin-noise
+psutil
+git+https://github.com/Rapptz/discord-ext-menus
+statcord.py
+prettytable

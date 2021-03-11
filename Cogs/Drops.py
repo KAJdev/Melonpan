@@ -19,10 +19,10 @@ class Drops(commands.Cog):
         drop = config.create_drop()
         actual_bread = config.create_bread(drop)
         special_string = actual_bread.get('special', None)
-            if special_string is not None:
-                special_string = f" `{special_string}`"
-            else:
-                special_string = ""
+        if special_string is not None:
+            special_string = f" `{special_string}`"
+        else:
+            special_string = ""
         embed = discord.Embed(color=config.special_drop[drop['special']], title=drop['name'] + special_string)
         embed.set_footer(text="React first to claim the free bread!\n\nDisable commands/drops with pan blacklist")
         embed.set_author(name="Bread Drop")
