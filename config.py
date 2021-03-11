@@ -361,7 +361,7 @@ breads = [
         "special": True,
         "sellable": False,
         "buyable": True,
-        "price": 70,
+        "price": 50,
         "volitility": 0.5,
         "bake_time": None,
         "image": "https://i.imgur.com/7Vl2q0y.png",
