@@ -5,6 +5,8 @@ import discord
 import random
 import os
 import uuid
+from random_word import RandomWords
+import string
 
 ## MongoDB
 myclient = pymongo.MongoClient(os.environ.get("MELONPAN_MONGO"))
@@ -36,6 +38,16 @@ ERRORCOLOR = 0xED4337
 
 def log(*args):
     if DEBUG_PRINTS: print(str(" ".join([str(elem) for elem in args])))
+
+def gen_bread_id():
+    random.seed()
+    type_of_id = random.randint(0, 2)
+    if type_of_id == 0:
+        return str(RandomWords().get_random_word(maxLength = 15))
+    elif type_of_id == 1:
+        return str(random.randint(0, 99999))
+    elif type_of_id == 2:
+        return "".join(random.choices(string.ascii_letters, k=6))
 
 def get_avg_messages():
     total = 0
@@ -110,12 +122,16 @@ def get_server(id):
     return server
 
 def create_bread(bread):
-    return {
+    random.seed()
+    bread = {
         'index': breads.index(bread),
         'quality': random.randint(1, 5),
         'created': datetime.datetime.utcnow(),
         'uuid': str(uuid.uuid4())
     }
+    if random.random() <= one_of_a_kind_bread_chance:
+        bread['special'] = gen_bread_id()
+    return bread
 
 def create_drop():
     return random.choice(breads)
@@ -128,6 +144,7 @@ expand_amount = 5
 burn_time_multipier = 1.5
 drop_message_count = 40
 drop_time_constraint = 2
+one_of_a_kind_bread_chance = 0.03
 drop_cooldown_min = 5
 special_drop = {True: 0xfcba03, False: 0xd3e647}
 
