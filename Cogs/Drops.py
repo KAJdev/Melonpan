@@ -66,8 +66,9 @@ class Drops(commands.Cog):
             if message.channel.id in server['blacklist']:
                 return
 
-        if not message.channel.permissions_for(message.guild.me).send_messages:
-            return
+        if message.guild is not None:
+            if not message.channel.permissions_for(message.guild.me).send_messages:
+                return
 
         obj = self.cache.get(message.channel.id, None)
         if obj is None:
@@ -86,7 +87,9 @@ class Drops(commands.Cog):
             
             if count >= config.drop_message_count:
                 self.cache[message.channel.id] = ([], datetime.datetime.utcnow())
-                print(f"DROP: #{message.channel.name} ({message.guild.name})")
+                guild = "NO GUILD"
+                if message.guild is not None: guild = message.guild.name
+                print(f"DROP: #{message.channel.name} ({guild})")
                 await self.send_drop_message(message)
 
 def setup(bot):
