@@ -60,7 +60,12 @@ class LootBoxes(commands.Cog):
         to_add = []
         for _ in loot:
             b = config.create_bread(_)
-            desc += f"+ {_['emoji']} **{_['name']}**\n"
+            special_string = b.get('special', None)
+            if special_string is not None:
+                special_string = f" `{special_string}`"
+            else:
+                special_string = ""
+            desc += f"+ {_['emoji']} **{_['name']}**{special_string}\n"
             to_add.append(b)
 
         config.USERS.update_one({'id': user['id']}, {'$push': {'inventory': {'$each': to_add}}})

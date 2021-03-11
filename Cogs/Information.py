@@ -20,7 +20,12 @@ class InventoryMenu(menus.ListPageSource):
         desc = ""
         for i, v in enumerate(entries, start=offset):
             n = config.breads[v['index']]['name']
-            desc += f"{config.breads[v['index']]['emoji']} · **{n}**\n"
+            special_string = v.get('special', None)
+            if special_string is not None:
+                special_string = f" `{special_string}`"
+            else:
+                special_string = ""
+            desc += f"{config.breads[v['index']]['emoji']} · **{n}**{special_string}\n"
         embed = discord.Embed(
             title="Bread Inventory",
             color=config.MAINCOLOR,
@@ -172,7 +177,7 @@ class Information(commands.Cog):
         embed = discord.Embed(title="Melonpan Bot Info", color=config.MAINCOLOR, timestamp=datetime.datetime.utcnow())
         embed.set_thumbnail(url=str(self.bot.user.avatar_url))
 
-        embed.description = f"[Github Repo](https://github.com/kajdev/melonpan)\n[Home Server](https://discord.gg/bread)"
+        embed.description = f"[Github Repo](https://github.com/kajdev/melonpan)\n[Bread Server](https://discord.gg/bread)\n[Support Server]()"
 
         u = 0
         for g in self.bot.guilds:

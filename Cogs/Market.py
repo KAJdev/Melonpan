@@ -217,7 +217,7 @@ class Market(commands.Cog):
 
                 this_selling = []
                 for their_item in user['inventory']:
-                    if their_item['index'] == config.breads.index(on_sale):
+                    if their_item['index'] == config.breads.index(on_sale) and their_item.get('special', None) is None:
                         this_selling.append(their_item)
                         selling.append(their_item)
                 total += len(this_selling) * today_price
@@ -267,7 +267,7 @@ class Market(commands.Cog):
 
                 selling = []
                 for their_item in user['inventory']:
-                    if their_item['index'] == config.breads.index(selected):
+                    if their_item['index'] == config.breads.index(selected) and their_item.get('special', None) is None:
                         selling.append(their_item)
                 total = len(selling) * today_price
 
