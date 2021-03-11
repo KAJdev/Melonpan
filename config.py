@@ -366,5 +366,18 @@ breads = [
         "bake_time": None,
         "image": "https://i.imgur.com/7Vl2q0y.png",
         "description": "A container that holds bread. Can be opened with 'pan open'"
+    },
+    {
+        "name": "English Muffin",
+        "emoji": "<:english_muffin:819393900652396604>",
+        "bakeable": True,
+        "special": False,
+        "sellable": True,
+        "buyable": True,
+        "price": 13,
+        "volitility": 0.5,
+        "bake_time": 10,
+        "image": "https://i.imgur.com/1X3fRCD.png",
+        "description": "Small, round, thin, usually dusted with cornmeal and served split horizontally, toasted, buttered, eaten as a snack alone or part of meal, usually breakfast or, in the UK and Ireland, early-evening tea."
     }
 ]
