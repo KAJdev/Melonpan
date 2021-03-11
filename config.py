@@ -4,6 +4,7 @@ import datetime
 import discord
 import random
 import os
+import uuid
 
 ## MongoDB
 myclient = pymongo.MongoClient(os.environ.get("MELONPAN_MONGO"))
@@ -112,7 +113,8 @@ def create_bread(bread):
     return {
         'index': breads.index(bread),
         'quality': random.randint(1, 5),
-        'created': datetime.datetime.utcnow()
+        'created': datetime.datetime.utcnow(),
+        'uuid': str(uuid.uuid4())
     }
 
 def create_drop():

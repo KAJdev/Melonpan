@@ -41,9 +41,10 @@ class LootBoxes(commands.Cog):
             await msg.edit(content="<:melonpan:815857424996630548> `You do not have any BreadBoxes. Buy some from the 'pan shop'.`", embed=None)
             return
         
-        seed = box.get('created', box.get('quality'))
+        seed = box.get('uuid', box.get('created', box.get('quality', 0)))
         if isinstance(seed, datetime.datetime):
             seed = seed.timestamp()
+        seed = int(seed)
 
         random.seed(seed)
         loot = random.choices(config.breads, k=random.randrange(2, 4))
