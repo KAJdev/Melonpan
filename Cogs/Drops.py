@@ -66,6 +66,9 @@ class Drops(commands.Cog):
             if message.channel.id in server['blacklist']:
                 return
 
+        if not message.channel.permissions_for(message.guild.me).send_messages:
+            return
+
         obj = self.cache.get(message.channel.id, None)
         if obj is None:
             self.cache[message.channel.id] = ([], datetime.datetime.utcnow())
