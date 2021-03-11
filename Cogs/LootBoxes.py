@@ -50,7 +50,7 @@ class LootBoxes(commands.Cog):
         seed = int(seed)
 
         random.seed(seed)
-        loot = random.choices(config.breads, k=random.randrange(2, 4))
+        loot = random.choices(config.breads, k=random.randrange(2, 5))
 
         if len(loot) + len(user['inventory']) > user.get('inventory_capacity', 25):
             await msg.edit(content="<:melonpan:815857424996630548> `This BreadBox holds more bread than you can fit in your bag.`", embed=None)
