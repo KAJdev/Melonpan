@@ -158,7 +158,7 @@ class Bakery(commands.Cog):
             user['baked'][str(bake_obj['index'])] = user['baked'].get(str(bake_obj['index']), 0) + amount
 
             config.USERS.update_one({'id': user['id']}, {'$set': {'ovens': user['ovens'], 'baked': user['baked']}})
-            await ctx.reply_safe(f"{config.stove_burning[True]} {amount} **{bake_obj['name']}s** are now baking! use `pan bakery` to check on them, and `pan plate` to take them out when they are done.")
+            await ctx.reply_safe(f"{config.stove_burning[True]} {amount} **{bake_obj['name']}{'s' if amount > 1 and bake_obj['name'][-1] != 's' else ''}** are now baking! use `pan bakery` to check on them, and `pan plate` to take them out when they are done.")
 
 
     @commands.command()
