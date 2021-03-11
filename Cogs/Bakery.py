@@ -158,7 +158,7 @@ class Bakery(commands.Cog):
             user['baked'][str(bake_obj['index'])] = user['baked'].get(str(bake_obj['index']), 0) + amount
 
             config.USERS.update_one({'id': user['id']}, {'$set': {'ovens': user['ovens'], 'baked': user['baked']}})
-            await ctx.reply_safe(f"{config.stove_burning[True]} {amount} **{bake_obj.get('plural_name', bake_obj['name']) if amount > 1 else bake_obj['name']}** {'are' if amount > 1 else 'is'} now baking! use `pan bakery` to check on {'them' if amount > 1 else 'it'}, and `pan plate` to take {'them' if amount > 1 else 'it'} out when {'they are' if amount > 1 else 'it is'} done.")
+            await ctx.reply_safe(f"{config.stove_burning[True]} {amount} **{selected.get('plural_name', selected['name']) if amount > 1 else selected['name']}** {'are' if amount > 1 else 'is'} now baking! use `pan bakery` to check on {'them' if amount > 1 else 'it'}, and `pan plate` to take {'them' if amount > 1 else 'it'} out when {'they are' if amount > 1 else 'it is'} done.")
 
 
     @commands.command()
