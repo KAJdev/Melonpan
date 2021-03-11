@@ -64,11 +64,7 @@ class Market(commands.Cog):
             else:
                 new_relics = []
                 for _ in range(amount):
-                    new_relics.append({
-                            'index': config.breads.index(selected),
-                            'quality': random.randint(1, 5)
-                        }
-                    )
+                    new_relics.append(config.create_bread(selected))
 
                 config.USERS.update_one({'id': ctx.author.id}, {'$push': {'inventory': {'$each': new_relics}}, '$inc': {'money': -today_price * amount}})
 
