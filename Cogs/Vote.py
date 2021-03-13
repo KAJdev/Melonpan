@@ -54,8 +54,8 @@ class Vote(commands.Cog):
 
     @commands.Cog.listener()
     async def on_dbl_vote(self, data):
-        user = config.get_user(int(data['user']['id']))
-        print(f"VOTE: {data['user']['id']}")
+        user = config.get_user(int(data['user']))
+        print(f"VOTE: {data['user']}")
         amount = 1 if data['isWeekend'] else 2
 
         to_add = []
