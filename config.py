@@ -97,7 +97,8 @@ def get_user(id):
             'baked': {},
             'ovens': [],
             'oven_count': 2,
-            'badges': []
+            'badges': [],
+            'last_vote': None
         }
         USERS.insert_one(user)
     return user
