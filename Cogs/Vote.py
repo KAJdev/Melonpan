@@ -62,7 +62,7 @@ class Vote(commands.Cog):
         for _ in range(amount):
             if len(to_add) + len(user['inventory']) >= user['inventory_capacity']:
                 break
-            to_add.append(config.create_bread(14))
+            to_add.append(config.create_bread(config.breads[14]))
             if len(to_add) + len(user['inventory']) >= user['inventory_capacity']:
                 break
             to_add.append(config.create_bread(config.create_drop()))
