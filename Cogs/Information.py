@@ -150,7 +150,7 @@ class Information(commands.Cog):
 
         await ctx.reply_safe(embed=embed)
 
-    @commands.command(aliases=['money', 'balance', 'm'])
+    @commands.command(aliases=['money', 'balance', 'm', 'wallet', 'breadcoin', 'coin', 'coins'])
     async def bal(self, ctx, member : discord.Member = None):
         if member is None:
             member = ctx.author
@@ -177,7 +177,7 @@ class Information(commands.Cog):
         embed = discord.Embed(title="Melonpan Bot Info", color=config.MAINCOLOR, timestamp=datetime.datetime.utcnow())
         embed.set_thumbnail(url=str(self.bot.user.avatar_url))
 
-        embed.description = f"[Github Repo](https://github.com/kajdev/melonpan)\n[Bread Server](https://discord.gg/bread)\n[Support Server]()"
+        embed.description = f"[Github Repo](https://github.com/kajdev/melonpan)\n[Bread Server](https://discord.gg/bread)\n[Support Server](https://discord.gg/ueYyZVJGcf)\n[Top.gg Page](https://top.gg/bot/815835732979220501)"
 
         u = 0
         for g in self.bot.guilds:
