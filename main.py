@@ -53,6 +53,7 @@ async def help(ctx):
     await ctx.send(embed=discord.Embed(
         title="Melonpan Commands",
         color=config.MAINCOLOR
+        #description="If you need help getting started, type `pan howto` to start the quick tutorial."
     ).add_field(
         name="Information",
         value="`inventory`, `stats`, `bal`, `badges`",
@@ -67,7 +68,7 @@ async def help(ctx):
         inline=False
     ).add_field(
         name="Misc",
-        value="`help`, `info`, `invite`, `top`, `remind`, `reminders`, `blacklist`",
+        value="`help`, `info`, `invite`, `top`, `remind`, `reminders`, `blacklist`, `vote`",
         inline=False
     ).set_thumbnail(url=bot.user.avatar_url))
 
@@ -76,7 +77,7 @@ async def invite(ctx):
     await ctx.send(embed=discord.Embed(description="[**Invite Link**](https://discord.com/api/oauth2/authorize?client_id=815835732979220501&permissions=314433&scope=bot) 🔗", color = config.MAINCOLOR))
 
 # Cogs
-cogs = ["Eval", "Information", "Market", "Bakery", "StatCord", "Leaderboards", "Badges", "Blacklist", "Drops", "LootBoxes"]
+cogs = ["Eval", "Information", "Market", "Bakery", "StatCord", "Leaderboards", "Badges", "Blacklist", "Drops", "LootBoxes", "Vote"]
 
 # Starts all cogs
 for cog in cogs:
