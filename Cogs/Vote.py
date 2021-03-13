@@ -43,7 +43,7 @@ class Vote(commands.Cog):
             hours, remainder = divmod(s, 3600)
             minutes, seconds = divmod(remainder, 60)
             vote_string = f"[`You can vote again in {hours}h {minutes}m {seconds}s.`](https://top.gg/bot/815835732979220501)"
-        embed = discord.Embed(title="Voting", color=config.MAINCOLOR, description=f"{vote_string}\n```\n-- REWARDS --```\n+ `100`x <:BreadCoin:815842873937100800> **BreadCoin**\n+ `1`x <:breadbox:819132627843416074> **BreadBox**\n+ `1`x <:question:820117437022208040> Mystery Bread")
+        embed = discord.Embed(title="Voting", color=config.MAINCOLOR, description=f"{vote_string}\n```\n-- REWARDS --```\n+ `100`x <:BreadCoin:815842873937100800> **BreadCoin**\n+ `1`x <:breadbox:819132627843416074> **BreadBox**\n+ `1`x <:question:820117437022208040> **Mystery Bread**")
         if can_vote:
             embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/814990535956889612.png?v=1")
         else:
