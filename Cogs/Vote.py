@@ -39,7 +39,7 @@ class Vote(commands.Cog):
             can_vote = True
             vote_string = "[**Vote Now!**](https://top.gg/bot/815835732979220501/vote)"
         else:
-            s = ((user.get('last_vote') + datetime.timedelta(hours=12) - datetime.datetime.utcnow()).total_seconds()
+            s = ((user.get('last_vote') + datetime.timedelta(hours=12)) - datetime.datetime.utcnow()).total_seconds()
             if s > 0:
                 hours, remainder = divmod(s, 3600)
                 minutes, seconds = divmod(remainder, 60)
