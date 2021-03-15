@@ -152,7 +152,7 @@ async def on_command_error(ctx, error):
         )
         await ctx.send(embed = embed)
     else:
-        await ctx.send(content="An error has occured while executing this command, please join the support server and report the issue!\n\ndiscord.gg/bread")
+        await ctx.send(content="An error has occured while executing this command.\nPlease join the support server and report the issue!\ndiscord.gg/rMgtgdavPh")
         raise error
 
 # On ready
