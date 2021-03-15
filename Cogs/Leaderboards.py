@@ -23,7 +23,7 @@ class Leaderboards(commands.Cog):
         to_remove = []
         amount = 1
         desc = ""
-        x = PrettyTable()
+        # x = PrettyTable()
         for user in top_global:
             if amount >= 11: break
             if user['id'] in self.user_cache.keys():
@@ -37,16 +37,18 @@ class Leaderboards(commands.Cog):
 
                 user['user_object'] = found
                 self.user_cache[user['id']] = found
-            x.add_row([f"#{amount}", user['user_object'].name, f"{user['money']} BreadCoin"])
+            # x.add_row([f"#{amount}", user['user_object'].name, f"{user['money']} BreadCoin"])
+            desc += f"`#{amount}` • **{found}**{" " if len(user.get('badges', [])) > 0 else ""}{"".join(config.badges[x]['emoji'] for x in user.get('badges', []))} • {user['money']} <:BreadCoin:815842873937100800>\n"
             amount += 1
 
-        x.header = False
-        x.align = "l"
+        # x.header = False
+        # x.align = "l"
 
         embed = discord.Embed(
             title="Richest Bakers",
             color=config.MAINCOLOR,
-            description="```\n" + x.get_string() + "```"
+            description = desc
+            # description="```\n" + x.get_string() + "```"
         )
         await ctx.send(embed=embed)
 
