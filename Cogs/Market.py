@@ -140,8 +140,14 @@ class Market(commands.Cog):
         if amount is None:
             amount = "1"
         if item is None:
-            await ctx.send("<:melonpan:815857424996630548> `You must tell me an item you wish to sell: e.g. 'pan sell 4 baguette'`")
-            return
+            try:
+                amount = abs(int(amount))
+                await ctx.send("<:melonpan:815857424996630548> `You must tell me an item you wish to sell: e.g. 'pan sell 4 baguette'`")
+                return
+            except:
+                item = amount
+                amount = "1"
+            
 
         today = datetime.datetime.now().timetuple().tm_yday
         random.seed(today)
