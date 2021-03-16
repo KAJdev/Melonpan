@@ -136,6 +136,7 @@ class Market(commands.Cog):
     @commands.command(aliases=['se', 's'])
     async def sell(self, ctx, amount: str = None, *, item : str = None):
         user = config.get_user(ctx.author.id)
+        server = config.get_server(ctx.guild.id)
         selected = None
 
         if amount is None:
@@ -153,10 +154,12 @@ class Market(commands.Cog):
                 __ = config.breads[special['index']]
                 item_price = market.ItemPrice(__['price'], __['volitility'], special['index'])
                 today_price = round(item_price.get_price(market.get_day_of_year_active()))
+                tax = round(today_price * server['tax'])
+                today_price -= tax
 
                 config.USERS.update_one({'id': ctx.author.id}, {'$pull': {'inventory': special}, '$inc': {'money': today_price}})
 
-                desc = f"```************\nSOLD RECEIPT\n************\nDescription\n- 1x {__['name']}\n\n============\nTOTAL AMOUNT: {today_price} BreadCoin\nTAX: 0 BreadCoin\n============\nTHANK YOU!```"
+                desc = f"```************\nSOLD RECEIPT\n************\nDescription\n- 1x {__['name']}\n\n============\nTOTAL AMOUNT: {today_price} BreadCoin\nTAX: {tax} BreadCoin\n============\nTHANK YOU!```"
 
                 await ctx.reply_safe(embed=discord.Embed(
                     title="Bread Market Exchange Receipt",
@@ -214,13 +217,15 @@ class Market(commands.Cog):
                 await ctx.send(f"<:melonpan:815857424996630548> `It looks like you only have {len(selling)} of that bread in your bag.`")
             else:
                 total = amount * today_price
+                tax = total * server['tax']
+                total -= tax
 
                 for selling_item in selling:
                     user['inventory'].remove(selling_item)
 
                 config.USERS.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
 
-                desc = f"```************\nSOLD RECEIPT\n************\nDescription\n- {amount}x {selected['name']}\n\n============\nTOTAL AMOUNT: {total} BreadCoin\nTAX: 0 BreadCoin\n============\nTHANK YOU!```"
+                desc = f"```************\nSOLD RECEIPT\n************\nDescription\n- {amount}x {selected['name']}\n\n============\nTOTAL AMOUNT: {total} BreadCoin\nTAX: {tax} BreadCoin\n============\nTHANK YOU!```"
 
                 await ctx.reply_safe(embed=discord.Embed(
                     title="Bread Market Exchange Receipt",
@@ -233,6 +238,7 @@ class Market(commands.Cog):
     @commands.command(aliases=['sa'])
     async def sellall(self, ctx, *, item : str = None):
         user = config.get_user(ctx.author.id)
+        server = config.get_server(ctx.guild.id)
 
         if item is None:
             today = datetime.datetime.now().timetuple().tm_yday
@@ -261,9 +267,12 @@ class Market(commands.Cog):
 
             
             if len(selling) > 0:
+                tax = total * server['tax']
+                total -= tax
+
                 config.USERS.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
 
-                desc += f"\n\n============\nTOTAL AMOUNT: {total} BreadCoin\nTAX: 0 BreadCoin\n============\nTHANK YOU!```"
+                desc += f"\n\n============\nTOTAL AMOUNT: {total} BreadCoin\nTAX: {tax} BreadCoin\n============\nTHANK YOU!```"
 
                 await ctx.reply_safe(embed=discord.Embed(
                     title="Bread Market Exchange Receipt",
@@ -306,9 +315,12 @@ class Market(commands.Cog):
                 for selling_item in selling:
                     user['inventory'].remove(selling_item)
 
+                tax = total * server['tax']
+                total -= tax
+
                 config.USERS.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
 
-                desc = f"```************\nSOLD RECEIPT\n************\nDescription\n- {len(selling)}x {selected['name']}\n\n============\nTOTAL AMOUNT: {total} BreadCoin\nTAX: 0 BreadCoin\n============\nTHANK YOU!```"
+                desc = f"```************\nSOLD RECEIPT\n************\nDescription\n- {len(selling)}x {selected['name']}\n\n============\nTOTAL AMOUNT: {total} BreadCoin\nTAX: {tax} BreadCoin\n============\nTHANK YOU!```"
 
                 await ctx.reply_safe(embed=discord.Embed(
                     title="Bread Market Exchange Receipt",
@@ -323,11 +335,12 @@ class Market(commands.Cog):
         if item is None:
             random.seed(today)
             display = random.sample(config.breads, k=9)
+            server = config.get_server(ctx.guild.id)
 
             embed = discord.Embed(
                 title="Bread Market",
                 color=config.MAINCOLOR,
-                description="Use the `pan buy` and `pan sell` commands to exchange Breads.\n*These are the tradable breads for today*\n\nuse `pan shop <item>` to view a specific item"
+                description=f"Use the `pan buy` and `pan sell` commands to exchange Breads.\n*These are the tradable breads for today*\n\nuse `pan shop <item>` to view a specific item\n\n**Guild Tax:** `{server['tax']*100}%`"
             )
             for i in display:
                 item = market.ItemPrice(i['price'], i['volitility'], config.breads.index(i))
