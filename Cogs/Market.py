@@ -156,7 +156,7 @@ class Market(commands.Cog):
 
                 config.USERS.update_one({'id': ctx.author.id}, {'$pull': {'inventory': special}, '$inc': {'money': today_price}})
 
-                desc = f"```************\nSOLD RECEIPT\n************\nDescription\n- 1x {__]['name']}\n\n============\nTOTAL AMOUNT: {today_price} BreadCoin\nTAX: 0 BreadCoin\n============\nTHANK YOU!```"
+                desc = f"```************\nSOLD RECEIPT\n************\nDescription\n- 1x {__['name']}\n\n============\nTOTAL AMOUNT: {today_price} BreadCoin\nTAX: 0 BreadCoin\n============\nTHANK YOU!```"
 
                 await ctx.reply_safe(embed=discord.Embed(
                     title="Bread Market Exchange Receipt",
