@@ -136,9 +136,36 @@ class Market(commands.Cog):
     @commands.command(aliases=['se', 's'])
     async def sell(self, ctx, amount: str = None, *, item : str = None):
         user = config.get_user(ctx.author.id)
+        selected = None
 
         if amount is None:
             amount = "1"
+        else:
+            special = None
+            check_string = amount
+            if item is not None:
+                check_string += " " + item
+            for i in user['inventory']:
+                if i.get('special', None) == check_string:
+                    special = i
+                    break
+            if special is not None:
+                __ = config.breads[special['index']]
+                item_price = market.ItemPrice(__['price'], __['volitility'], special['index'])
+                today_price = round(item_price.get_price(market.get_day_of_year_active()))
+
+                config.USERS.update_one({'id': ctx.author.id}, {'$pull': {'inventory': special}, '$inc': {'money': today_price}})
+
+                desc = f"```************\nSOLD RECEIPT\n************\nDescription\n- 1x {__]['name']}\n\n============\nTOTAL AMOUNT: {today_price} BreadCoin\nTAX: 0 BreadCoin\n============\nTHANK YOU!```"
+
+                await ctx.reply_safe(embed=discord.Embed(
+                    title="Bread Market Exchange Receipt",
+                    color=discord.Color(0xebeae8),
+                    description=desc,
+                    timestamp=datetime.datetime.utcnow()
+                ))
+                return
+
         if item is None:
             try:
                 amount = abs(int(amount))
@@ -148,22 +175,21 @@ class Market(commands.Cog):
                 item = amount
                 amount = "1"
             
-
-        today = datetime.datetime.now().timetuple().tm_yday
-        random.seed(today)
-        display = random.sample(config.breads, k=9)
-        selected = None
-        for r in display:
-            if item.lower() in r['name'].lower():
-                selected = r
-                break
-            try:
-                index = int(item)
-                if index == config.breads.index(r):
+        if selected is None:
+            today = datetime.datetime.now().timetuple().tm_yday
+            random.seed(today)
+            display = random.sample(config.breads, k=9)
+            for r in display:
+                if item.lower() in r['name'].lower():
                     selected = r
                     break
-            except:
-                pass
+                try:
+                    index = int(item)
+                    if index == config.breads.index(r):
+                        selected = r
+                        break
+                except:
+                    pass
         if selected is None:
             await ctx.send("<:melonpan:815857424996630548> `That bread doesn't look like it's on the market today...`")
         elif not selected['sellable']:
