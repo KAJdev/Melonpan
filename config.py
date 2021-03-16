@@ -113,10 +113,12 @@ def get_server(id):
 
     server = SERVERS.find_one({'id': id})
     if server is None:
+        random.seed()
         server = {
             'id': id,
             'blacklist': [],
-            'prefix': 'pan '
+            'prefix': 'pan ',
+            'tax': round(random.random() * 0.2, 2)
         }
         SERVERS.insert_one(server)
     SERVER_CACHE[id] = server
