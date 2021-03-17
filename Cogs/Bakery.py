@@ -212,7 +212,10 @@ class Bakery(commands.Cog):
             user['baked'][str(bake_obj['index'])] = user['baked'].get(str(bake_obj['index']), 0) + 1
             
             config.USERS.update_one({'id': user['id']}, {'$set': {'ovens': user['ovens']}})
-            await ctx.reply_safe(f"{config.stove_burning[True]} Your **{bake_obj['name']}** is now baking! use `pan bakery` to check on it, and `pan plate` to take it out when it's done.")
+            extra = ""
+            if config.get_avg_commands(minutes=0.1, user=ctx.author.id, command=ctx.command.name) >= 0.6:
+                extra = "\n\n**TIP:** Use `pan bakeall <bread>` to fill all of your empty ovens!"
+            await ctx.reply_safe(f"{config.stove_burning[True]} Your **{bake_obj['name']}** is now baking! use `pan bakery` to check on it, and `pan plate` to take it out when it's done.{extra}")
 
     @commands.command(aliases=['p'])
     async def plate(self, ctx):
