@@ -2,6 +2,7 @@ import ast
 import discord
 import config
 import traceback
+import datetime
 
 from discord.ext import commands, tasks
 
@@ -58,6 +59,9 @@ class Eval(commands.Cog):
     @commands.Cog.listener()
     async def on_command(self, ctx):
         config.log("CMD:", ctx.message.content, " - ", ctx.author)
+        config.COMMANDS_LOG.append((ctx, datetime.datetime.utcnow()))
+        if len(config.COMMANDS_LOG) > 1000:
+            config.COMMANDS_LOG.pop(0)
 
     @commands.Cog.listener()
     async def on_message(self, message):

@@ -22,6 +22,7 @@ OWNERIDS = [684155404078415890,
 DEBUG_PRINTS = True
 
 MESSAGES_PER_SECOND_AVG = []
+COMMANDS_LOG = []
 CURRENT_MESSAGE_SECOND_COUNT = 0
 
 # MEMBER CACHE
@@ -38,6 +39,19 @@ ERRORCOLOR = 0xED4337
 
 def log(*args):
     if DEBUG_PRINTS: print(str(" ".join([str(elem) for elem in args])))
+
+def get_avg_commands(minutes=1, user=None, command=None):
+    total = 0
+    compare = datetime.datetime.utcnow() - datetime.timedelta(minutes=minutes)
+    for _ in COMMANDS_LOG:
+        if _[1] < compare:
+            continue
+        if user is not None and _[0].author.id != user:
+            continue
+        if command is not None and _[0].command.name != command:
+            continue
+        total += 1
+    return total / (minutes*60)
 
 def gen_bread_id():
     random.seed()
