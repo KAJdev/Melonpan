@@ -76,7 +76,7 @@ class Information(commands.Cog):
         config.TIMERS.update_many({'_id': {'$in': list(x['_id'] for x in sent_timers)}}, {'$set': {'sent': True}})
 
     @commands.command(aliases=['list', 'bread', 'all', 'bl', 'breadlist', 'listbread', 'allbread'])
-    async breads(self, ctx):
+    async def breads(self, ctx):
         embed = discord.Embed(title="All Items", color=config.MAINCOLOR, description = "*use `pan shop <bread>` to get more specific price info about an item.*\n\n")
         for bread in config.breads:
             embed.description += f"> {bread['emoji']} **{bread['name']}**\n"
