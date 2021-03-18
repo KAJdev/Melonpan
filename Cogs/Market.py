@@ -266,7 +266,7 @@ class Market(commands.Cog):
                     if their_item['index'] == config.breads.index(on_sale):
                         can_sell = False
                         for _ in event[2]:
-                            if _['uuid'] == their_item['uuid']:
+                            if _['uuid'] == their_item.get('uuid', None):
                                 can_sell = True
                                 break
                         if can_sell:
