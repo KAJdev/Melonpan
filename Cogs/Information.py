@@ -82,7 +82,7 @@ class Information(commands.Cog):
             embed.description += f"> {bread['emoji']} **{bread['name']}**\n"
         await ctx.reply_safe(embed=embed)
 
-    @commands.command(aliases=['i', 'inv', 'items', 'in', 'bag', 'bread'])
+    @commands.command(aliases=['i', 'inv', 'items', 'in', 'bag'])
     async def inventory(self, ctx):
         user = config.get_user(ctx.author.id)
         desc = ""
