@@ -285,12 +285,13 @@ class Bakery(commands.Cog):
 
         if ending == "":
             ending = "No bread was plated."
+        else:
+            embed.set_footer(text="react with 💲 to sell these breads")
         
         embed = discord.Embed(color=config.MAINCOLOR, title="Plated Bread", description=ending)
         if cutoff:
             embed.description += "\n*Some ovens were not emptied because your bread storage is full. Please sell some bread.*"
-        else:
-            embed.set_footer(text="react with 💲 to sell these breads")
+
         msg = await ctx.reply_safe(embed=embed)
         if not ending == "No bread was plated.":
             config.SELL_BREAD_CACHE.append((msg, user, to_add))
