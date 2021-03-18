@@ -223,6 +223,7 @@ class Bakery(commands.Cog):
 
         ending = ""
         cutoff = False
+        to_add = []
 
         regular = {}
         special = []
@@ -246,6 +247,7 @@ class Bakery(commands.Cog):
                     else:
                         regular[o['index']] = regular.get(o['index'], 0) + 1
                     user['inventory'].append(new_bread)
+                    to_add.append(new_bread)
                     user['ovens'][user['ovens'].index(o)] = None
                 elif s <= 0 and b <= 0:
                     if len(user['inventory']) >= user.get('inventory_capacity', 25):
@@ -257,6 +259,7 @@ class Bakery(commands.Cog):
                     else:
                         burned[o['index']] = burned.get(o['index'], 0) + 1
                     user['inventory'].append(new_bread)
+                    to_add.append(new_bread)
                     user['ovens'][user['ovens'].index(o)] = None
 
         for index, amount in regular.items():
@@ -286,8 +289,13 @@ class Bakery(commands.Cog):
         embed = discord.Embed(color=config.MAINCOLOR, title="Plated Bread", description=ending)
         if cutoff:
             embed.description += "\n*Some ovens were not emptied because your bread storage is full. Please sell some bread.*"
-        await ctx.reply_safe(embed=embed)
-        
+        else:
+            embed.set_footer(text="react with 💲 to sell these breads")
+        msg = await ctx.reply_safe(embed=embed)
+        if not cutoff:
+            config.SELL_BREAD_CACHE.append((msg, user, to_add))
+            await msg.add_reaction("💲")
+
 
 
 

@@ -236,6 +236,63 @@ class Market(commands.Cog):
                     timestamp=datetime.datetime.utcnow()
                 ))
 
+    @commands.Cog.listener()
+    async def on_raw_reaction_add(self, payload):
+        if str(payload.emoji) == "💲":
+            event = None
+            for _ in config.SELL_BREAD_CACHE:
+                if _[0].id == payload.message_id and _[1]['id'] == payload.user_id:
+                    event = _
+                    break
+            if event is None:
+                return
+            config.SELL_BREAD_CACHE.remove(event)
+            user = config.get_user(payload.user_id)
+            server = config.get_server(payload.guild_id)
+            today = datetime.datetime.now().timetuple().tm_yday
+            random.seed(today)
+            display = random.sample(config.breads, k=9)
+            selling = []
+            total = 0
+            desc = "```************\nSOLD RECEIPT\n************\nDescription"
+            for on_sale in display:
+                if not on_sale['sellable']:
+                    continue
+                item_price = market.ItemPrice(on_sale['price'], on_sale['volitility'], config.breads.index(on_sale))
+                today_price = round(item_price.get_price(market.get_day_of_year_active()))
+
+                this_selling = []
+                for their_item in user['inventory']:
+                    if their_item in event[2]:
+                        this_selling.append(their_item)
+                        selling.append(their_item)
+                total += len(this_selling) * today_price
+                if len(this_selling) > 0:
+                    desc += f"\n- {len(this_selling)}x {on_sale['name']}"
+
+            for selling_item in selling:
+                user['inventory'].remove(selling_item)
+
+            
+            if len(selling) > 0:
+                tax = round(total * server['tax'])
+                total -= tax
+                total = round(total)
+
+                config.USERS.update_one({'id': payload.user_id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
+
+                desc += f"\n\n============\nTOTAL AMOUNT: {int(total)} BreadCoin\nTAX: {int(tax)} BreadCoin\n============\nTHANK YOU!```"
+                embed = event[0].embeds[0]
+                embed.description += "\n\n**Bread Market Exchange Receipt**\n" = desc
+                embed.timestamp=datetime.datetime.utcnow()
+                await event[0].edit(embed=embed)
+                await event[0].clear_reactions()
+            else:
+                embed = event[0].embeds[0]
+                embed.description += "\n\n<:melonpan:815857424996630548> `There was nothing sellable in your inventory.`"
+                await event[0].edit(embed=embed)
+                await event[0].clear_reactions()
+
 
     @commands.command(aliases=['sa'])
     async def sellall(self, ctx, *, item : str = None):

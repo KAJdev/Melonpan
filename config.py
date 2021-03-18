@@ -25,6 +25,9 @@ MESSAGES_PER_SECOND_AVG = []
 COMMANDS_LOG = []
 CURRENT_MESSAGE_SECOND_COUNT = 0
 
+# Cache of opened breadBox/Plate messages and the users
+SELL_BREAD_CACHE = []
+
 # MEMBER CACHE
 MEMBER_CACHE = []
 
