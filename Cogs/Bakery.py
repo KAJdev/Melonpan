@@ -292,7 +292,7 @@ class Bakery(commands.Cog):
         else:
             embed.set_footer(text="react with 💲 to sell these breads")
         msg = await ctx.reply_safe(embed=embed)
-        if not ending == "":
+        if not ending == "No bread was plated.":
             config.SELL_BREAD_CACHE.append((msg, user, to_add))
             await msg.add_reaction("💲")
 
