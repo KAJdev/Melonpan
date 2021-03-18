@@ -56,7 +56,7 @@ async def help(ctx):
         #description="If you need help getting started, type `pan howto` to start the quick tutorial."
     ).add_field(
         name="Information",
-        value="`inventory`, `stats`, `bal`, `badges`",
+        value="`inventory`, `stats`, `bal`, `badges`, `breads`",
         inline=False
     ).add_field(
         name="Bakery",
