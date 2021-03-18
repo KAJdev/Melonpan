@@ -283,7 +283,7 @@ class Market(commands.Cog):
 
                 desc += f"\n\n============\nTOTAL AMOUNT: {int(total)} BreadCoin\nTAX: {int(tax)} BreadCoin\n============\nTHANK YOU!```"
                 embed = event[0].embeds[0]
-                embed.description += "\n\n**Bread Market Exchange Receipt**\n" = desc
+                embed.description += "\n\n**Bread Market Exchange Receipt**\n" + desc
                 embed.timestamp=datetime.datetime.utcnow()
                 await event[0].edit(embed=embed)
                 await event[0].clear_reactions()
