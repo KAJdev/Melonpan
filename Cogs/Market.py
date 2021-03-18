@@ -263,9 +263,15 @@ class Market(commands.Cog):
 
                 this_selling = []
                 for their_item in user['inventory']:
-                    if their_item in event[2]:
-                        this_selling.append(their_item)
-                        selling.append(their_item)
+                    if their_item['index'] == config.breads.index(on_sale):
+                        can_sell = False
+                        for _ in event[2]:
+                            if _['uuid'] == their_item['uuid']:
+                                can_sell = True
+                                break
+                        if can_sell:
+                            this_selling.append(their_item)
+                            selling.append(their_item)
                 total += len(this_selling) * today_price
                 if len(this_selling) > 0:
                     desc += f"\n- {len(this_selling)}x {on_sale['name']}"
@@ -285,10 +291,12 @@ class Market(commands.Cog):
                 embed = event[0].embeds[0]
                 embed.description += "\n\n**Bread Market Exchange Receipt**\n" + desc
                 embed.timestamp=datetime.datetime.utcnow()
+                embed.set_footer()
                 await event[0].edit(embed=embed)
                 await event[0].clear_reactions()
             else:
                 embed = event[0].embeds[0]
+                embed.set_footer()
                 embed.description += "\n\n<:melonpan:815857424996630548> `There was nothing sellable in your inventory.`"
                 await event[0].edit(embed=embed)
                 await event[0].clear_reactions()
