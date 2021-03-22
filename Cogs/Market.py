@@ -135,6 +135,9 @@ class Market(commands.Cog):
 
     @commands.command(aliases=['se', 's'])
     async def sell(self, ctx, amount: str = None, *, item : str = None):
+        if ctx.guild is None:
+            await ctx.send("<:melonpan:815857424996630548> `This command cannot be used in Direct Messages.`")
+            return
         user = config.get_user(ctx.author.id)
         server = config.get_server(ctx.guild.id)
         selected = None
@@ -305,6 +308,9 @@ class Market(commands.Cog):
 
     @commands.command(aliases=['sa'])
     async def sellall(self, ctx, *, item : str = None):
+        if ctx.guild is None:
+            await ctx.send("<:melonpan:815857424996630548> `This command cannot be used in Direct Messages.`")
+            return
         user = config.get_user(ctx.author.id)
         server = config.get_server(ctx.guild.id)
 
@@ -405,12 +411,15 @@ class Market(commands.Cog):
         if item is None:
             random.seed(today)
             display = random.sample(config.breads, k=9)
-            server = config.get_server(ctx.guild.id)
+            if ctx.guild is not None:
+                server_tax = str(int(round(config.get_server(ctx.guild.id)['tax']*100))) + "%"
+            else:
+                server_tax = "N/A"
 
             embed = discord.Embed(
                 title="Bread Market",
                 color=config.MAINCOLOR,
-                description=f"Use the `pan buy` and `pan sell` commands to exchange Breads.\n*These are the tradable breads for today*\n\nuse `pan shop <item>` to view a specific item\n\n**Guild Tax:** `{int(round(server['tax']*100))}%`"
+                description=f"Use the `pan buy` and `pan sell` commands to exchange Breads.\n*These are the tradable breads for today*\n\nuse `pan shop <item>` to view a specific item\n\n**Guild Tax:** `{server_tax}`"
             )
             for i in display:
                 item = market.ItemPrice(i['price'], i['volitility'], config.breads.index(i))
