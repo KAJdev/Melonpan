@@ -30,7 +30,7 @@ class Vote(commands.Cog):
         except Exception as e:
             logger.exception('Failed to post server count\n{}: {}'.format(type(e).__name__, e))
 
-    @commands.command()
+    @commands.command(aliases=['v', 'topgg', 'rewards'])
     async def vote(self, ctx):
         user = config.get_user(ctx.author.id)
         vote_string = ""

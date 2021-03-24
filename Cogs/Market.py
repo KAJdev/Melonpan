@@ -21,6 +21,7 @@ class Market(commands.Cog):
     @commands.command(aliases=['b', 'purchase'])
     async def buy(self, ctx, amount: str = None, *, item : str = None):
         user = config.get_user(ctx.author.id)
+        server = config.get_server(ctx.guild.id)
 
         if amount is None:
             amount = "1"
@@ -64,7 +65,7 @@ class Market(commands.Cog):
             else:
                 new_relics = []
                 for _ in range(amount):
-                    new_relics.append(config.create_bread(selected))
+                    new_relics.append(server.create_bread(selected))
 
                 config.USERS.update_one({'id': ctx.author.id}, {'$push': {'inventory': {'$each': new_relics}}, '$inc': {'money': -today_price * amount}})
 
@@ -82,6 +83,7 @@ class Market(commands.Cog):
     @commands.command(aliases=['d', 'give', 'trash'])
     async def donate(self, ctx, amount: str = None, *, item : str = None):
         user = config.get_user(ctx.author.id)
+        server = config.get_user(ctx.guild.id)
 
         if amount is None:
             amount = "1"
@@ -119,8 +121,15 @@ class Market(commands.Cog):
             if len(selling) < amount:
                 await ctx.send(f"<:melonpan:815857424996630548> `It looks like you only have {len(selling)} of that bread in your bag.`")
             else:
+                total = 0
                 for selling_item in selling:
+                     __ = config.breads[selling_item['index']]
+                    item_price = market.ItemPrice(__['price'], __['volitility'], selling_item['index'])
+                    total += round(item_price.get_price(market.get_day_of_year_active()))
+
                     user['inventory'].remove(selling_item)
+
+                server.add_money(total)
 
                 config.USERS.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}})
 
@@ -157,9 +166,11 @@ class Market(commands.Cog):
                 __ = config.breads[special['index']]
                 item_price = market.ItemPrice(__['price'], __['volitility'], special['index'])
                 today_price = round(item_price.get_price(market.get_day_of_year_active()))
-                tax = round(today_price * server['tax'])
+                tax = round(today_price * server.tax)
                 today_price -= tax
                 today_price = round(today_price)
+
+                server.add_money(tax)
 
                 config.USERS.update_one({'id': ctx.author.id}, {'$pull': {'inventory': special}, '$inc': {'money': today_price}})
 
@@ -221,12 +232,14 @@ class Market(commands.Cog):
                 await ctx.send(f"<:melonpan:815857424996630548> `It looks like you only have {len(selling)} of that bread in your bag.`")
             else:
                 total = amount * today_price
-                tax = round(total * server['tax'])
+                tax = round(total * server.tax)
                 total -= tax
                 total = round(total)
 
                 for selling_item in selling:
                     user['inventory'].remove(selling_item)
+
+                server.add_money(tax)
 
                 config.USERS.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
 
@@ -285,9 +298,11 @@ class Market(commands.Cog):
             print(f"QUICK SELL: ({event[1]['id']})")
             
             if len(selling) > 0:
-                tax = round(total * server['tax'])
+                tax = round(total * server.tax)
                 total -= tax
                 total = round(total)
+
+                server.add_money(tax)
 
                 config.USERS.update_one({'id': payload.user_id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
 
@@ -341,9 +356,11 @@ class Market(commands.Cog):
 
             
             if len(selling) > 0:
-                tax = round(total * server['tax'])
+                tax = round(total * server.tax)
                 total -= tax
                 total = round(total)
+
+                server.add_money(tax)
 
                 config.USERS.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
 
@@ -390,9 +407,11 @@ class Market(commands.Cog):
                 for selling_item in selling:
                     user['inventory'].remove(selling_item)
 
-                tax = round(total * server['tax'])
+                tax = round(total * server.tax)
                 total -= tax
                 total = round(total)
+
+                server.add_money(tax)
 
                 config.USERS.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
 
@@ -412,7 +431,7 @@ class Market(commands.Cog):
             random.seed(today)
             display = random.sample(config.breads, k=9)
             if ctx.guild is not None:
-                server_tax = str(int(round(config.get_server(ctx.guild.id)['tax']*100))) + "%"
+                server_tax = str(int(round(config.get_server(ctx.guild.id).tax*100))) + "%"
             else:
                 server_tax = "N/A"
 

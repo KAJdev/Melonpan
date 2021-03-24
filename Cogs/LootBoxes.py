@@ -32,6 +32,7 @@ class LootBoxes(commands.Cog):
         await asyncio.sleep(1.5)
 
         user = config.get_user(ctx.author.id)
+        server = config.get_server(ctx.guild.id)
 
         box = None
         for i in user['inventory']:
@@ -59,7 +60,7 @@ class LootBoxes(commands.Cog):
         desc = ""
         to_add = []
         for _ in loot:
-            b = config.create_bread(_)
+            b = server.create_bread(_)
             special_string = b.get('special', None)
             if special_string is not None:
                 special_string = f" `{special_string}`"

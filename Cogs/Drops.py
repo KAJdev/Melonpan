@@ -14,10 +14,10 @@ class Drops(commands.Cog):
         self.bot = bot
         self.cache = {}
     
-    async def send_drop_message(self, message):
+    async def send_drop_message(self, message, server):
         await asyncio.sleep(5)
         drop = config.create_drop()
-        actual_bread = config.create_bread(drop)
+        actual_bread = server.create_bread(drop)
         special_string = actual_bread.get('special', None)
         if special_string is not None:
             special_string = f" `{special_string}`"
@@ -63,13 +63,13 @@ class Drops(commands.Cog):
     @commands.command()
     async def forcedrop(self, ctx):
         if ctx.author.id in config.OWNERIDS:
-            await self.send_drop_message(ctx.message)
+            await self.send_drop_message(ctx.message, config.get_server(ctx.guild.id))
 
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.guild is not None:
             server = config.get_server(message.guild.id)
-            if message.channel.id in server['blacklist']:
+            if message.channel.id in server.blacklist:
                 return
 
         if message.guild is not None:
@@ -84,8 +84,10 @@ class Drops(commands.Cog):
 
         if len(self.cache[message.channel.id][0]) > config.drop_message_count:
             self.cache[message.channel.id][0].pop(0)
+
+        server = config.get_server(message.guild.id)
         
-        if datetime.datetime.utcnow() - self.cache[message.channel.id][1] >= datetime.timedelta(minutes=config.drop_cooldown_min):
+        if datetime.datetime.utcnow() - self.cache[message.channel.id][1] >= datetime.timedelta(minutes=server.drop_cooldown_min):
             count = 0
             for x in self.cache[message.channel.id][0]:
                 if datetime.datetime.utcnow() - x[1] <= datetime.timedelta(minutes=config.drop_time_constraint):
@@ -96,7 +98,7 @@ class Drops(commands.Cog):
                 guild = "NO GUILD"
                 if message.guild is not None: guild = message.guild.name
                 print(f"DROP: #{message.channel.name} ({guild})")
-                await self.send_drop_message(message)
+                await self.send_drop_message(message, server)
 
 def setup(bot):
     bot.add_cog(Drops(bot))

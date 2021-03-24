@@ -23,7 +23,7 @@ class Blacklist(commands.Cog):
         server = config.get_server(ctx.guild.id)
         if channel is None:
             desc = ""
-            for entry in server['blacklist']:
+            for entry in server.blacklist:
                 c = ctx.guild.get_channel(entry)
                 if c is not None:
                     desc += f" • {c.mention}\n"
@@ -32,13 +32,12 @@ class Blacklist(commands.Cog):
             embed = discord.Embed(title="Blacklisted Channels", color=config.MAINCOLOR, description=desc)
             await ctx.reply_safe(embed=embed)
         else:
-            if channel.id in server['blacklist']:
-                config.SERVERS.update_one({'id': server['id']}, {'$pull': {'blacklist': channel.id}})
+            if channel.id in server.blacklist:
+                server.update({'$pull': {'blacklist': channel.id}})
                 await ctx.reply_safe(f"{channel.mention} was unblacklisted. Commands **will** work there once again.")
             else:
-                config.SERVERS.update_one({'id': server['id']}, {'$push': {'blacklist': channel.id}})
+                server.update({'$push': {'blacklist': channel.id}})
                 await ctx.reply_safe(f"{channel.mention} was blacklisted. Commands will **no longer** work there.")
-            config.update_server_cache(ctx.guild.id)
     
     @blacklist.error
     async def blacklist_error(self, ctx, error):

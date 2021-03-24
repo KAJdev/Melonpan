@@ -56,7 +56,7 @@ async def help(ctx):
         #description="If you need help getting started, type `pan howto` to start the quick tutorial."
     ).add_field(
         name="Information",
-        value="`inventory`, `stats`, `bal`, `badges`, `breads`",
+        value="`inventory`, `stats`, `bal`, `badges`, `breads`, `guild`",
         inline=False
     ).add_field(
         name="Bakery",
@@ -77,7 +77,7 @@ async def invite(ctx):
     await ctx.send(embed=discord.Embed(description="[**Invite Link**](https://discord.com/api/oauth2/authorize?client_id=815835732979220501&permissions=314433&scope=bot) 🔗", color = config.MAINCOLOR))
 
 # Cogs
-cogs = ["Eval", "Information", "Market", "Bakery", "StatCord", "Leaderboards", "Badges", "Blacklist", "Drops", "LootBoxes", "Vote"]
+cogs = ["Eval", "Information", "Market", "Bakery", "StatCord", "Leaderboards", "Badges", "Blacklist", "Drops", "LootBoxes", "Vote", "Guilds"]
 
 # Starts all cogs
 for cog in cogs:
