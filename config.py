@@ -199,14 +199,14 @@ guild_money_levels = [
 ]
 
 class Server():
-    def __init__(self, **kwargs):
-        for k,v in kwargs.items():
+    def __init__(self, server):
+        for k,v in server.items():
             setattr(self, k, v)
-        self.id = kwargs.get('id', None)
-        self.blacklist = kwargs.get('blacklist', [])
-        self.prefix = kwargs.get('prefix', 'pan ')
-        self.tax = kwargs.get('tax', round(random.random() * 0.2, 2))
-        self.money = kwargs.get('money', 0)
+        self.id = server.get('id', None)
+        self.blacklist = server.get('blacklist', [])
+        self.prefix = server.get('prefix', 'pan ')
+        self.tax = server.get('tax', round(random.random() * 0.2, 2))
+        self.money = server.get('money', 0)
         level = self.get_level()
         self.name = level.get('name', None)
         self.one_of_a_kind_bread_chance = level.get('one_of_a_kind_droprate', one_of_a_kind_bread_chance)
