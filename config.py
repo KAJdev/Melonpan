@@ -233,7 +233,7 @@ class Server():
     def add_money(self, amount):
         self.update({'$inc': {'money': amount}})
 
-    def create_bread(bread):
+    def create_bread(self, bread):
         random.seed()
         bread = {
             'index': breads.index(bread),
