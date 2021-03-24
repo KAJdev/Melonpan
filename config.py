@@ -125,7 +125,7 @@ def get_server(id):
     if cached is not None:
         return cached
 
-    server = SERVERS.find_one({'id': id})
+    server = dict(SERVERS.find_one({'id': id}))
     if server is None:
         random.seed()
         server = {
