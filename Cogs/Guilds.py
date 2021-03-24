@@ -16,6 +16,8 @@ class Guilds(commands.Cog):
         embed.set_author(icon_url=str(ctx.guild.icon_url), name=str(ctx.guild.name))
         embed.add_field(name=server.name, value=f"BreadCoin Value: **{server.money:,}**\nTax: **{round(server.tax*100, 2)}%**\nUnique Chance: **{round(server.one_of_a_kind_bread_chance*100, 2)}%**\nDrop Cooldown: **{server.drop_cooldown_min} min.**")
 
+        embed.set_footer(text="Value is collected from taxes and donations.")
+
         embed.description = "`This Server has reached max level.`"
         if server.money_until_next_level is not None:
             embed.description = f"`{server.money_until_next_level} BreadCoin until server upgrade.`"
