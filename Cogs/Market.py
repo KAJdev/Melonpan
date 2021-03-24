@@ -83,7 +83,7 @@ class Market(commands.Cog):
     @commands.command(aliases=['d', 'give', 'trash'])
     async def donate(self, ctx, amount: str = None, *, item : str = None):
         user = config.get_user(ctx.author.id)
-        server = config.get_user(ctx.guild.id)
+        server = config.get_server(ctx.guild.id)
 
         if amount is None:
             amount = "1"
