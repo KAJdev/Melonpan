@@ -123,7 +123,7 @@ class Market(commands.Cog):
             else:
                 total = 0
                 for selling_item in selling:
-                     __ = config.breads[selling_item['index']]
+                    __ = config.breads[selling_item['index']]
                     item_price = market.ItemPrice(__['price'], __['volitility'], selling_item['index'])
                     total += round(item_price.get_price(market.get_day_of_year_active()))
 
