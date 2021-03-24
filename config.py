@@ -213,7 +213,7 @@ class Server():
         self.tax *= level.get('tax_ratio', 1)
         self.drop_cooldown_min = level.get('drop_cooldown', drop_cooldown_min)
         i = guild_money_levels.index(level)
-        if i = len(guild_money_levels) - 1
+        if i >= len(guild_money_levels) - 1
             self.money_until_next_level = None
             self.next_level = None
         else:
