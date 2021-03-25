@@ -84,8 +84,6 @@ class Drops(commands.Cog):
 
         if len(self.cache[message.channel.id][0]) > config.drop_message_count:
             self.cache[message.channel.id][0].pop(0)
-
-        server = config.get_server(message.guild.id)
         
         if datetime.datetime.utcnow() - self.cache[message.channel.id][1] >= datetime.timedelta(minutes=server.drop_cooldown_min):
             count = 0
