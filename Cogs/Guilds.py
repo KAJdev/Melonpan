@@ -11,6 +11,9 @@ class Guilds(commands.Cog):
 
     @commands.command(aliases=['server', 'g', 'discord', 'company', 'com', 'group', 'clan'])
     async def guild(self, ctx):
+        if ctx.guild is None:
+            await ctx.send("<:melonpan:815857424996630548> `This isn't a guild, silly.`")
+            return
         server = config.get_server(ctx.guild.id)
         embed = discord.Embed(title="Server Info", color=config.MAINCOLOR)
         embed.set_author(icon_url=str(ctx.guild.icon_url), name=str(ctx.guild.name))
