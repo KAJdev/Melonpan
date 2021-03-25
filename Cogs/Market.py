@@ -230,7 +230,14 @@ class Market(commands.Cog):
             today_price = round(item_price.get_price(market.get_day_of_year_active()))
 
             selling = []
-            for their_item in user['inventory']:
+            sorted_list = []
+            for _ in user['inventory']:
+                if _.get('special', None) is None:
+                    sorted_list.insert(0, _)
+                else:
+                    sorted_list.append(_)
+
+            for their_item in sorted_list:
                 if their_item['index'] == config.breads.index(selected):
                     selling.append(their_item)
                 if len(selling) >= amount:
