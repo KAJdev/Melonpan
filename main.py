@@ -74,7 +74,7 @@ async def help(ctx):
 
 @bot.command(aliases = ['join'])
 async def invite(ctx):
-    await ctx.send(embed=discord.Embed(description="[**Invite Link**](https://discord.com/api/oauth2/authorize?client_id=815835732979220501&permissions=314433&scope=bot) 🔗", color = config.MAINCOLOR))
+    await ctx.send(embed=discord.Embed(description="[**Invite Link**](https://discord.com/api/oauth2/authorize?client_id=815835732979220501&permissions=314433&scope=bot%20applications.commands) 🔗", color = config.MAINCOLOR))
 
 # Cogs
 cogs = ["Eval", "Information", "Market", "Bakery", "StatCord", "Leaderboards", "Badges", "Blacklist", "Drops", "LootBoxes", "Vote", "Guilds"]
