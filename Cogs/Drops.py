@@ -71,6 +71,8 @@ class Drops(commands.Cog):
             server = config.get_server(message.guild.id)
             if message.channel.id in server.blacklist:
                 return
+        else:
+            return
 
         if message.guild is not None:
             if not message.channel.permissions_for(message.guild.me).send_messages:
