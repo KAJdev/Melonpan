@@ -173,11 +173,11 @@ class Trading(commands.Cog):
     async def offer(self, ctx, amount:str=None, *, item:str=None):
         user = config.get_user(ctx.author.id)
         trade = self.get_trade(ctx.author.id)
-        other = {'tradee': "trader", 'trader': "tradee"}
-        other = other[trade[0]]
         if trade is None:
             await ctx.send("<:melonpan:815857424996630548> `You are not trading with anyone. Start trading with 'pan trade <member>'`")
             return
+        other = {'tradee': "trader", 'trader': "tradee"}
+        other = other[trade[0]]
 
         selected = None
 
@@ -316,11 +316,11 @@ class Trading(commands.Cog):
     async def unoffer(self, ctx, amount:str=None, *, item:str=None):
         user = config.get_user(ctx.author.id)
         trade = self.get_trade(ctx.author.id)
-        other = {'tradee': "trader", 'trader': "tradee"}
-        other = other[trade[0]]
         if trade is None:
             await ctx.send("<:melonpan:815857424996630548> `You are not trading with anyone. Start trading with 'pan trade <member>'`")
             return
+        other = {'tradee': "trader", 'trader': "tradee"}
+        other = other[trade[0]]
 
         selected = None
 
