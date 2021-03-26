@@ -38,6 +38,9 @@ class Trading(commands.Cog):
             if str(_) == "<a:check:824804284398698496>":
                 users = await _.users().flatten()
         
+        if users is None:
+            return False
+        
         only_ids = list(x.id for x in users)
         return trade['member'].id in only_ids and trade['author'].id in only_ids
 
