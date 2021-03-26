@@ -11,7 +11,7 @@ class Trading(commands.Cog):
         self.active_trades = {}
 
     def create_trade_embed(self, trade):
-        embed = discord.Embed(title=f"Trade ({trade['author']} - {trade['member']})", color=config.MAINCOLOR, description="**How to trade:**\n\n `pan offer <amount> <bread|id>` - offer bread\n `pan unoffer <amount> <bread|id>` - unoffer bread\n `pan offer|unoffer <amount> breadcoin` - offer BreadCoin\n `pan exit` - cancel trade\n\nReact with <a:check:824804284398698496> to accept the trade.")
+        embed = discord.Embed(title=f"Trade ({trade['author']} - {trade['member']})", color=config.MAINCOLOR, description="**How to trade:**\n `pan offer <amount> <bread|id>` - offer bread\n `pan unoffer <amount> <bread|id>` - unoffer bread\n `pan offer|unoffer <amount> breadcoin` - offer BreadCoin\n `pan exit` - cancel trade\n\nReact with <a:check:824804284398698496> to accept the trade.")
 
         trader_breads = {}
         tradee_breads = {}
