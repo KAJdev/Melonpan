@@ -48,7 +48,7 @@ class Trading(commands.Cog):
 
     async def countdown(self, trade):
         colors = {0: 0x32a852, 1: 0xcc2316}
-        for _ in range(5, 5, -1):
+        for _ in range(5, 0, -1):
             embed = self.create_trade_embed(trade)
             embed.color = colors[_ % 2]
             embed.set_author(name=f"Trade Completing in {_}...")
