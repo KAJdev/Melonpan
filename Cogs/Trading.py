@@ -16,10 +16,19 @@ class Trading(commands.Cog):
 
         trader_breads = {}
         tradee_breads = {}
+
+        trader_special = []
+        tradee_special = []
         for _ in trade.get('trader_offers', []):
-            trader_breads[_['index']] = trader_breads.get(_['index'], 0) + 1
+            if _.get("special", None) is None:
+                trader_breads[_['index']] = trader_breads.get(_['index'], 0) + 1
+            else:
+                trader_special.append(_)
         for _ in trade.get('tradee_offers', []):
-            tradee_breads[_['index']] = tradee_breads.get(_['index'], 0) + 1
+            if _.get("special", None) is None:
+                tradee_breads[_['index']] = tradee_breads.get(_['index'], 0) + 1
+            else:
+                tradee_special.append(_)
 
         trader_offers_string = f"{trade['trader_coins']} <:BreadCoin:815842873937100800>\n"
         tradee_offers_string = f"{trade['tradee_coins']} <:BreadCoin:815842873937100800>\n"
@@ -27,6 +36,11 @@ class Trading(commands.Cog):
             trader_offers_string += f"> `{amount}x` {config.breads[index]['emoji']} **{config.breads[index]['name']}**\n"
         for index,amount in tradee_breads.items():
             tradee_offers_string += f"> `{amount}x` {config.breads[index]['emoji']} **{config.breads[index]['name']}**\n"
+        
+        for s in trader_special:
+            trader_offers_string += f"> {config.breads[s['index']]['emoji']} **{config.breads[s['index']]['name']}** `{s['special']}`\n"
+        for s in tradee_special:
+            tradee_offers_string += f"> {config.breads[s['index']]['emoji']} **{config.breads[s['index']]['name']}** `{s['special']}`\n"
 
         embed.add_field(name=f"{trade['author']} Offers", value=trader_offers_string, inline=True)
         embed.add_field(name=f"{trade['member']} Offers", value=tradee_offers_string, inline=True)
