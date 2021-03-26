@@ -11,7 +11,7 @@ class Trading(commands.Cog):
         self.active_trades = {}
 
     def create_trade_embed(self, trade):
-        embed = discord.Embed(title=f"Trade ({ctx.author} - {member})", color=config.MAINCOLOR, description="**How to trade:**\n\n `pan offer <amount> <bread|id>` - offer bread\n `pan unoffer <amount> <bread|id>` - unoffer bread\n `pan offer|unoffer <amount> breadcoin` - offer BreadCoin\n `pan exit` - cancel trade\n\nReact with <a:check:824804284398698496> to accept the trade.")
+        embed = discord.Embed(title=f"Trade ({trade['author']} - {trade['member']})", color=config.MAINCOLOR, description="**How to trade:**\n\n `pan offer <amount> <bread|id>` - offer bread\n `pan unoffer <amount> <bread|id>` - unoffer bread\n `pan offer|unoffer <amount> breadcoin` - offer BreadCoin\n `pan exit` - cancel trade\n\nReact with <a:check:824804284398698496> to accept the trade.")
 
         trader_breads = {}
         tradee_breads = {}
@@ -47,18 +47,32 @@ class Trading(commands.Cog):
             embed = self.create_trade_embed(trade)
             embed.color = colors[_ % 2]
             embed.set_author(name=f"Trade Completing in {_}...")
-            await trade['message'].edit(embed=embed)
+            try:
+                await trade['message'].edit(embed=embed)
+            except:
+                del self.active_trades[trade['message'].id]
         if await self.check_reactions(trade):
             try:
                 await self.complete_trade(trade)
             except:
                 embed = discord.Embed(title="Trade Failed", color=config.ERRORCOLOR, description="An unknown error occured while completing the trade.")
                 await trade['message'].edit(embed=embed)
+            finally:
                 del self.active_trades[trade['message'].id]
         else:
             embed = self.create_trade_embed(trade)
             embed.set_author(name=f"Trade Canceled")
+            try:
+                await trade['message'].edit(embed=embed)
+            except:
+                del self.active_trades[trade['message'].id]
+
+    async def update_trade(self, trade):
+        embed = self.create_trade_embed(trade)
+        try:
             await trade['message'].edit(embed=embed)
+        except:
+            del self.active_trades[trade['message'].id]
 
     async def complete_trade(self, trade):
         trader = config.get_user(trade['author'].id)
@@ -66,8 +80,10 @@ class Trading(commands.Cog):
 
         if (not all(list(x in trader['inventory'] for x in trade['trader_offers']))) or (not all(list(x in tradee['inventory'] for x in trade['tradee_offers']))) or (trade['trader_coins'] > trader['money']) or (trade['tradee_coins'] > tradee['money']):
             embed = discord.Embed(title="Trade Failed", color=config.ERRORCOLOR, description="Some or all items and BreadCoins offered by one or both parties were not found.")
-            await trade['message'].edit(embed=embed)
-            del self.active_trades[trade['message'].id]
+            try:
+                await trade['message'].edit(embed=embed)
+            finally:
+                del self.active_trades[trade['message'].id]
             return
         
         for _ in trade['trader_offers']:
@@ -84,8 +100,10 @@ class Trading(commands.Cog):
 
         if len(trader['inventory']) > trader.get('inventory_capacity', 25) or len(tradee['inventory']) > tradee.get('inventory_capacity', 25) or trader['money'] < 0 or tradee['money'] < 0:
             embed = discord.Embed(title="Trade Failed", color=config.ERRORCOLOR, description="One or both parties didn't have enough Storage Space or BreadCoin to complete the trade.")
-            await trade['message'].edit(embed=embed)
-            del self.active_trades[trade['message'].id]
+            try:
+                await trade['message'].edit(embed=embed)
+            finally:
+                del self.active_trades[trade['message'].id]
             return
 
         config.USERS.update_one({'id': trader['id']}, {'$set': {'inventory': trader['inventory'], 'money': trader['money']}})
@@ -94,8 +112,8 @@ class Trading(commands.Cog):
         embed = self.create_trade_embed(trade)
         embed.color = 0x22cc12
         embed.description="Trade Completed"
-        await trade['message'].edit(embed=embed)
         try:
+            await trade['message'].edit(embed=embed)
             await trade['message'].clear_reactions()
         except:
             pass
@@ -108,6 +126,28 @@ class Trading(commands.Cog):
             elif _['tradee']['id'] == id:
                 trade = ('tradee', _)
         return trade
+
+    @commands.command(aliases=['cancel', 'quit'])
+    async def exit(self, ctx):
+        user = config.get_user(ctx.author.id)
+        trade = self.get_trade(ctx.author.id)
+        if trade is None:
+            await ctx.send("<:melonpan:815857424996630548> `You are not trading with anyone. Start trading with 'pan trade <member>'`")
+            return
+
+        embed = discord.Embed(title="Trade Canceled", color=config.ERRORCOLOR, description="A party has exited the trade.")
+        try:
+            await trade['message'].edit(embed=embed)
+        finally:
+            del self.active_trades[trade['message'].id]
+
+        m = await ctx.reply_safe("<:check2:824842637381992529> `Trade Canceled.`")
+        await m.delete(delay=5)
+        try:
+            await ctx.message.delete()
+        except:
+            return
+        return
 
     @commands.command(aliases=['o'])
     async def offer(self, ctx, amount:str=None, *, item:str=None):
@@ -144,6 +184,7 @@ class Trading(commands.Cog):
                 checking = config.get_user(trade[1][other]['id'])
                 if len(checking['inventory']) + len(trade[1][trade[0] + "_offers"]) < checking.get('inventory_capacity', 25):
                     trade[1][trade[0] + "_offers"].append(special)
+                    await self.update_trade(trade[1])
                     m = await ctx.send("<:check2:824842637381992529> `Offer placed.`")
                     await m.delete(delay=5)
                     try:
@@ -193,6 +234,7 @@ class Trading(commands.Cog):
                     return
 
                 trade[1][trade[0] + "_coins"] += amount
+                await self.update_trade(trade[1])
                 m = await ctx.send("<:check2:824842637381992529> `BreadCoin offer placed.`")
                 await m.delete(delay=5)
                 try:
@@ -233,6 +275,7 @@ class Trading(commands.Cog):
                 checking = config.get_user(trade[1][other]['id'])
                 if len(checking['inventory']) + len(final_offering) <= checking.get('inventory_capacity', 25):
                     trade[1][trade[0] + "_offers"].extend(final_offering)
+                    await self.update_trade(trade[1])
                     m = await ctx.send("<:check2:824842637381992529> `Offer placed.`")
                     await m.delete(delay=5)
                     try:
@@ -283,6 +326,7 @@ class Trading(commands.Cog):
                     return
                 
                 trade[1][trade[0] + "_offers"].remove(special)
+                await self.update_trade(trade[1])
                 m = await ctx.send("<:check2:824842637381992529> `Offer removed.`")
                 await m.delete(delay=5)
                 try:
@@ -322,6 +366,7 @@ class Trading(commands.Cog):
                 trade[1][trade[0] + "_coins"] -= amount
                 if trade[1][trade[0] + "_coins"] < 0:
                     trade[1][trade[0] + "_coins"] = 0
+                await self.update_trade(trade[1])
                 m = await ctx.send("<:check2:824842637381992529> `BreadCoin offer removed.`")
                 await m.delete(delay=5)
                 try:
@@ -356,6 +401,7 @@ class Trading(commands.Cog):
             else:
                 for _ in unoffering:
                     trade[1][trade[0] + "_offers"].remove(_)
+                await self.update_trade(trade[1])
                 m = await ctx.send("<:check2:824842637381992529> `Offers removed.`")
                 await m.delete(delay=5)
                 try:
