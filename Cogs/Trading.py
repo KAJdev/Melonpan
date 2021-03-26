@@ -1,6 +1,7 @@
 import discord
 import config
 import datetime
+import asyncio
 
 from discord.ext import commands, tasks, menus
 
@@ -55,6 +56,8 @@ class Trading(commands.Cog):
                 await trade['message'].edit(embed=embed)
             except:
                 del self.active_trades[trade['message'].id]
+                print("aborting")
+            await asyncio.sleep(1)
         if await self.check_reactions(trade):
             try:
                 await self.complete_trade(trade)
