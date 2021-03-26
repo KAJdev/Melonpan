@@ -80,7 +80,7 @@ class Market(commands.Cog):
                     timestamp=datetime.datetime.utcnow()
                 ))
 
-    @commands.command(aliases=['d', 'give', 'trash'])
+    @commands.command(aliases=['d', 'trash'])
     async def donate(self, ctx, amount: str = None, *, item : str = None):
         user = config.get_user(ctx.author.id)
         server = config.get_server(ctx.guild.id)

@@ -249,7 +249,7 @@ class Trading(commands.Cog):
                         return
                     return
 
-    @commands.command(aliases=['uo'])
+    @commands.command(aliases=['uo', 'u'])
     async def unoffer(self, ctx, amount:str=None, *, item:str=None):
         user = config.get_user(ctx.author.id)
         trade = self.get_trade(ctx.author.id)
