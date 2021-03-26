@@ -158,9 +158,9 @@ class Trading(commands.Cog):
 
         embed = discord.Embed(title="Trade Canceled", color=config.ERRORCOLOR, description="A party has exited the trade.")
         try:
-            await trade['message'].edit(embed=embed)
+            await trade[1]['message'].edit(embed=embed)
         finally:
-            del self.active_trades[trade['message'].id]
+            del self.active_trades[trade[1]['message'].id]
 
         m = await ctx.reply_safe("<:check2:824842637381992529> `Trade Canceled.`")
         await m.delete(delay=5)
