@@ -33,6 +33,7 @@ class Trading(commands.Cog):
         return embed
 
     async def check_reactions(self, trade):
+        trade['message'] = await trade['channel'].fetch_message(trade['message'].id)
         users = None
         for _ in trade['message'].reactions:
             if str(_) == "<a:check:824804284398698496>":
@@ -450,8 +451,6 @@ class Trading(commands.Cog):
         self.active_trades[msg.id] = trade_obj
 
         await msg.add_reaction("<a:check:824804284398698496>")
-        trade_obj['message'] = await ctx.channel.fetch_message(msg.id)
-
 
         
     @commands.Cog.listener()
