@@ -42,8 +42,8 @@ class Trading(commands.Cog):
         for s in tradee_special:
             tradee_offers_string += f"> {config.breads[s['index']]['emoji']} **{config.breads[s['index']]['name']}** `{s['special']}`\n"
 
-        embed.add_field(name=f"{trade['author']} Offers", value=trader_offers_string, inline=True)
-        embed.add_field(name=f"{trade['member']} Offers", value=tradee_offers_string, inline=True)
+        embed.add_field(name=f"{trade['author'].name}'s' Offers", value=trader_offers_string, inline=True)
+        embed.add_field(name=f"{trade['member'].name}'s' Offers", value=tradee_offers_string, inline=True)
 
         return embed
 
