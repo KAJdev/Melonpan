@@ -34,12 +34,12 @@ class Trading(commands.Cog):
 
     async def check_reactions(self, trade):
         users = None
-        for _ in trade_obj['message'].reactions:
+        for _ in trade['message'].reactions:
             if str(_) == "<a:check:824804284398698496>":
                 users = await _.users().flatten()
         
         only_ids = list(x.id for x in users)
-        return trade_obj['member'].id in only_ids and trade_obj['author'].id in only_ids
+        return trade['member'].id in only_ids and trade['author'].id in only_ids
 
     async def countdown(self, trade):
         colors = {0: 0x32a852, 1: 0xcc2316}
@@ -445,6 +445,8 @@ class Trading(commands.Cog):
         trade_obj['message'] = msg
 
         self.active_trades[msg.id] = trade_obj
+
+        await msg.add_reaction("<a:check:824804284398698496>")
 
         
     @commands.Cog.listener()
