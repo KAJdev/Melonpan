@@ -20,15 +20,15 @@ class Trading(commands.Cog):
         for _ in trade.get('tradee_offers', []):
             tradee_breads[_['index']] = tradee_breads.get(_['index'], 0) + 1
 
-        trader_offers_string = ""
-        tradee_offers_string = ""
+        trader_offers_string = f"{trade['trader_coins']} <:BreadCoin:815842873937100800>\n"
+        tradee_offers_string = f"{trade['tradee_coins']} <:BreadCoin:815842873937100800>\n"
         for index,amount in trader_breads.items():
             trader_offers_string += f"> `{amount}x` {config.breads[index]['emoji']} **{config.breads[index]['name']}**\n"
         for index,amount in tradee_breads.items():
             tradee_offers_string += f"> `{amount}x` {config.breads[index]['emoji']} **{config.breads[index]['name']}**\n"
 
-        embed.add_field(name=f"{trade['author']}", value=trader_offers_string)
-        embed.add_field(name=f"{trade['member']}", value=tradee_offers_string)
+        embed.add_field(name=f"{trade['author']} Offers", value=trader_offers_string, inline=True)
+        embed.add_field(name=f"{trade['member']} Offers", value=tradee_offers_string, inline=True)
 
         return embed
 
