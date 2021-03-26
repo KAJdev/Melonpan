@@ -163,8 +163,6 @@ class Trading(commands.Cog):
         finally:
             del self.active_trades[trade[1]['message'].id]
 
-        m = await ctx.reply_safe("<:check2:824842637381992529> `Trade Canceled.`")
-        await m.delete(delay=5)
         try:
             await ctx.message.delete()
         except:
