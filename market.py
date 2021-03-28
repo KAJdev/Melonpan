@@ -74,7 +74,7 @@ class ItemPrice():
         xfinal = []
         for _ in xnew:
             xfinal.append(str(round(_)))
-        xfinal.append("0")
+        xfinal[len(xfinal) - 1] = "0"
 
         ax.plot(xfinal, y_smooth, color=(224/255, 1, 186/255))
         plt.yticks(np.arange(math.floor(y.min()) - 1, math.ceil(y.max()) + 1, 1))
