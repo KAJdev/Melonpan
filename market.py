@@ -62,10 +62,20 @@ class ItemPrice():
         days.reverse()
         x_axises = []
         for __ in days:
-            x_axises.append(str(__) + " days ago")
+            x_axises.append(str(__/2.) + " days ago")
 
-        ax.plot(x_axises, prices, color=(224/255, 1, 186/255))
-        plt.xticks(np.arange(0, len(days)+1, 10))
+        x = np.array(days)
+        y = np.array(prices)
+
+        #define x as 200 equally spaced values between the min and max of original x
+        xnew = np.linspace(x.min(), x.max(), 300)
+
+        #define spline
+        spl = make_interp_spline(x, y, k=3)
+        y_smooth = spl(xnew)
+
+        ax.plot(xnew, y_smooth, color=(224/255, 1, 186/255))
+        plt.xticks(np.arange(0, len(xnew)+1, 20))
 
         ax.get_yaxis().tick_left()
         ax.spines["top"].set_visible(False)
