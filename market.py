@@ -68,7 +68,7 @@ class ItemPrice():
 
         #define x as 200 equally spaced values between the min and max of original x
         xnew = np.linspace(x.min(), x.max(), 200)
-        xnew.reverse()
+        xnew = xnew[::-1]
 
         #define spline
         spl = make_interp_spline(x, y, k=3)
