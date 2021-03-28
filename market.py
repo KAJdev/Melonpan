@@ -80,7 +80,7 @@ class ItemPrice():
             xfinal.append(f"{round(_)} Days Ago")
 
         ax.plot(xfinal, y_smooth, color=(224/255, 1, 186/255))
-        plt.xticks(np.arange(len(xnew)+1, 0, 40))
+        plt.xticks(np.arange(0, len(days)+1, 20))
         plt.yticks(np.arange(math.floor(y.min()), math.ceil(y.max()), 1))
         plt.text(len(days), prices[0], f"  {int(prices[0])} BreadCoin", fontsize=14, color=(224/255, 1, 186/255))
 
