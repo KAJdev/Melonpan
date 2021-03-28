@@ -59,7 +59,6 @@ class ItemPrice():
         fig.patch.set_visible(False)
 
         days = list(range(1, 121))
-        days.reverse()
         # x_axises = []
         # for __ in days:
         #     x_axises.append(str(__/2.) + " days ago")
@@ -69,6 +68,7 @@ class ItemPrice():
 
         #define x as 200 equally spaced values between the min and max of original x
         xnew = np.linspace(x.min(), x.max(), 200)
+        xnew.reverse()
 
         #define spline
         spl = make_interp_spline(x, y, k=3)
