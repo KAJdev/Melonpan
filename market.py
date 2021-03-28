@@ -22,7 +22,7 @@ def get_minute_of_year_locked():
     midnight = datetime.datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
     delta = datetime.datetime.utcnow() - midnight
     minute = (delta.total_seconds()/60/60/24) + day
-    return math.floor(minute * 10) / 10
+    return math.floor(minute * 100) / 100
 
 def get_day_of_year_active():
     day = get_day_of_year()
@@ -54,7 +54,7 @@ class ItemPrice():
     def get_graph(self, days):
         prices = []
         for _ in range(1, 120):
-            day = get_minute_of_year_locked() - (_/1440) # convert to minutes and create a list of the last 120 minutes (2 hours)
+            day = get_minute_of_year_locked() - (_/86400) # convert to minutes and create a list of the last 120 minutes (2 hours)
             if day <= 0:
                 day += 365
             prices.append(self.get_price(day))
