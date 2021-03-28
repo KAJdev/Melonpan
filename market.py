@@ -41,7 +41,7 @@ class ItemPrice():
 
     def get_price(self, time):
         noise = PerlinNoise(octaves=10, seed=self.s + 1)
-        s = (noise(time * 4) - 0.5) * 2
+        s = (noise(time * 2) - 0.5) * 2
         s *= (self.v * self.i) * 0.5
         self.c = self.i + s
 
