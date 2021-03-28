@@ -58,7 +58,7 @@ class ItemPrice():
             if day <= 0:
                 day += 365
             prices.append(self.get_price(day))
-        prices.append(self.get_price(get_minute_of_year_locked()))
+        prices.append(self.get_price(get_day_of_year_active()))
         #prices.reverse()
 
         fig, ax = plt.subplots(figsize=(8, 2),frameon=False)
