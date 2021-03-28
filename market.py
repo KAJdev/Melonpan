@@ -46,8 +46,8 @@ class ItemPrice():
 
     def get_graph(self, days):
         prices = []
-        for _ in range(1, 60):
-            day = get_day_of_year() - _
+        for _ in range(1, 120):
+            day = get_day_of_year() - (_/2.)
             if day <= 0:
                 day += 365
             prices.append(int(self.get_price(day + 0.1234)))
@@ -65,6 +65,7 @@ class ItemPrice():
             x_axises.append(str(__) + " days ago")
 
         ax.plot(x_axises, prices, color=(224/255, 1, 186/255))
+        plt.xticks(np.arange(0, len(days)+1, 5))
 
         ax.get_yaxis().tick_left()
         ax.spines["top"].set_visible(False)
