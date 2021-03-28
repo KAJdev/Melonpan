@@ -50,8 +50,8 @@ class ItemPrice():
             day = get_day_of_year() - (_/2.)
             if day <= 0:
                 day += 365
-            prices.append(int(self.get_price(day + 0.1234)))
-        prices.append(int(self.get_price(get_day_of_year_active())))
+            prices.append(self.get_price(day + 0.1234))
+        prices.append(self.get_price(get_day_of_year_active()))
         prices.reverse()
 
         fig, ax = plt.subplots(figsize=(8, 2),frameon=False)
@@ -59,9 +59,9 @@ class ItemPrice():
         fig.patch.set_visible(False)
 
         days = list(range(1, 121))
-        # x_axises = []
-        # for __ in days:
-        #     x_axises.append(str(__/2.) + " days ago")
+        x_axises = []
+        for __ in days:
+            x_axises.append(str(__/2.) + " days ago")
 
         x = np.array(days)
         y = np.array(prices)
@@ -73,10 +73,11 @@ class ItemPrice():
         spl = make_interp_spline(x, y, k=3)
         y_smooth = spl(xnew)
 
-        xnew = xnew[::-1]
+        xnew = np.flipud(xnew)
 
         ax.plot(xnew, y_smooth, color=(224/255, 1, 186/255))
         #plt.xticks(np.arange(0, len(xnew)+1, 20))
+        plt.yticks(np.arange(y.min(), y.max(), 1))
         plt.text(len(days), prices[0], " Price", fontsize=14, color=(224/255, 1, 186/255))
 
         ax.get_yaxis().tick_left()
