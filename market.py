@@ -58,10 +58,10 @@ class ItemPrice():
         #ax.axis('off')
         fig.patch.set_visible(False)
 
-        days = list(range(1, 61))
+        days = list(range(1, 61)).reverse()
         x_axises = []
-        for _ in days.reverse():
-            x_axises.append(str(_) + " days ago")
+        for __ in days:
+            x_axises.append(str(__) + " days ago")
 
         x = np.array(x_axises)
         y = np.array(prices)
