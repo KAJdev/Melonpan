@@ -50,7 +50,7 @@ class ItemPrice():
             day = get_day_of_year() - _
             if day <= 0:
                 day += 365
-            prices.append(int(self.get_price(day)))
+            prices.append(int(self.get_price(day + 0.1234)))
         prices.append(int(self.get_price(get_day_of_year_active())))
 
         fig, ax = plt.subplots(figsize=(8, 2),frameon=False)
@@ -58,7 +58,12 @@ class ItemPrice():
         #ax.axis('off')
         fig.patch.set_visible(False)
 
-        x = np.array(list(range(1, 61)))
+        days = list(range(1, 61))
+        x_axises = []
+        for _ in days.reverse():
+            x_axises.append(str(_) + " days ago")
+
+        x = np.array(x_axises)
         y = np.array(prices)
 
         #define x as 200 equally spaced values between the min and max of original x
@@ -71,6 +76,7 @@ class ItemPrice():
         ax.plot(xnew, y_smooth, color=(224/255, 1, 186/255))
         #ax.plot(x, y)
 
+        ax.get_yaxis().tick_left()
         ax.spines["top"].set_visible(False)
         ax.spines["bottom"].set_visible(False)
         ax.spines["right"].set_visible(False)
