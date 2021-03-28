@@ -54,28 +54,28 @@ class ItemPrice():
         prices.append(int(self.get_price(get_day_of_year_active())))
 
         fig, ax = plt.subplots(figsize=(8, 2),frameon=False)
-        plt.text(60, prices[len(prices) - 1], " Price", fontsize=14, color=(224/255, 1, 186/255))
         #ax.axis('off')
         fig.patch.set_visible(False)
 
-        days = list(range(1, 121))
-        days.reverse()
-        x_axises = []
-        for __ in days:
-            x_axises.append(str(__/2.) + " days ago")
+        # days = list(range(1, 121))
+        # days.reverse()
+        # x_axises = []
+        # for __ in days:
+        #     x_axises.append(str(__/2.) + " days ago")
 
-        x = np.array(days)
+        x = np.array(list(range(1, 121)))
         y = np.array(prices)
 
         #define x as 200 equally spaced values between the min and max of original x
-        xnew = np.linspace(x.min(), x.max(), 300)
+        xnew = np.linspace(x.min(), x.max(), 125)
 
         #define spline
         spl = make_interp_spline(x, y, k=3)
         y_smooth = spl(xnew)
 
         ax.plot(xnew, y_smooth, color=(224/255, 1, 186/255))
-        plt.xticks(np.arange(0, len(xnew)+1, 20))
+        #plt.xticks(np.arange(0, len(xnew)+1, 20))
+        plt.text(len(xnew), prices[len(prices) - 1], " Price", fontsize=14, color=(224/255, 1, 186/255))
 
         ax.get_yaxis().tick_left()
         ax.spines["top"].set_visible(False)
