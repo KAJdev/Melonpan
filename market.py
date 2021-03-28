@@ -68,11 +68,12 @@ class ItemPrice():
 
         #define x as 200 equally spaced values between the min and max of original x
         xnew = np.linspace(x.min(), x.max(), 200)
-        xnew = xnew[::-1]
 
         #define spline
         spl = make_interp_spline(x, y, k=3)
         y_smooth = spl(xnew)
+
+        xnew = xnew[::-1]
 
         ax.plot(xnew, y_smooth, color=(224/255, 1, 186/255))
         #plt.xticks(np.arange(0, len(xnew)+1, 20))
