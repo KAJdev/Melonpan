@@ -64,18 +64,7 @@ class ItemPrice():
         for __ in days:
             x_axises.append(str(__) + " days ago")
 
-        x = np.array(x_axises)
-        y = np.array(prices)
-
-        #define x as 200 equally spaced values between the min and max of original x
-        xnew = np.linspace(x.min(), x.max(), 125)
-
-        #define spline
-        spl = make_interp_spline(x, y, k=3)
-        y_smooth = spl(xnew)
-
-        ax.plot(xnew, y_smooth, color=(224/255, 1, 186/255))
-        #ax.plot(x, y)
+        ax.plot(x_axises, prices, color=(224/255, 1, 186/255))
 
         ax.get_yaxis().tick_left()
         ax.spines["top"].set_visible(False)
