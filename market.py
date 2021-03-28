@@ -84,7 +84,8 @@ class ItemPrice():
         xfinal[len(xfinal) - 1] = "0"
 
         ax.plot(xfinal, y_smooth, color=(224/255, 1, 186/255))
-        plt.yticks(np.arange(math.floor(y.min()) - 1, math.ceil(y.max()) + 1, 1))
+        step = math.ceil(((math.ceil(y.max()) + 1) - (math.floor(y.min()) - 1)) / 5)
+        plt.yticks(np.arange(math.floor(y.min()) - 1, math.ceil(y.max()) + 1, step))
         plt.xticks(np.arange(0, len(days), 20))
         plt.text(len(days), prices[len(prices) - 1], f"-  {round(prices[len(prices) - 1])} BreadCoin", fontsize=14, color=(224/255, 1, 186/255))
 
