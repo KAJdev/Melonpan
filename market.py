@@ -77,7 +77,7 @@ class ItemPrice():
 
         ax.plot(xnew, y_smooth, color=(224/255, 1, 186/255))
         #plt.xticks(np.arange(0, len(xnew)+1, 20))
-        plt.text(len(days), prices[len(prices) - 1], " Price", fontsize=14, color=(224/255, 1, 186/255))
+        plt.text(len(days), prices[0], " Price", fontsize=14, color=(224/255, 1, 186/255))
 
         ax.get_yaxis().tick_left()
         ax.spines["top"].set_visible(False)
