@@ -51,7 +51,7 @@ class ItemPrice():
             self.c = 1
         return self.c
 
-    def get_graph(self):
+    def get_graph(self, days):
         prices = []
         for _ in range(1, 120):
             day = get_minute_of_year_locked() - (_/1440) # convert to minutes and create a list of the last 120 minutes (2 hours)
