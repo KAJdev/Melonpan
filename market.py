@@ -73,9 +73,7 @@ class ItemPrice():
         spl = make_interp_spline(x, y, k=3)
         y_smooth = spl(xnew)
 
-        xnew = np.flipud(xnew)
-
-        ax.plot(xnew, y_smooth, color=(224/255, 1, 186/255))
+        ax.plot(np.flipud(xnew), y_smooth, color=(224/255, 1, 186/255))
         plt.yticks(np.arange(math.floor(y.min()) - 1, math.ceil(y.max()) + 1, 1))
         plt.text(len(days), prices[0], f"  {int(prices[0])} BreadCoin", fontsize=14, color=(224/255, 1, 186/255))
 
