@@ -71,9 +71,6 @@ class ItemPrice():
         ax.plot(xnew, y_smooth, color=(224/255, 1, 186/255))
         #ax.plot(x, y)
 
-        #ax.set(ylabel='Price (Orth)')
-
-        ax = plt.subplot(111)
         ax.spines["top"].set_visible(False)
         ax.spines["bottom"].set_visible(False)
         ax.spines["right"].set_visible(False)
