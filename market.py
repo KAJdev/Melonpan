@@ -52,7 +52,7 @@ class ItemPrice():
                 day += 365
             prices.append(self.get_price(day + 0.1234))
         prices.append(self.get_price(get_day_of_year_active()))
-        prices.reverse()
+        #prices.reverse()
 
         fig, ax = plt.subplots(figsize=(8, 2),frameon=False)
         #ax.axis('off')
@@ -74,6 +74,7 @@ class ItemPrice():
         xfinal = []
         for _ in xnew:
             xfinal.append(str(round(_)))
+        xfinal.append("0")
 
         ax.plot(xfinal, y_smooth, color=(224/255, 1, 186/255))
         plt.yticks(np.arange(math.floor(y.min()) - 1, math.ceil(y.max()) + 1, 1))
