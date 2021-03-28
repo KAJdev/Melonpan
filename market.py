@@ -50,11 +50,11 @@ class ItemPrice():
             day = get_day_of_year() - _
             if day <= 0:
                 day += 365
-            prices.append(self.get_price(day))
-        prices.append(self.get_price(get_day_of_year_active()))
+            prices.append(int(self.get_price(day)))
+        prices.append(int(self.get_price(get_day_of_year_active())))
 
         fig, ax = plt.subplots(figsize=(8, 2),frameon=False)
-        plt.text(60, prices[len(prices) - 1], "Price", fontsize=14, color=(224/255, 1, 186/255))
+        plt.text(60, prices[len(prices) - 1], " Price", fontsize=14, color=(224/255, 1, 186/255))
         #ax.axis('off')
         fig.patch.set_visible(False)
 
