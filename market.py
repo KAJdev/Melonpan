@@ -75,16 +75,12 @@ class ItemPrice():
 
         xnew = np.flipud(xnew)
 
-        xfinal = []
-        for _ in xnew:
-            xfinal.append(f"{round(_)} Days Ago")
-
-        ax.plot(xfinal, y_smooth, color=(224/255, 1, 186/255))
-        plt.xticks(np.arange(0, len(days)+1, 20))
-        plt.yticks(np.arange(math.floor(y.min()), math.ceil(y.max()), 1))
+        ax.plot(xnew, y_smooth, color=(224/255, 1, 186/255))
+        plt.yticks(np.arange(math.floor(y.min()) - 1, math.ceil(y.max()) + 1, 1))
         plt.text(len(days), prices[0], f"  {int(prices[0])} BreadCoin", fontsize=14, color=(224/255, 1, 186/255))
 
         ax.get_yaxis().tick_left()
+        plt.xlabel("\nDays Ago", fontsize=10)
         ax.spines["top"].set_visible(False)
         ax.spines["bottom"].set_visible(False)
         ax.spines["right"].set_visible(False)
