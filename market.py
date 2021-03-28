@@ -52,22 +52,23 @@ class ItemPrice():
                 day += 365
             prices.append(int(self.get_price(day + 0.1234)))
         prices.append(int(self.get_price(get_day_of_year_active())))
+        prices.reverse()
 
         fig, ax = plt.subplots(figsize=(8, 2),frameon=False)
         #ax.axis('off')
         fig.patch.set_visible(False)
 
-        # days = list(range(1, 121))
-        # days.reverse()
+        days = list(range(1, 121))
+        days.reverse()
         # x_axises = []
         # for __ in days:
         #     x_axises.append(str(__/2.) + " days ago")
 
-        x = np.array(list(range(1, 121)))
+        x = np.array(days)
         y = np.array(prices)
 
         #define x as 200 equally spaced values between the min and max of original x
-        xnew = np.linspace(x.min(), x.max(), 125)
+        xnew = np.linspace(x.min(), x.max(), 200)
 
         #define spline
         spl = make_interp_spline(x, y, k=3)
