@@ -74,6 +74,7 @@ class ItemPrice():
         y_smooth = spl(xnew)
 
         xnew = np.flipud(xnew)
+        print(xnew)
 
         ax.plot(xnew, y_smooth, color=(224/255, 1, 186/255))
         #plt.xticks(np.arange(0, len(xnew)+1, 20))
