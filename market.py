@@ -46,11 +46,12 @@ class ItemPrice():
 
     def get_graph(self, days):
         prices = []
-        for _ in range(1, 61):
-            day = get_day_of_year_active() - _
-            if day < 1:
+        for _ in range(1, 60):
+            day = get_day_of_year() - _
+            if day <= 0:
                 day += 365
             prices.append(self.get_price(day))
+        prices.append(self.get_price(get_day_of_year_active()))
 
         fig, ax = plt.subplots(figsize=(8, 2),frameon=False)
         #ax.axis('off')
