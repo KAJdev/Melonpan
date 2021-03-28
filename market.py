@@ -17,6 +17,13 @@ def get_minute_of_year():
     minute = (delta.total_seconds()/60) * day
     return minute
 
+def get_minute_of_year_locked():
+    day = get_day_of_year()
+    midnight = datetime.datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+    delta = datetime.datetime.utcnow() - midnight
+    minute = (delta.total_seconds()/60/60/24) + day
+    return math.floor(minute * 10) / 10
+
 def get_day_of_year_active():
     day = get_day_of_year()
     midnight = datetime.datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -44,14 +51,14 @@ class ItemPrice():
             self.c = 1
         return self.c
 
-    def get_graph(self, days):
+    def get_graph(self):
         prices = []
         for _ in range(1, 120):
-            day = get_day_of_year() - (_/2.)
+            day = get_minute_of_year_locked() - (_/1440) # convert to minutes and create a list of the last 120 minutes (2 hours)
             if day <= 0:
                 day += 365
-            prices.append(self.get_price(day + 0.1234))
-        prices.append(self.get_price(get_day_of_year_active()))
+            prices.append(self.get_price(day))
+        prices.append(self.get_price(get_day_of_year_locked()))
         #prices.reverse()
 
         fig, ax = plt.subplots(figsize=(8, 2),frameon=False)
@@ -79,10 +86,10 @@ class ItemPrice():
         ax.plot(xfinal, y_smooth, color=(224/255, 1, 186/255))
         plt.yticks(np.arange(math.floor(y.min()) - 1, math.ceil(y.max()) + 1, 1))
         plt.xticks(np.arange(0, len(days), 20))
-        plt.text(len(days), prices[len(prices) - 1], f"  {int(prices[len(prices) - 1])} BreadCoin", fontsize=14, color=(224/255, 1, 186/255))
+        plt.text(len(days), prices[len(prices) - 1], f"-  {int(prices[len(prices) - 1])} BreadCoin", fontsize=14, color=(224/255, 1, 186/255))
 
         ax.get_yaxis().tick_left()
-        plt.xlabel("\nDays Ago", fontsize=10)
+        plt.xlabel("\nMinutes Ago", fontsize=10)
         ax.spines["top"].set_visible(False)
         ax.spines["bottom"].set_visible(False)
         ax.spines["right"].set_visible(False)
