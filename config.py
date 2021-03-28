@@ -219,17 +219,17 @@ class Server():
         else:
             self.money_until_next_level = level['max'] - self.money
             self.next_level = guild_money_levels[i + 1]
-    
+
     def update(self, change):
         after = SERVERS.find_one_and_update({'id': self.id}, change, return_document=pymongo.ReturnDocument.AFTER)
         self.__init__(after)
-    
+
     def get_level(self):
         for _ in guild_money_levels:
             if self.money < _['max']:
                 return _
         return guild_money_levels[len(guild_money_levels) - 1]
-    
+
     def add_money(self, amount):
         self.update({'$inc': {'money': amount}})
 
@@ -283,6 +283,10 @@ badges = [
     {
         'name': "Bread Booster",
         'emoji': "<:BreadBooster:815484321371783229>"
+    },
+    {
+        'name': "Developer",
+        'emoji': "<:dev:825665685492858881>"
     }
 ]
 
