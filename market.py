@@ -54,6 +54,7 @@ class ItemPrice():
         prices.append(self.get_price(get_day_of_year_active()))
 
         fig, ax = plt.subplots(figsize=(8, 2),frameon=False)
+        plt.text(60, prices[len(prices) - 1], "Price", fontsize=14, color=(224/255, 1, 186/255))
         #ax.axis('off')
         fig.patch.set_visible(False)
 
@@ -72,10 +73,11 @@ class ItemPrice():
 
         #ax.set(ylabel='Price (Orth)')
 
-        ax.spines['bottom'].set_color('white')
-        ax.spines['top'].set_color('white')
-        ax.spines['right'].set_color('white')
-        ax.spines['left'].set_color('white')
+        ax = plt.subplot(111)
+        ax.spines["top"].set_visible(False)
+        ax.spines["bottom"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.spines["left"].set_visible(False)
         ax.yaxis.label.set_color('white')
         ax.xaxis.label.set_color('white')
         ax.tick_params(axis='x', colors='white')
