@@ -199,7 +199,7 @@ class Market(commands.Cog):
             except:
                 item = amount
                 amount = "1"
-            
+
         if selected is None:
             today = datetime.datetime.now().timetuple().tm_yday
             random.seed(today)
@@ -310,7 +310,7 @@ class Market(commands.Cog):
                 user['inventory'].remove(selling_item)
 
             print(f"QUICK SELL: ({event[1]['id']})")
-            
+
             if len(selling) > 0:
                 tax = round(total * server.tax)
                 total -= tax
@@ -368,7 +368,7 @@ class Market(commands.Cog):
             for selling_item in selling:
                 user['inventory'].remove(selling_item)
 
-            
+
             if len(selling) > 0:
                 tax = round(total * server.tax)
                 total -= tax
@@ -513,42 +513,7 @@ class Market(commands.Cog):
                 if selected['buyable'] or selected['sellable']:
                     item = market.ItemPrice(selected['price'], selected['volitility'], config.breads.index(selected))
 
-                    prices = []
-                    for _ in range(1, 61):
-                        day = market.get_day_of_year_active() - _
-                        if day < 1:
-                            day += 365
-                        prices.append(item.get_price(day))
-
-                    fig, ax = plt.subplots(figsize=(8, 2),frameon=False)
-                    #ax.axis('off')
-                    fig.patch.set_visible(False)
-
-                    x = np.array(list(range(1, 61)))
-                    y = np.array(prices)
-
-                    #define x as 200 equally spaced values between the min and max of original x
-                    xnew = np.linspace(x.min(), x.max(), 125)
-
-                    #define spline
-                    spl = make_interp_spline(x, y, k=3)
-                    y_smooth = spl(xnew)
-
-                    ax.plot(xnew, y_smooth)
-                    #ax.plot(x, y)
-
-                    #ax.set(ylabel='Price (Orth)')
-
-                    ax.spines['bottom'].set_color('white')
-                    ax.spines['top'].set_color('white')
-                    ax.spines['right'].set_color('white')
-                    ax.spines['left'].set_color('white')
-                    ax.yaxis.label.set_color('white')
-                    ax.xaxis.label.set_color('white')
-                    ax.tick_params(axis='x', colors='white')
-                    ax.tick_params(axis='y', colors='white')
-
-                    fig.savefig("tempgraph.png", transparent=True, bbox_inches='tight')
+                    item.get_graph(60).savefig("tempgraph.png", transparent=True, bbox_inches='tight')
 
                     file = discord.File("tempgraph.png") # an image in the same folder as the main bot file
                     embed.set_image(url="attachment://tempgraph.png")
@@ -562,7 +527,7 @@ class Market(commands.Cog):
                     if not selected['buyable']:
                         embed.description += "\n\n**Can only be sold**"
                     elif not selected['sellable']:
-                        embed.description += "\n\n**Can only be purchased**"    
+                        embed.description += "\n\n**Can only be purchased**"
                 embed.set_thumbnail(url=selected['image'])
 
                 await ctx.send(embed=embed, file=file)

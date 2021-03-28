@@ -3,6 +3,9 @@ import datetime
 import random
 import math
 from perlin_noise import PerlinNoise
+import matplotlib
+import matplotlib.pyplot as plt
+from scipy.interpolate import make_interp_spline, BSpline
 
 def get_day_of_year():
     return datetime.datetime.now().timetuple().tm_yday
@@ -40,3 +43,41 @@ class ItemPrice():
         if self.c < 1:
             self.c = 1
         return self.c
+
+    def get_graph(self, days):
+        prices = []
+        for _ in range(1, 61):
+            day = get_day_of_year_active() - _
+            if day < 1:
+                day += 365
+            prices.append(self.get_price(day))
+
+        fig, ax = plt.subplots(figsize=(8, 2),frameon=False)
+        #ax.axis('off')
+        fig.patch.set_visible(False)
+
+        x = np.array(list(range(1, 61)))
+        y = np.array(prices)
+
+        #define x as 200 equally spaced values between the min and max of original x
+        xnew = np.linspace(x.min(), x.max(), 125)
+
+        #define spline
+        spl = make_interp_spline(x, y, k=3)
+        y_smooth = spl(xnew)
+
+        ax.plot(xnew, y_smooth, color=(224/255, 1, 186/255))
+        #ax.plot(x, y)
+
+        #ax.set(ylabel='Price (Orth)')
+
+        ax.spines['bottom'].set_color('white')
+        ax.spines['top'].set_color('white')
+        ax.spines['right'].set_color('white')
+        ax.spines['left'].set_color('white')
+        ax.yaxis.label.set_color('white')
+        ax.xaxis.label.set_color('white')
+        ax.tick_params(axis='x', colors='white')
+        ax.tick_params(axis='y', colors='white')
+
+        return fig
