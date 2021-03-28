@@ -22,7 +22,7 @@ def get_minute_of_year_locked():
     midnight = datetime.datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
     delta = datetime.datetime.utcnow() - midnight
     minute = (delta.total_seconds()/60/60/24) + day
-    return math.floor(minute * 10) / 10
+    return math.floor(minute * 5) / 5
 
 def get_day_of_year_active():
     day = get_day_of_year()
