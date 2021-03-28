@@ -58,14 +58,14 @@ class ItemPrice():
         #ax.axis('off')
         fig.patch.set_visible(False)
 
-        days = list(range(1, 61))
+        days = list(range(1, 121))
         days.reverse()
         x_axises = []
         for __ in days:
             x_axises.append(str(__) + " days ago")
 
         ax.plot(x_axises, prices, color=(224/255, 1, 186/255))
-        plt.xticks(np.arange(0, len(days)+1, 5))
+        plt.xticks(np.arange(0, len(days)+1, 10))
 
         ax.get_yaxis().tick_left()
         ax.spines["top"].set_visible(False)
