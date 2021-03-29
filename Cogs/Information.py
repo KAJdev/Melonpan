@@ -16,6 +16,9 @@ class InventoryMenu(menus.ListPageSource):
         super().__init__(data, per_page=10)
         self.max = max
         self.og = data
+    
+    def create_jump_url(self, ctx):
+        return f"https://discord.com/channels/{ctx.guild.id}/{ctx.channel.id}/{ctx.message.id}"
 
     async def format_page(self, menu, entries):
         offset = menu.current_page * self.per_page
@@ -124,7 +127,7 @@ class Information(commands.Cog):
         embed = discord.Embed(color=config.MAINCOLOR, timestamp=remind_time)
         embed.set_footer(text=f"I will remind you about {message} at >")
 
-        config.TIMERS.insert_one({'owner': ctx.author.id, 'link': ctx.message.jump_url, 'time': remind_time, 'created': datetime.datetime.utcnow(), 'message': message, 'id': ctx.message.id, 'sent': False, 'expired': False})
+        config.TIMERS.insert_one({'owner': ctx.author.id, 'link': self.create_jump_url(ctx), 'time': remind_time, 'created': datetime.datetime.utcnow(), 'message': message, 'id': ctx.message.id, 'sent': False, 'expired': False})
 
         await config.reply(ctx, embed=embed)
 
