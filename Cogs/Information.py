@@ -247,13 +247,19 @@ class Information(commands.Cog):
                 description="specific duration, e.g. (5h 32m 23s) (leave blank to check reminders)",
                 option_type=3,
                 required=False
+            ),
+            create_option(
+                name="message",
+                description="What do you want to be reminded about?",
+                option_type=3,
+                required=False
             )
         ])
-    async def remind_slash(self, ctx: SlashContext, time:str=None):
+    async def remind_slash(self, ctx: SlashContext, time:str=None, message:str=""):
         if time is None:
             await self.reminders_command(ctx)
         else:
-            await self.remind_command(ctx, time)
+            await self.remind_command(ctx, time+" "+message)
 
     @cog_ext.cog_slash(name="balance",
         description="Show your BreadCoin balance.",
