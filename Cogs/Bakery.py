@@ -48,6 +48,17 @@ class BakeryMenu(menus.ListPageSource):
         embed.set_footer(text=f"pan bake <bread> | pan plate\n\nShowing {menu.current_page + 1}/{menu._source.get_max_pages()}")
         return embed
 
+class CustomMenuManager(menus.MenuPages):
+    async def send_initial_message(self, ctx, channel):
+        """|coro|
+        The default implementation of :meth:`Menu.send_initial_message`
+        for the interactive pagination session.
+        This implementation shows the first page of the source.
+        """
+        page = await self._source.get_page(0)
+        kwargs = await self._get_kwargs_from_page(page)
+        return await ctx.send(**kwargs)
+
 class Bakery(commands.Cog):
 
     def __init__(self, bot):
@@ -66,8 +77,9 @@ class Bakery(commands.Cog):
                 x = user['ovens'][_]
             except IndexError:
                 user['ovens'].append(None)
-
-        pages = menus.MenuPages(source=BakeryMenu(user['ovens'], user['oven_count'], baking, user), clear_reactions_after=True)
+                        
+        menuClass = BakeryMenu(user['ovens'], user['oven_count'], baking, user)
+        pages = CustomMenuManager(source=menuClass, clear_reactions_after=True)
         await pages.start(ctx)
 
     async def build_command(self, ctx):
