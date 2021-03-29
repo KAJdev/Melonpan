@@ -16,8 +16,7 @@ class LootBoxes(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
-    async def open(self, ctx):
+    async def open_command(self, ctx):
         user = config.get_user(ctx.author.id)
 
         box = None
@@ -79,6 +78,15 @@ class LootBoxes(commands.Cog):
         await msg.edit(embed=embed)
         config.SELL_BREAD_CACHE.append((msg, user, to_add))
         await msg.add_reaction("💲")
+
+    @commands.command()
+    async def open(self, ctx):
+        await self.open_command(ctx)
+
+    @cog_ext.cog_slash(name="open",
+        description="Open a BreadBox item.")
+    async def open_slash(self, ctx: SlashContext):
+        await self.open_command(ctx)
 
 
 def setup(bot):
