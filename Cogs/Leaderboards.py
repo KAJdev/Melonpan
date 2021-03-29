@@ -89,7 +89,7 @@ class Leaderboards(commands.Cog):
                 "side": "<:stove:815875824376610837>",
                 "title": "Biggest Bakeries"
             },
-            "inventory" {
+            "inventory": {
                 "field": "inventory_capacity",
                 "side": "Storage",
                 "title": "Biggest Inventories"
