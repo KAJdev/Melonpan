@@ -412,7 +412,7 @@ class Trading(commands.Cog):
                 name="member",
                 description="The member to trade with.",
                 option_type=6,
-                required=False
+                required=True
             )
         ])
     async def trade_slash(self, ctx: SlashContext, member:discord.User):
