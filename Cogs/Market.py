@@ -518,7 +518,7 @@ class Market(commands.Cog):
             )
         ])
     async def sell_slash(self, ctx: SlashContext, item:str, amount:int=1):
-        await self.sell_command(ctx, amount, item)
+        await self.sell_command(ctx, str(amount), item)
 
     @cog_ext.cog_slash(name="buy",
         description="Buy an item.",
