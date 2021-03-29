@@ -95,7 +95,7 @@ class Leaderboards(commands.Cog):
                 "title": "Biggest Inventories"
             }
         }
-        await self.top_command(ctx, field=skill[skill]['field'], side=skill[skill]['side'], title=skill[skill]['title'])
+        await self.top_command(ctx, field=skills[skill]['field'], side=skills[skill]['side'], title=skills[skill]['title'])
 
 
 
