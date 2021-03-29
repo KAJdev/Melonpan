@@ -14,7 +14,7 @@ class Trading(commands.Cog):
         self.active_trades = {}
 
     def create_trade_embed(self, trade):
-        embed = discord.Embed(title=f"Trade ({trade['author']} - {trade['member']})", color=config.MAINCOLOR, description="**How to trade:**\n `pan offer <amount> <bread|id>` - offer bread\n `pan unoffer <amount> <bread|id>` - unoffer bread\n `pan offer|unoffer <amount> breadcoin` - offer BreadCoin\n `pan exit` - cancel trade\n\nReact with <a:check:824804284398698496> to accept the trade.")
+        embed = discord.Embed(title=f"Trade ({trade['author']} - {trade['member']})", color=config.MAINCOLOR, description="**How to trade:**\n `pan offer <amount> <bread|id>` - offer bread\n `pan unoffer <amount> <bread|id>` - unoffer bread\n `pan offer|unoffer <amount> breadcoin` - offer BreadCoin\n\nReact with <a:check:824804284398698496> to accept the trade.\nReact with <:xx:824842660106731542> to exit the trade.")
 
         trader_breads = {}
         tradee_breads = {}
@@ -149,35 +149,13 @@ class Trading(commands.Cog):
             elif _['tradee']['id'] == id:
                 trade = ('tradee', _)
         return trade
-
-    @commands.command(aliases=['cancel', 'quit'])
-    async def exit(self, ctx):
+    
+    
+    async def offer_command(self, ctx, amount, item):
         user = config.get_user(ctx.author.id)
         trade = self.get_trade(ctx.author.id)
         if trade is None:
-            await ctx.send("<:melonpan:815857424996630548> `You are not trading with anyone. Start trading with 'pan trade <member>'`")
-            return
-
-        embed = discord.Embed(title="Trade Canceled", color=config.ERRORCOLOR, description="A party has exited the trade.")
-        try:
-            await trade[1]['message'].edit(embed=embed)
-            await trade[1]['message'].clear_reactions()
-        finally:
-            del self.active_trades[trade[1]['message'].id]
-
-        try:
-            await ctx.message.delete()
-        except:
-            return
-        return
-
-    @commands.command(aliases=['o'])
-    async def offer(self, ctx, amount:str=None, *, item:str=None):
-        user = config.get_user(ctx.author.id)
-        trade = self.get_trade(ctx.author.id)
-        if trade is None:
-            await ctx.send("<:melonpan:815857424996630548> `You are not trading with anyone. Start trading with 'pan trade <member>'`")
-            return
+            return "<:melonpan:815857424996630548> `You are not trading with anyone. Start trading with 'pan trade <member>'`"
         other = {'tradee': "trader", 'trader': "tradee"}
         other = other[trade[0]]
 
@@ -196,38 +174,20 @@ class Trading(commands.Cog):
                     break
             if special is not None:
                 if special in trade[1][trade[0] + "_offers"]:
-                    m = await ctx.send("<:xx:824842660106731542> `This item is already being offered.`")
-                    await m.delete(delay=5)
-                    try:
-                        await ctx.message.delete()
-                    except:
-                        return
-                    return
+                    return "<:xx:824842660106731542> `This item is already being offered.`"
+                    
                 checking = config.get_user(trade[1][other]['id'])
                 if len(checking['inventory']) + len(trade[1][trade[0] + "_offers"]) < checking.get('inventory_capacity', 25):
                     trade[1][trade[0] + "_offers"].append(special)
                     await self.update_trade(trade[1])
-                    m = await ctx.send("<:check2:824842637381992529> `Offer placed.`")
-                    await m.delete(delay=5)
-                    try:
-                        await ctx.message.delete()
-                    except:
-                        return
-                    return
+                    return "<:check2:824842637381992529> `Offer placed.`"
                 else:
-                    m = await ctx.send("<:xx:824842660106731542> `The other party would not have enough storage to hold this item.`")
-                    await m.delete(delay=5)
-                    try:
-                        await ctx.message.delete()
-                    except:
-                        return
-                    return
+                    return "<:xx:824842660106731542> `The other party would not have enough storage to hold this item.`"
 
         if item is None:
             try:
                 amount = abs(int(amount))
-                await ctx.send("<:melonpan:815857424996630548> `You must tell me an item you wish to offer: e.g. 'pan offer 4 baguette'`")
-                return
+                return "<:melonpan:815857424996630548> `You must tell me an item you wish to offer: e.g. 'pan offer 4 baguette'`"
             except:
                 item = amount
                 amount = "1"
@@ -248,30 +208,21 @@ class Trading(commands.Cog):
                 try:
                     amount = abs(int(amount))
                 except:
-                    await ctx.send("<:melonpan:815857424996630548> `Amount must be a number: e.g. 'pan offer 4 breadcoin'`")
-                    return
+                    return "<:melonpan:815857424996630548> `Amount must be a number: e.g. 'pan offer 4 breadcoin'`"
 
                 if amount + trade[1][trade[0] + "_coins"] > user['money']:
-                    await ctx.send(f"<:xx:824842660106731542> `You only have {user['money']} BreadCoin.`")
-                    return
+                    return f"<:xx:824842660106731542> `You only have {user['money']} BreadCoin.`"
 
                 trade[1][trade[0] + "_coins"] += amount
                 await self.update_trade(trade[1])
-                m = await ctx.send("<:check2:824842637381992529> `BreadCoin offer placed.`")
-                await m.delete(delay=5)
-                try:
-                    await ctx.message.delete()
-                except:
-                    return
-                return
+                return "<:check2:824842637381992529> `BreadCoin offer placed.`"
             else:
-                await ctx.send("<:melonpan:815857424996630548> `That bread doesn't look like it exists...`")
+                return "<:melonpan:815857424996630548> `That bread doesn't look like it exists...`"
         else:
             try:
                 amount = abs(int(amount))
             except:
-                await ctx.send("<:melonpan:815857424996630548> `Amount must be a number: e.g. 'pan offer 4 baguette'`")
-                return
+                return "<:melonpan:815857424996630548> `Amount must be a number: e.g. 'pan offer 4 baguette'`"
 
             offering = []
             sorted_list = []
@@ -287,7 +238,7 @@ class Trading(commands.Cog):
                 if len(offering) >= amount:
                     break
             if len(offering) < amount:
-                await ctx.send(f"<:melonpan:815857424996630548> `It looks like you only have {len(offering)} of that bread in your bag.`")
+                return f"<:melonpan:815857424996630548> `It looks like you only have {len(offering)} of that bread in your bag.`"
             else:
                 final_offering = []
                 for _ in offering:
@@ -298,29 +249,15 @@ class Trading(commands.Cog):
                 if len(checking['inventory']) + len(final_offering) <= checking.get('inventory_capacity', 25):
                     trade[1][trade[0] + "_offers"].extend(final_offering)
                     await self.update_trade(trade[1])
-                    m = await ctx.send("<:check2:824842637381992529> `Offer placed.`")
-                    await m.delete(delay=5)
-                    try:
-                        await ctx.message.delete()
-                    except:
-                        return
-                    return
+                    return "<:check2:824842637381992529> `Offer placed.`"
                 else:
-                    m = await ctx.send("<:xx:824842660106731542> `The other party would not have enough storage to hold these items.`")
-                    await m.delete(delay=5)
-                    try:
-                        await ctx.message.delete()
-                    except:
-                        return
-                    return
-
-    @commands.command(aliases=['uo', 'u'])
-    async def unoffer(self, ctx, amount:str=None, *, item:str=None):
+                    return "<:xx:824842660106731542> `The other party would not have enough storage to hold these items.`"
+                                  
+    async def unoffer_command(self, ctx, amount, item):
         user = config.get_user(ctx.author.id)
         trade = self.get_trade(ctx.author.id)
         if trade is None:
-            await ctx.send("<:melonpan:815857424996630548> `You are not trading with anyone. Start trading with 'pan trade <member>'`")
-            return
+            return "<:melonpan:815857424996630548> `You are not trading with anyone. Start trading with 'pan trade <member>'`"
         other = {'tradee': "trader", 'trader': "tradee"}
         other = other[trade[0]]
 
@@ -339,29 +276,16 @@ class Trading(commands.Cog):
                     break
             if special is not None:
                 if special not in trade[1][trade[0] + "_offers"]:
-                    m = await ctx.send("<:xx:824842660106731542> `This item is not being offered.`")
-                    await m.delete(delay=5)
-                    try:
-                        await ctx.message.delete()
-                    except:
-                        return
-                    return
+                    return "<:xx:824842660106731542> `This item is not being offered.`"
 
                 trade[1][trade[0] + "_offers"].remove(special)
                 await self.update_trade(trade[1])
-                m = await ctx.send("<:check2:824842637381992529> `Offer removed.`")
-                await m.delete(delay=5)
-                try:
-                    await ctx.message.delete()
-                except:
-                    return
-                return
+                return "<:check2:824842637381992529> `Offer removed.`"
 
         if item is None:
             try:
                 amount = abs(int(amount))
-                await ctx.send("<:melonpan:815857424996630548> `You must tell me an item you wish to stop offering: e.g. 'pan unoffer 4 baguette'`")
-                return
+                return "<:melonpan:815857424996630548> `You must tell me an item you wish to stop offering: e.g. 'pan unoffer 4 baguette'`"
             except:
                 item = amount
                 amount = "1"
@@ -382,28 +306,20 @@ class Trading(commands.Cog):
                 try:
                     amount = abs(int(amount))
                 except:
-                    await ctx.send("<:melonpan:815857424996630548> `Amount must be a number: e.g. 'pan offer 4 breadcoin'`")
-                    return
+                    return "<:melonpan:815857424996630548> `Amount must be a number: e.g. 'pan offer 4 breadcoin'`"
 
                 trade[1][trade[0] + "_coins"] -= amount
                 if trade[1][trade[0] + "_coins"] < 0:
                     trade[1][trade[0] + "_coins"] = 0
                 await self.update_trade(trade[1])
-                m = await ctx.send("<:check2:824842637381992529> `BreadCoin offer removed.`")
-                await m.delete(delay=5)
-                try:
-                    await ctx.message.delete()
-                except:
-                    return
-                return
+                return "<:check2:824842637381992529> `BreadCoin offer removed.`"
             else:
-                await ctx.send("<:melonpan:815857424996630548> `That bread doesn't look like it exists...`")
+                return "<:melonpan:815857424996630548> `That bread doesn't look like it exists...`"
         else:
             try:
                 amount = abs(int(amount))
             except:
-                await ctx.send("<:melonpan:815857424996630548> `Amount must be a number: e.g. 'pan unoffer 4 baguette'`")
-                return
+                return "<:melonpan:815857424996630548> `Amount must be a number: e.g. 'pan unoffer 4 baguette'`"
 
             unoffering = []
             sorted_list = []
@@ -419,21 +335,14 @@ class Trading(commands.Cog):
                 if len(unoffering) >= amount:
                     break
             if len(unoffering) < amount:
-                await ctx.send(f"<:melonpan:815857424996630548> `You are only offering {len(unoffering)} of that item.`")
+                return f"<:melonpan:815857424996630548> `You are only offering {len(unoffering)} of that item.`"
             else:
                 for _ in unoffering:
                     trade[1][trade[0] + "_offers"].remove(_)
                 await self.update_trade(trade[1])
-                m = await ctx.send("<:check2:824842637381992529> `Offers removed.`")
-                await m.delete(delay=5)
-                try:
-                    await ctx.message.delete()
-                except:
-                    return
-                return
-
-    @commands.command(aliases=['give'])
-    async def trade(self, ctx, member:discord.Member=None):
+                return "<:check2:824842637381992529> `Offers removed.`"      
+                                   
+    async def trade_command(self, ctx, member):
         if member is None or member == ctx.author:
             await ctx.send("<:melonpan:815857424996630548> `You must mention someone to trade bread with!`")
             return
@@ -469,7 +378,88 @@ class Trading(commands.Cog):
         self.active_trades[msg.id] = trade_obj
 
         await msg.add_reaction("<a:check:824804284398698496>")
+        await msg.add_reaction("<:xx:824842660106731542>")                           
+                        
+    @commands.command(aliases=['o'])
+    async def offer(self, ctx, amount:str=None, *, item:str=None):
+        e = await self.offer_command(ctx, amount, item)
+        m = await ctx.send(e)
+        await m.delete(delay=5)
+        try:
+            await ctx.message.delete()
+        except:
+            return
 
+    @commands.command(aliases=['uo', 'u'])
+    async def unoffer(self, ctx, amount:str=None, *, item:str=None):
+        e = await self.unoffer_command(ctx, amount, item)
+        m = await ctx.send(e)
+        await m.delete(delay=5)
+        try:
+            await ctx.message.delete()
+        except:
+            return
+
+    @commands.command(aliases=['give'])
+    async def trade(self, ctx, member:discord.Member=None):
+        await self.trade_command(ctx, member)
+                                   
+                                   
+    @cog_ext.cog_slash(name="trade",
+        description="Trade with another baker.",
+        options=[
+            create_option(
+                name="member",
+                description="The member to trade with.",
+                option_type=6,
+                required=False
+            )
+        ])
+    async def trade_slash(self, ctx: SlashContext, member:discord.User):
+        await self.trade_command(ctx, member)   
+                                   
+    @cog_ext.cog_slash(name="offer",
+        description="Offer an item while in a trade.",
+        options=[
+            create_option(
+                name="item",
+                description="Choose an item to offer",
+                option_type=3,
+                required= True,
+                choices = [create_choice(name="Bread Coin", value="breadcoin")] + config.bread_choices
+            ),
+            create_option(
+                name="amount",
+                description="How much?"
+                option_type=4,
+                required=False
+            )
+        ])
+    async def offer_slash(self, ctx: SlashContext, item:str, amount:int=1):
+        e = await self.offer_command(ctx, str(amount), item)
+        await ctx.send(e, hidden=True)
+                                   
+                                   
+    @cog_ext.cog_slash(name="unoffer",
+        description="Remove an offer from a trade.",
+        options=[
+            create_option(
+                name="item",
+                description="Choose an item to remove",
+                option_type=3,
+                required= True,
+                choices = [create_choice(name="Bread Coin", value="breadcoin")] + config.bread_choices
+            ),
+            create_option(
+                name="amount",
+                description="How much?"
+                option_type=4,
+                required=False
+            )
+        ])
+    async def unoffer_slash(self, ctx: SlashContext, item:str, amount:int=1):
+        e = await self.unoffer_command(ctx, str(amount), item)
+        await ctx.send(e, hidden=True)                                  
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
@@ -480,6 +470,17 @@ class Trading(commands.Cog):
 
             if await self.check_reactions(trade_obj):
                 await self.countdown(trade_obj)
+        if str(payload.emoji) == "<:xx:824842660106731542>":
+            trade_obj = self.active_trades.get(payload.message_id, None)
+            if trade_obj is None:
+                return
+
+            embed = discord.Embed(title="Trade Canceled", color=config.ERRORCOLOR, description="A party has exited the trade.")
+            try:
+                await trade[1]['message'].edit(embed=embed)
+                await trade[1]['message'].clear_reactions()
+            finally:
+                del self.active_trades[trade[1]['message'].id]
 
 
 def setup(bot):
