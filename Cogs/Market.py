@@ -367,7 +367,7 @@ class Market(commands.Cog):
                     timestamp=datetime.datetime.utcnow()
                 ))
 
-    async def shop_command(self, ctx, item):
+    async def shop_command(self, ctx, item, graph=True):
         today = datetime.datetime.now().timetuple().tm_yday
         if item is None:
             random.seed(today)
@@ -444,7 +444,8 @@ class Market(commands.Cog):
                     item.get_graph(60).savefig("tempgraph.png", transparent=True, bbox_inches='tight')
 
                     file = discord.File("tempgraph.png") # an image in the same folder as the main bot file
-                    embed.set_image(url="attachment://tempgraph.png")
+                    if graph:
+                        embed.set_image(url="attachment://tempgraph.png")
                     embed.description += f"\nCurrent Price: **{round(item.get_price(market.get_day_of_year_active()))}** <:BreadCoin:815842873937100800>"
 
                     random.seed(today)
@@ -457,8 +458,11 @@ class Market(commands.Cog):
                     elif not selected['sellable']:
                         embed.description += "\n\n**Can only be purchased**"
                 embed.set_thumbnail(url=selected['image'])
-
-                await ctx.send(embed=embed, file=file)
+                if graph:
+                    await ctx.send(embed=embed, file=file)
+                else:
+                    await ctx.send(embed=embed)
+                    await ctx.channel.send(file=file)
 
     @cog_ext.cog_slash(name="buy",
         description="Buy an item.",
@@ -532,7 +536,7 @@ class Market(commands.Cog):
             )
         ])
     async def shop_slash(self, ctx: SlashContext, item:str=None):
-        await self.shop_command(ctx, item)
+        await self.shop_command(ctx, item, False)
     
     @cog_ext.cog_slash(name="sellall",
         description="Sell everything in your inventory.",
