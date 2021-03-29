@@ -6,6 +6,8 @@ import asyncio
 import datetime
 import logging
 import config
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option, create_choice
 
 
 class Vote(commands.Cog):

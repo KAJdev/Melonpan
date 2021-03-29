@@ -6,6 +6,8 @@ import datetime
 import market
 
 from discord.ext import commands, tasks
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option, create_choice
 
 class BreadmojiEvent(commands.Cog):
 
@@ -16,7 +18,7 @@ class BreadmojiEvent(commands.Cog):
         self.allowed = ['🥯', '🥖', '🫓', '🍞', '🥐', '🥨']
         self.channel = 816841054983946271
         self.guild = 814958240009420830
-    
+
     def cog_unload(self):
         self.delete.cancel()
 
@@ -31,7 +33,7 @@ class BreadmojiEvent(commands.Cog):
                     self.channel = t
                     print("couldn't get channel")
                     return
-        
+
         if len(self.to_delete) > 0:
             def check(message):
                 return message.id in self.to_delete
@@ -53,7 +55,7 @@ class BreadmojiEvent(commands.Cog):
                 if w not in self.allowed:
                     self.to_delete.append(message.id)
                     return
-    
+
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
         if after.content is None or len(after.stickers) > 0 or len(after.content) > 20:

@@ -8,6 +8,8 @@ import os
 import psutil
 
 from discord.ext import commands, tasks, menus
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option, create_choice
 
 class Tutorial(commands.Cog):
 

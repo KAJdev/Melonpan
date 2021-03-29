@@ -3,6 +3,8 @@ import config
 import datetime
 
 from discord.ext import commands, tasks, menus
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option, create_choice
 
 class Guilds(commands.Cog):
 
@@ -24,9 +26,9 @@ class Guilds(commands.Cog):
         embed.description = "`This Server has reached max level.`"
         if server.money_until_next_level is not None:
             embed.description = f"`{server.money_until_next_level} BreadCoin until server upgrade.`"
-        
+
         await ctx.send(embed=embed)
-        
+
 
 def setup(bot):
     bot.add_cog(Guilds(bot))

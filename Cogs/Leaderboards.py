@@ -9,6 +9,8 @@ from prettytable import PrettyTable
 from prettytable import MARKDOWN
 
 from discord.ext import commands, tasks
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option, create_choice
 
 class Leaderboards(commands.Cog):
 

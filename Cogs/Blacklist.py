@@ -6,6 +6,8 @@ import datetime
 import market
 
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option, create_choice
 
 class Blacklist(commands.Cog):
 
@@ -38,7 +40,7 @@ class Blacklist(commands.Cog):
             else:
                 server.update({'$push': {'blacklist': channel.id}})
                 await ctx.reply_safe(f"{channel.mention} was blacklisted. Commands will **no longer** work there.")
-    
+
     @blacklist.error
     async def blacklist_error(self, ctx, error):
         if isinstance(error, commands.errors.UserInputError):

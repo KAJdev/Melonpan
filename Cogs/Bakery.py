@@ -8,6 +8,8 @@ import asyncio
 import market
 
 from discord.ext import commands, tasks, menus
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option, create_choice
 
 class BakeryMenu(menus.ListPageSource):
     def __init__(self, data, total, baking, user):
@@ -50,7 +52,7 @@ class Bakery(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-    
+
     @commands.command()
     async def bakery(self, ctx):
         user = config.get_user(ctx.author.id)
@@ -82,7 +84,7 @@ class Bakery(commands.Cog):
         if user['money'] < cost:
             await ctx.reply_safe("<:melonpan:815857424996630548> `You don't have enough BreadCoin to build a new oven.`")
             return
-        
+
         config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -cost, 'oven_count': 1}})
         await ctx.reply_safe("<:melonpan:815857424996630548> You have built a new oven! View it with `pan bakery`.")
 
@@ -121,7 +123,7 @@ class Bakery(commands.Cog):
         if bread is None:
             await ctx.send("<:melonpan:815857424996630548> `You must tell me an item you wish to bake: e.g. 'pan bakeall baguette'`")
             return
-        
+
         selected = None
         for r in config.breads:
             if bread.lower() in r['name'].lower():
@@ -154,7 +156,7 @@ class Bakery(commands.Cog):
                 except IndexError:
                     user['ovens'].append(bake_obj)
                     amount += 1
-            
+
             user['baked'][str(bake_obj['index'])] = user['baked'].get(str(bake_obj['index']), 0) + amount
 
             config.USERS.update_one({'id': user['id']}, {'$set': {'ovens': user['ovens'], 'baked': user['baked']}})
@@ -176,7 +178,7 @@ class Bakery(commands.Cog):
         if bread is None:
             await ctx.send("<:melonpan:815857424996630548> `You must tell me an item you wish to bake: e.g. 'pan bake baguette'`")
             return
-        
+
         selected = None
         for r in config.breads:
             if bread.lower() in r['name'].lower():
@@ -210,7 +212,7 @@ class Bakery(commands.Cog):
                 user['ovens'].append(bake_obj)
 
             user['baked'][str(bake_obj['index'])] = user['baked'].get(str(bake_obj['index']), 0) + 1
-            
+
             config.USERS.update_one({'id': user['id']}, {'$set': {'ovens': user['ovens']}})
             extra = ""
             if config.get_avg_commands(minutes=0.1, user=ctx.author.id, command=ctx.command.name) >= 0.6:
@@ -280,16 +282,16 @@ class Bakery(commands.Cog):
             else:
                 special_string = ""
             ending += f"+ {config.breads[12]['emoji']} **Burned {config.breads[index]['name']}** (Charcoal){special_string}\n"
-        
+
         config.USERS.update_one({'id': user['id']}, {'$set': {'inventory': user['inventory'], 'ovens': user['ovens']}})
 
         if ending == "":
             ending = "No bread was plated."
-        
+
         embed = discord.Embed(color=config.MAINCOLOR, title="Plated Bread", description=ending)
         if cutoff:
             embed.description += "\n*Some ovens were not emptied because your bread storage is full. Please sell some bread.*"
-        
+
         if not ending == "No bread was plated.":
             embed.set_footer(text="react with 💲 to sell these breads")
 
@@ -301,7 +303,7 @@ class Bakery(commands.Cog):
 
 
 
-            
+
 
 
 def setup(bot):

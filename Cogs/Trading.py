@@ -4,6 +4,8 @@ import datetime
 import asyncio
 
 from discord.ext import commands, tasks, menus
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option, create_choice
 
 class Trading(commands.Cog):
 
@@ -36,7 +38,7 @@ class Trading(commands.Cog):
             trader_offers_string += f"> `{amount}x` {config.breads[index]['emoji']} **{config.breads[index]['name']}**\n"
         for index,amount in tradee_breads.items():
             tradee_offers_string += f"> `{amount}x` {config.breads[index]['emoji']} **{config.breads[index]['name']}**\n"
-        
+
         for s in trader_special:
             trader_offers_string += f"> {config.breads[s['index']]['emoji']} **{config.breads[s['index']]['name']}** `{s['special']}`\n"
         for s in tradee_special:
@@ -53,10 +55,10 @@ class Trading(commands.Cog):
         for _ in trade['message'].reactions:
             if str(_) == "<a:check:824804284398698496>":
                 users = await _.users().flatten()
-        
+
         if users is None:
             return False
-        
+
         only_ids = list(x.id for x in users)
         return trade['member'].id in only_ids and trade['author'].id in only_ids
 
@@ -106,7 +108,7 @@ class Trading(commands.Cog):
             finally:
                 del self.active_trades[trade['message'].id]
             return
-        
+
         for _ in trade['trader_offers']:
             trader['inventory'].remove(_)
             tradee['inventory'].append(_)
@@ -344,7 +346,7 @@ class Trading(commands.Cog):
                     except:
                         return
                     return
-                
+
                 trade[1][trade[0] + "_offers"].remove(special)
                 await self.update_trade(trade[1])
                 m = await ctx.send("<:check2:824842637381992529> `Offer removed.`")
@@ -468,17 +470,17 @@ class Trading(commands.Cog):
 
         await msg.add_reaction("<a:check:824804284398698496>")
 
-        
+
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
         if str(payload.emoji) == "<a:check:824804284398698496>":
             trade_obj = self.active_trades.get(payload.message_id, None)
             if trade_obj is None:
                 return
-            
+
             if await self.check_reactions(trade_obj):
                 await self.countdown(trade_obj)
-            
+
 
 def setup(bot):
     bot.add_cog(Trading(bot))

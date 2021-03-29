@@ -8,6 +8,8 @@ import os
 import psutil
 
 from discord.ext import commands, tasks, menus
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option, create_choice
 
 class InventoryMenu(menus.ListPageSource):
     def __init__(self, data, max=25):
@@ -40,11 +42,11 @@ class Information(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-    
+
     @commands.Cog.listener()
     async def on_ready(self):
         self.timer_loop.start()
-    
+
     def cog_unload(self):
         self.timer_loop.cancel()
 

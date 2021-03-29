@@ -6,30 +6,29 @@ import datetime
 import market
 
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option, create_choice
 
 class Badges(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.group(aliases=['collectables', 'badge', 'collect'])
-    async def badges(self, ctx):
-        if ctx.invoked_subcommand is None:
-            on_sale = list((config.badges[x['index']], x['price'], x['index']) for x in config.current_collectables)
+    async def badges_command(self, ctx):
+        on_sale = list((config.badges[x['index']], x['price'], x['index']) for x in config.current_collectables)
 
-            embed = discord.Embed(
-                title="Badge Shop",
-                description="Badges will be displayed on your `pan stats` page, and are only available for a limited amount of time.",
-                color=config.MAINCOLOR
-            )
+        embed = discord.Embed(
+            title="Badge Shop",
+            description="Badges will be displayed on your `pan stats` page, and are only available for a limited amount of time.",
+            color=config.MAINCOLOR
+        )
 
-            for x in on_sale:
-                embed.add_field(name=f"{x[0]['emoji']} {x[0]['name']}", value=f"Cost: **{x[1]}** <:BreadCoin:815842873937100800>\n`pan badge buy {x[2]}`")
+        for x in on_sale:
+            embed.add_field(name=f"{x[0]['emoji']} {x[0]['name']}", value=f"Cost: **{x[1]}** <:BreadCoin:815842873937100800>\n`pan badge buy {x[2]}`")
 
-            await ctx.send(embed=embed)
+        await ctx.send(embed=embed)
 
-    @badges.command()
-    async def buy(self, ctx, index:str=None):
+    async def badges_buy_command(self, ctx, index):
         user = config.get_user(ctx.author.id)
 
         try:
@@ -45,7 +44,7 @@ class Badges(commands.Cog):
         for x in config.current_collectables:
             if x['index'] == index:
                 chosen = x
-        
+
         if chosen is None:
             await ctx.reply_safe("<:melonpan:815857424996630548> `I don't see that badge on sale.`")
             return
@@ -53,7 +52,7 @@ class Badges(commands.Cog):
         if user['money'] < chosen['price']:
             await ctx.reply_safe("<:melonpan:815857424996630548> `You don't have enough BreadCoin for this badge.`")
             return
-        
+
         if index in user['badges']:
             await ctx.reply_safe("<:melonpan:815857424996630548> `You already have this badge.`")
             return
@@ -63,6 +62,32 @@ class Badges(commands.Cog):
         chosen_badge = config.badges[index]
 
         await ctx.reply_safe(f"Congratulations! You have purchased the {chosen_badge['emoji']} **{chosen_badge['name']}** Badge!")
+
+    @commands.group(aliases=['collectables', 'badge', 'collect'])
+    async def badges(self, ctx):
+        if ctx.invoked_subcommand is None:
+            await self.badges_command(ctx)
+
+    @badges.command()
+    async def buy(self, ctx, index:str=None):
+        await self.badges_buy_command(ctx, index)
+
+    @cog_ext.cog_slash(name="badges",
+        description="List all the badges you can buy.",
+        options=[
+           create_option(
+             name="badge",
+             description="Purchase a specific badge",
+             option_type=3,
+             required=False,
+             choices = config.badge_choices
+           )
+         ])
+    async def badges_slash(self, ctx: SlashContext, badge=None):
+        if badge is None:
+            await self.badges_command(ctx)
+        else:
+            await self.badges_buy_command(ctx, str(badge))
 
 
 def setup(bot):

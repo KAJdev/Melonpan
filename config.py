@@ -7,6 +7,7 @@ import os
 import uuid
 from random_word import RandomWords
 import string
+from discord_slash.utils.manage_commands import create_option, create_choice
 
 ## MongoDB
 myclient = pymongo.MongoClient(os.environ.get("MELONPAN_MONGO"))
@@ -289,6 +290,10 @@ badges = [
         'emoji': "<:dev:825665685492858881>"
     }
 ]
+
+badge_choices = []
+for _ in current_collectables:
+    badge_choices.append(create_choice(name=badges[_['index']]['name'] + f" ({_['price']} BreadCoin)", value=_['index']))
 
 breads = [
     {

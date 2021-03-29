@@ -5,6 +5,8 @@ import config
 import discord
 import datetime
 from discord.ext import commands
+from discord_slash import SlashCommand, SlashContext
+import discord_slash
 import os
 import logging
 import random
@@ -23,6 +25,7 @@ intents = discord.Intents.default()
 
 # Set prefix and set case insensitive to true so the a command will work if miscapitlized
 bot = commands.Bot(command_prefix = get_prefix, case_insensitive = True, intents=intents)
+slash = SlashCommand(bot, sync_commands=True)
 
 # Remove default help command
 bot.remove_command("help")

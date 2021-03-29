@@ -7,13 +7,15 @@ import market
 import asyncio
 
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option, create_choice
 
 class Drops(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
         self.cache = {}
-    
+
     async def send_drop_message(self, message, server):
         await asyncio.sleep(5)
         drop = config.create_drop()
@@ -81,18 +83,18 @@ class Drops(commands.Cog):
         obj = self.cache.get(message.channel.id, None)
         if obj is None:
             self.cache[message.channel.id] = ([], datetime.datetime.utcnow())
-        
+
         self.cache[message.channel.id][0].append((message, datetime.datetime.utcnow()))
 
         if len(self.cache[message.channel.id][0]) > config.drop_message_count:
             self.cache[message.channel.id][0].pop(0)
-        
+
         if datetime.datetime.utcnow() - self.cache[message.channel.id][1] >= datetime.timedelta(minutes=server.drop_cooldown_min):
             count = 0
             for x in self.cache[message.channel.id][0]:
                 if datetime.datetime.utcnow() - x[1] <= datetime.timedelta(minutes=config.drop_time_constraint):
                     count += 1
-            
+
             if count >= config.drop_message_count:
                 self.cache[message.channel.id] = ([], datetime.datetime.utcnow())
                 guild = "NO GUILD"
