@@ -255,9 +255,17 @@ class Information(commands.Cog):
             await self.remind_command(ctx, time)
 
     @cog_ext.cog_slash(name="balance",
-        description="Show your BreadCoin balance.")
-    async def bal_slash(self, ctx: SlashContext):
-        await self.bal_command(ctx)
+        description="Show your BreadCoin balance.",
+        options=[
+            create_option(
+                name="member",
+                description="The member to show balance for.",
+                option_type=6,
+                required=False
+            )
+        ])
+    async def bal_slash(self, ctx: SlashContext, member=None):
+        await self.bal_command(ctx, member)
 
     @cog_ext.cog_slash(name="stats",
         description="Show stats for yourself or another baker.",
