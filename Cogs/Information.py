@@ -49,9 +49,6 @@ class Information(commands.Cog):
 
     def cog_unload(self):
         self.timer_loop.cancel()
- 
-    def create_jump_url(self, ctx):
-        return f"https://discord.com/channels/{ctx.guild.id}/{ctx.channel.id}/{ctx.message.id}"
 
     @tasks.loop(minutes=1)
     async def timer_loop(self):
@@ -126,10 +123,11 @@ class Information(commands.Cog):
 
         embed = discord.Embed(color=config.MAINCOLOR, timestamp=remind_time)
         embed.set_footer(text=f"I will remind you about {message} at >")
+        msg = await config.reply(ctx, embed=embed)
 
-        config.TIMERS.insert_one({'owner': ctx.author.id, 'link': self.create_jump_url(ctx), 'time': remind_time, 'created': datetime.datetime.utcnow(), 'message': message, 'id': ctx.message.id, 'sent': False, 'expired': False})
+        config.TIMERS.insert_one({'owner': ctx.author.id, 'link': msg.jump_url, 'time': remind_time, 'created': datetime.datetime.utcnow(), 'message': message, 'id': ctx.message.id, 'sent': False, 'expired': False})
 
-        await config.reply(ctx, embed=embed)
+        
 
     async def reminders_command(self, ctx):
         timers = config.TIMERS.find({'owner': ctx.author.id, 'expired': False})
