@@ -52,7 +52,7 @@ def get_avg_commands(minutes=1, user=None, command=None):
             continue
         if user is not None and _[0].author.id != user:
             continue
-        if command is not None and _[0].command.name != command:
+        if command is not None and str(_[0].command) != command:
             continue
         total += 1
     return total / (minutes*60)
