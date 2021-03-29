@@ -18,9 +18,8 @@ class Leaderboards(commands.Cog):
         self.bot = bot
         self.user_cache = {}
 
-    @commands.command(aliases=['t', 'leaderboard', 'leaderboards', 'rich', 'fame'])
-    async def top(self, ctx):
-        top_global = list(config.USERS.find({}).sort('money', pymongo.DESCENDING).limit(15))
+    async def top_command(self, ctx, field="money", side="<:BreadCoin:815842873937100800>", title="Richest Bakers"):
+        top_global = list(config.USERS.find({}).sort(field, pymongo.DESCENDING).limit(15))
 
         to_remove = []
         amount = 1
@@ -40,19 +39,64 @@ class Leaderboards(commands.Cog):
                 user['user_object'] = found
                 self.user_cache[user['id']] = found
             # x.add_row([f"#{amount}", user['user_object'].name, f"{user['money']} BreadCoin"])
-            desc += f"`#{amount}` • **{user['money']:,}** <:BreadCoin:815842873937100800> • {user['user_object'].name}{' ' if len(user.get('badges', [])) > 0 else ''}{''.join(config.badges[x]['emoji'] for x in user.get('badges', []))}\n"
+            desc += f"`#{amount}` • **{user['money']:,}** {side} • {user['user_object'].name}{' ' if len(user.get('badges', [])) > 0 else ''}{''.join(config.badges[x]['emoji'] for x in user.get('badges', []))}\n"
             amount += 1
 
         # x.header = False
         # x.align = "l"
 
         embed = discord.Embed(
-            title="Richest Bakers",
+            title=title,
             color=config.MAINCOLOR,
             description = desc
             # description="```\n" + x.get_string() + "```"
         )
         await ctx.send(embed=embed)
+
+    @commands.command(aliases=['t', 'leaderboard', 'leaderboards', 'rich', 'fame'])
+    async def top(self, ctx):
+        await self.top_command(ctx)
+
+    @cog_ext.cog_slash(name="leaderboard",
+        description="Show the best bakers.",
+        options=[
+            create_option(
+              name="skill",
+              description="The skill to sort by",
+              option_type=3,
+              required=False,
+              choices = [
+                create_choice(name="Bread Coin", value="money"),
+                create_choice(name="Oven Count", value="ovens"),
+                create_choice(name="Inventory Space", value="inventory")
+              ]
+            )
+        ])
+    async def bake_slash(self, ctx: SlashContext, skill:str="money"):
+        skills = {
+            "money": {
+                "field": "money",
+                "side": '<:BreadCoin:815842873937100800>',
+                "title": "Richest Bakers"
+            },
+            "baked": {
+                "field": "baked",
+                "side": 'Baked',
+                "title": "Most Active Bakers"
+            },
+            "ovens": {
+                "field": "oven_count",
+                "side": "<:stove:815875824376610837>",
+                "title": "Biggest Bakeries"
+            },
+            "inventory" {
+                "field": "inventory_capacity",
+                "side": "Storage",
+                "title": "Biggest Inventories"
+            }
+        }
+        await self.top_command(ctx, field=skill[skill]['field'], side=skill[skill]['side'], title=skill[skill]['title'])
+
 
 
 def setup(bot):
