@@ -73,6 +73,7 @@ class Leaderboards(commands.Cog):
             )
         ])
     async def bake_slash(self, ctx: SlashContext, skill:str="money"):
+        await ctx.defer()
         skills = {
             "money": {
                 "field": "money",
