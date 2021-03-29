@@ -474,6 +474,8 @@ class Trading(commands.Cog):
             trade_obj = self.active_trades.get(payload.message_id, None)
             if trade_obj is None:
                 return
+            if payload.user_id not in [trade['author'].id, trade['member'].id]:
+                return
 
             embed = discord.Embed(title="Trade Canceled", color=config.ERRORCOLOR, description="A party has exited the trade.")
             try:
