@@ -255,7 +255,7 @@ class Information(commands.Cog):
                 required=False
             )
         ])
-    async def remind_slash(self, ctx: SlashContext, time:str=None, message:str=""):
+    async def remind_slash(self, ctx: SlashContext, time:str=None, message:str="something"):
         if time is None:
             await self.reminders_command(ctx)
         else:
