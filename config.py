@@ -293,7 +293,7 @@ badges = [
 
 badge_choices = []
 for _ in current_collectables:
-    badge_choices.append(create_choice(name=badges[_['index']]['name'] + f" ({_['price']} BreadCoin)", value=_['index']))
+    badge_choices.append(create_choice(name=badges[_['index']]['name'] + f" ({_['price']} BreadCoin)", value=str(_['index'])))
 
 breads = [
     {
