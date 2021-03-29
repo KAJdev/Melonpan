@@ -430,7 +430,7 @@ class Trading(commands.Cog):
             ),
             create_option(
                 name="amount",
-                description="How much?"
+                description="How much?",
                 option_type=4,
                 required=False
             )
@@ -452,7 +452,7 @@ class Trading(commands.Cog):
             ),
             create_option(
                 name="amount",
-                description="How much?"
+                description="How much?",
                 option_type=4,
                 required=False
             )
