@@ -16,9 +16,6 @@ class InventoryMenu(menus.ListPageSource):
         super().__init__(data, per_page=10)
         self.max = max
         self.og = data
-    
-    def create_jump_url(self, ctx):
-        return f"https://discord.com/channels/{ctx.guild.id}/{ctx.channel.id}/{ctx.message.id}"
 
     async def format_page(self, menu, entries):
         offset = menu.current_page * self.per_page
@@ -52,6 +49,9 @@ class Information(commands.Cog):
 
     def cog_unload(self):
         self.timer_loop.cancel()
+ 
+    def create_jump_url(self, ctx):
+        return f"https://discord.com/channels/{ctx.guild.id}/{ctx.channel.id}/{ctx.message.id}"
 
     @tasks.loop(minutes=1)
     async def timer_loop(self):
