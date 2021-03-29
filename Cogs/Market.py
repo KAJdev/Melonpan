@@ -367,7 +367,7 @@ class Market(commands.Cog):
                     timestamp=datetime.datetime.utcnow()
                 ))
 
-    async def shop_command(self, item):
+    async def shop_command(self, ctx, item):
         today = datetime.datetime.now().timetuple().tm_yday
         if item is None:
             random.seed(today)
@@ -519,26 +519,34 @@ class Market(commands.Cog):
         ])
     async def sell_slash(self, ctx: SlashContext, item:str, amount:int=1):
         await self.sell_command(ctx, str(amount), item)
-
-    @cog_ext.cog_slash(name="buy",
-        description="Buy an item.",
+        
+    @cog_ext.cog_slash(name="shop",
+        description="View shop information.",
         options=[
             create_option(
               name="bread",
-              description="The bread to buy.",
+              description="View more detailed information about a certain bread.",
               option_type=3,
-              required=True,
+              required=False,
               choices = config.bread_choices
-            ),
-            create_option(
-                name="amount",
-                description="How much do you want to buy?",
-                option_type=4,
-                required=False
             )
         ])
-    async def buy_slash(self, ctx: SlashContext, item:str, amount:int=1):
-        await self.buy_command(ctx, amount, item)
+    async def shop_slash(self, ctx: SlashContext, item:str=None):
+        await self.shop_command(ctx, item)
+    
+    @cog_ext.cog_slash(name="sellall",
+        description="Sell everything in your inventory.",
+        options=[
+            create_option(
+              name="bread",
+              description="Sell all of a specific bread.",
+              option_type=3,
+              required=False,
+              choices = config.bread_choices
+            )
+        ])
+    async def sellall_slash(self, ctx: SlashContext, item:str=None):
+        await self.sellall_command(ctx, item)
 
     @commands.command(aliases=['b', 'purchase'])
     async def buy(self, ctx, amount: str = None, *, item : str = None):
