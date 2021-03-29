@@ -20,8 +20,7 @@ class Market(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=['b', 'purchase'])
-    async def buy(self, ctx, amount: str = None, *, item : str = None):
+    async def buy_command(self, ctx, amount, item):
         user = config.get_user(ctx.author.id)
         server = config.get_server(ctx.guild.id)
 
@@ -82,8 +81,7 @@ class Market(commands.Cog):
                     timestamp=datetime.datetime.utcnow()
                 ))
 
-    @commands.command(aliases=['d', 'trash'])
-    async def donate(self, ctx, amount: str = None, *, item : str = None):
+    async def donate_command(self, ctx, amount, item):
         user = config.get_user(ctx.author.id)
         server = config.get_server(ctx.guild.id)
 
@@ -151,8 +149,7 @@ class Market(commands.Cog):
                     timestamp=datetime.datetime.utcnow()
                 ))
 
-    @commands.command(aliases=['se', 's'])
-    async def sell(self, ctx, amount: str = None, *, item : str = None):
+    async def sell_command(self, ctx, amount, item):
         if ctx.guild is None:
             await ctx.send("<:melonpan:815857424996630548> `This command cannot be used in Direct Messages.`")
             return
@@ -268,77 +265,7 @@ class Market(commands.Cog):
                     timestamp=datetime.datetime.utcnow()
                 ))
 
-    @commands.Cog.listener()
-    async def on_raw_reaction_add(self, payload):
-        if str(payload.emoji) == "💲":
-            event = None
-            for _ in config.SELL_BREAD_CACHE:
-                if _[0].id == payload.message_id and _[1]['id'] == payload.user_id:
-                    event = _
-                    break
-            if event is None:
-                return
-            config.SELL_BREAD_CACHE.remove(event)
-            user = config.get_user(payload.user_id)
-            server = config.get_server(payload.guild_id)
-            today = datetime.datetime.now().timetuple().tm_yday
-            random.seed(today)
-            display = random.sample(config.breads, k=9)
-            selling = []
-            total = 0
-            desc = "```************\nSOLD RECEIPT\n************\nDescription"
-            for on_sale in display:
-                if not on_sale['sellable']:
-                    continue
-                item_price = market.ItemPrice(on_sale['price'], on_sale['volitility'], config.breads.index(on_sale))
-                today_price = round(item_price.get_price(market.get_day_of_year_active()))
-
-                this_selling = []
-                for their_item in user['inventory']:
-                    if their_item['index'] == config.breads.index(on_sale):
-                        can_sell = False
-                        for _ in event[2]:
-                            if _['uuid'] == their_item.get('uuid', None):
-                                can_sell = True
-                                break
-                        if can_sell:
-                            this_selling.append(their_item)
-                            selling.append(their_item)
-                total += len(this_selling) * today_price
-                if len(this_selling) > 0:
-                    desc += f"\n- {len(this_selling)}x {on_sale['name']}"
-
-            for selling_item in selling:
-                user['inventory'].remove(selling_item)
-
-            print(f"QUICK SELL: ({event[1]['id']})")
-
-            if len(selling) > 0:
-                tax = round(total * server.tax)
-                total -= tax
-                total = round(total)
-
-                server.add_money(tax)
-
-                config.USERS.update_one({'id': payload.user_id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
-
-                desc += f"\n\n============\nTOTAL AMOUNT: {int(total)} BreadCoin\nTAX: {int(tax)} BreadCoin\n============\nTHANK YOU!```"
-                embed = event[0].embeds[0]
-                embed.description += "\n\n**Bread Market Exchange Receipt**\n" + desc
-                embed.timestamp=datetime.datetime.utcnow()
-                embed.set_footer()
-                await event[0].edit(embed=embed)
-                await event[0].clear_reactions()
-            else:
-                embed = event[0].embeds[0]
-                embed.set_footer()
-                embed.description += "\n\n<:melonpan:815857424996630548> `There was nothing sellable in your inventory.`"
-                await event[0].edit(embed=embed)
-                await event[0].clear_reactions()
-
-
-    @commands.command(aliases=['sa'])
-    async def sellall(self, ctx, *, item : str = None):
+    async def sellall_command(self, ctx, item):
         if ctx.guild is None:
             await ctx.send("<:melonpan:815857424996630548> `This command cannot be used in Direct Messages.`")
             return
@@ -440,8 +367,7 @@ class Market(commands.Cog):
                     timestamp=datetime.datetime.utcnow()
                 ))
 
-    @commands.command(aliases=['sh', 'store', 'shopping', 'market', 'markets'])
-    async def shop(self, ctx, *, item : str = None):
+    async def shop_command(self, item):
         today = datetime.datetime.now().timetuple().tm_yday
         if item is None:
             random.seed(today)
@@ -534,8 +460,174 @@ class Market(commands.Cog):
 
                 await ctx.send(embed=embed, file=file)
 
+    @cog_ext.cog_slash(name="buy",
+        description="Buy an item.",
+        options=[
+            create_option(
+              name="bread",
+              description="The bread to buy.",
+              option_type=3,
+              required=True,
+              choices = config.bread_choices
+            ),
+            create_option(
+                name="amount",
+                description="How much do you want to buy?",
+                option_type=4,
+                required=False
+            )
+        ])
+    async def buy_slash(self, ctx: SlashContext, item:str, amount:int=1):
+        await self.buy_command(ctx, amount, item)
+
+    @cog_ext.cog_slash(name="donate",
+        description="Donate a bread to the current server.",
+        options=[
+            create_option(
+              name="bread",
+              description="The bread to donate.",
+              option_type=3,
+              required=True,
+              choices = config.bread_choices
+            ),
+            create_option(
+                name="amount",
+                description="How much do you want to donate?",
+                option_type=4,
+                required=False
+            )
+        ])
+    async def donate_slash(self, ctx: SlashContext, item:str, amount:int=1):
+        await self.donate_command(ctx, amount, item)
+
+    @cog_ext.cog_slash(name="sell",
+        description="Sell a bread",
+        options=[
+            create_option(
+              name="bread",
+              description="The bread to sell.",
+              option_type=3,
+              required=True,
+              choices = config.bread_choices
+            ),
+            create_option(
+                name="amount",
+                description="How much do you want to sell?",
+                option_type=4,
+                required=False
+            )
+        ])
+    async def sell_slash(self, ctx: SlashContext, item:str, amount:int=1):
+        await self.sell_command(ctx, amount, item)
+
+    @cog_ext.cog_slash(name="buy",
+        description="Buy an item.",
+        options=[
+            create_option(
+              name="bread",
+              description="The bread to buy.",
+              option_type=3,
+              required=True,
+              choices = config.bread_choices
+            ),
+            create_option(
+                name="amount",
+                description="How much do you want to buy?",
+                option_type=4,
+                required=False
+            )
+        ])
+    async def buy_slash(self, ctx: SlashContext, item:str, amount:int=1):
+        await self.buy_command(ctx, amount, item)
+
+    @commands.command(aliases=['b', 'purchase'])
+    async def buy(self, ctx, amount: str = None, *, item : str = None):
+        await self.buy_command(ctx, amount, item)
+
+    @commands.command(aliases=['d', 'trash'])
+    async def donate(self, ctx, amount: str = None, *, item : str = None):
+        await self.donate_command(ctx, amount, item)
+
+    @commands.command(aliases=['se', 's'])
+    async def sell(self, ctx, amount: str = None, *, item : str = None):
+        await self.sell_command(ctx, amount, item)
+
+    @commands.Cog.listener()
+    async def on_raw_reaction_add(self, payload):
+        if str(payload.emoji) == "💲":
+            event = None
+            for _ in config.SELL_BREAD_CACHE:
+                if _[0].id == payload.message_id and _[1]['id'] == payload.user_id:
+                    event = _
+                    break
+            if event is None:
+                return
+            config.SELL_BREAD_CACHE.remove(event)
+            user = config.get_user(payload.user_id)
+            server = config.get_server(payload.guild_id)
+            today = datetime.datetime.now().timetuple().tm_yday
+            random.seed(today)
+            display = random.sample(config.breads, k=9)
+            selling = []
+            total = 0
+            desc = "```************\nSOLD RECEIPT\n************\nDescription"
+            for on_sale in display:
+                if not on_sale['sellable']:
+                    continue
+                item_price = market.ItemPrice(on_sale['price'], on_sale['volitility'], config.breads.index(on_sale))
+                today_price = round(item_price.get_price(market.get_day_of_year_active()))
+
+                this_selling = []
+                for their_item in user['inventory']:
+                    if their_item['index'] == config.breads.index(on_sale):
+                        can_sell = False
+                        for _ in event[2]:
+                            if _['uuid'] == their_item.get('uuid', None):
+                                can_sell = True
+                                break
+                        if can_sell:
+                            this_selling.append(their_item)
+                            selling.append(their_item)
+                total += len(this_selling) * today_price
+                if len(this_selling) > 0:
+                    desc += f"\n- {len(this_selling)}x {on_sale['name']}"
+
+            for selling_item in selling:
+                user['inventory'].remove(selling_item)
+
+            print(f"QUICK SELL: ({event[1]['id']})")
+
+            if len(selling) > 0:
+                tax = round(total * server.tax)
+                total -= tax
+                total = round(total)
+
+                server.add_money(tax)
+
+                config.USERS.update_one({'id': payload.user_id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
+
+                desc += f"\n\n============\nTOTAL AMOUNT: {int(total)} BreadCoin\nTAX: {int(tax)} BreadCoin\n============\nTHANK YOU!```"
+                embed = event[0].embeds[0]
+                embed.description += "\n\n**Bread Market Exchange Receipt**\n" + desc
+                embed.timestamp=datetime.datetime.utcnow()
+                embed.set_footer()
+                await event[0].edit(embed=embed)
+                await event[0].clear_reactions()
+            else:
+                embed = event[0].embeds[0]
+                embed.set_footer()
+                embed.description += "\n\n<:melonpan:815857424996630548> `There was nothing sellable in your inventory.`"
+                await event[0].edit(embed=embed)
+                await event[0].clear_reactions()
 
 
+    @commands.command(aliases=['sa'])
+    async def sellall(self, ctx, *, item : str = None):
+        await self.sellall_command(ctx, item)
+
+    @commands.command(aliases=['sh', 'store', 'shopping', 'market', 'markets'])
+    async def shop(self, ctx, *, item : str = None):
+        await self.shop_command(ctx, item)
 
 
 
