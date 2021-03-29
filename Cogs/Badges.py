@@ -37,7 +37,7 @@ class Badges(commands.Cog):
             index = None
 
         if index is None:
-            await ctx.reply_safe("<:melonpan:815857424996630548> `You must tell me the badge index you would like to purchase: e.g. 'pan badge buy 0'`")
+            await config.reply(ctx, "<:melonpan:815857424996630548> `You must tell me the badge index you would like to purchase: e.g. 'pan badge buy 0'`")
             return
 
         chosen = None
@@ -46,22 +46,22 @@ class Badges(commands.Cog):
                 chosen = x
 
         if chosen is None:
-            await ctx.reply_safe("<:melonpan:815857424996630548> `I don't see that badge on sale.`")
+            await config.reply(ctx, "<:melonpan:815857424996630548> `I don't see that badge on sale.`")
             return
 
         if user['money'] < chosen['price']:
-            await ctx.reply_safe("<:melonpan:815857424996630548> `You don't have enough BreadCoin for this badge.`")
+            await config.reply(ctx, "<:melonpan:815857424996630548> `You don't have enough BreadCoin for this badge.`")
             return
 
         if index in user['badges']:
-            await ctx.reply_safe("<:melonpan:815857424996630548> `You already have this badge.`")
+            await config.reply(ctx, "<:melonpan:815857424996630548> `You already have this badge.`")
             return
 
         config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -chosen['price']}, '$push': {'badges': index}})
 
         chosen_badge = config.badges[index]
 
-        await ctx.reply_safe(f"Congratulations! You have purchased the {chosen_badge['emoji']} **{chosen_badge['name']}** Badge!")
+        await config.reply(ctx, f"Congratulations! You have purchased the {chosen_badge['emoji']} **{chosen_badge['name']}** Badge!")
 
     @commands.group(aliases=['collectables', 'badge', 'collect'])
     async def badges(self, ctx):

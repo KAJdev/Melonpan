@@ -55,7 +55,7 @@ class Vote(commands.Cog):
         else:
             embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/814990535751106660.png?v=1")
         embed.set_footer(text="You can vote every 12 hours.")
-        await ctx.reply_safe(embed=embed)
+        await config.reply(ctx, embed=embed)
 
 
     @commands.Cog.listener()

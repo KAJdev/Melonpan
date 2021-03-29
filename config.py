@@ -67,6 +67,12 @@ def gen_bread_id():
     elif type_of_id == 2:
         return "".join(random.choices(string.ascii_letters, k=6))
 
+async def reply(ctx, content=None, **kwargs):
+    try:
+        return await ctx.reply(content=content, **kwargs)
+    except (discord.errors.HTTPException, AttributeError):
+        return await ctx.send(content=content, **kwargs)
+
 def get_avg_messages():
     total = 0
     for c in MESSAGES_PER_SECOND_AVG:
@@ -521,3 +527,7 @@ breads = [
         "description": "Small, round, thin, usually dusted with cornmeal and served split horizontally, toasted, buttered, eaten as a snack alone or part of meal, usually breakfast or, in the UK and Ireland, early-evening tea."
     }
 ]
+
+bread_choices = []
+for _ in breads:
+    bread_choices.append(create_choice(name=_['name'], value=_['name']))

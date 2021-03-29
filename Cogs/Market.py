@@ -75,7 +75,7 @@ class Market(commands.Cog):
 
                 desc = f"```************\nCASH RECEIPT\n************\nDescription\n- {amount}x {selected['name']}\n\n============\nTOTAL AMOUNT: {total} BreadCoin\nTAX: 0 BreadCoin\n============\nTHANK YOU!```"
 
-                await ctx.reply_safe(embed=discord.Embed(
+                await config.reply(ctx, embed=discord.Embed(
                     title="Bread Market Exchange Receipt",
                     color=discord.Color(0xebeae8),
                     description=desc,
@@ -144,7 +144,7 @@ class Market(commands.Cog):
 
                 desc = f"```**********\nDONATE RECEIPT\n**********\nDescription\n- {amount}x {selected['name']}\n\nTHANK YOU!```"
 
-                await ctx.reply_safe(embed=discord.Embed(
+                await config.reply(ctx, embed=discord.Embed(
                     title="Bread Market Donation Receipt",
                     color=discord.Color(0xebeae8),
                     description=desc,
@@ -185,7 +185,7 @@ class Market(commands.Cog):
 
                 desc = f"```************\nSOLD RECEIPT\n************\nDescription\n- 1x {__['name']}\n\n============\nTOTAL AMOUNT: {int(today_price)} BreadCoin\nTAX: {int(tax)} BreadCoin\n============\nTHANK YOU!```"
 
-                await ctx.reply_safe(embed=discord.Embed(
+                await config.reply(ctx, embed=discord.Embed(
                     title="Bread Market Exchange Receipt",
                     color=discord.Color(0xebeae8),
                     description=desc,
@@ -261,7 +261,7 @@ class Market(commands.Cog):
 
                 desc = f"```************\nSOLD RECEIPT\n************\nDescription\n- {amount}x {selected['name']}\n\n============\nTOTAL AMOUNT: {int(total)} BreadCoin\nTAX: {int(tax)} BreadCoin\n============\nTHANK YOU!```"
 
-                await ctx.reply_safe(embed=discord.Embed(
+                await config.reply(ctx, embed=discord.Embed(
                     title="Bread Market Exchange Receipt",
                     color=discord.Color(0xebeae8),
                     description=desc,
@@ -382,14 +382,14 @@ class Market(commands.Cog):
 
                 desc += f"\n\n============\nTOTAL AMOUNT: {int(total)} BreadCoin\nTAX: {int(tax)} BreadCoin\n============\nTHANK YOU!```"
 
-                await ctx.reply_safe(embed=discord.Embed(
+                await config.reply(ctx, embed=discord.Embed(
                     title="Bread Market Exchange Receipt",
                     color=discord.Color(0xebeae8),
                     description=desc,
                     timestamp=datetime.datetime.utcnow()
                 ))
             else:
-                await ctx.reply_safe("<:melonpan:815857424996630548> `There was nothing sellable in your inventory.`")
+                await config.reply(ctx, "<:melonpan:815857424996630548> `There was nothing sellable in your inventory.`")
         else:
             today = datetime.datetime.now().timetuple().tm_yday
             random.seed(today)
@@ -433,7 +433,7 @@ class Market(commands.Cog):
 
                 desc = f"```************\nSOLD RECEIPT\n************\nDescription\n- {len(selling)}x {selected['name']}\n\n============\nTOTAL AMOUNT: {int(total)} BreadCoin\nTAX: {int(tax)} BreadCoin\n============\nTHANK YOU!```"
 
-                await ctx.reply_safe(embed=discord.Embed(
+                await config.reply(ctx, embed=discord.Embed(
                     title="Bread Market Exchange Receipt",
                     color=discord.Color(0xebeae8),
                     description=desc,

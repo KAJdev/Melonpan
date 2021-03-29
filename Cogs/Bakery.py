@@ -53,8 +53,7 @@ class Bakery(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
-    async def bakery(self, ctx):
+    async def bakery_command(self, ctx):
         user = config.get_user(ctx.author.id)
 
         baking = len(user['ovens'])
@@ -71,45 +70,42 @@ class Bakery(commands.Cog):
         pages = menus.MenuPages(source=BakeryMenu(user['ovens'], user['oven_count'], baking, user), clear_reactions_after=True)
         await pages.start(ctx)
 
-    @commands.command()
-    async def build(self, ctx):
+    async def build_command(self, ctx):
         user = config.get_user(ctx.author.id)
 
         # if user['oven_count'] >= 24:
-        #     await ctx.reply_safe("<:melonpan:815857424996630548> `You have built the maximum amount of ovens!`")
+        #     await config.reply(ctx, "<:melonpan:815857424996630548> `You have built the maximum amount of ovens!`")
         #     return
 
         cost = user['oven_count'] * config.oven_cost
 
         if user['money'] < cost:
-            await ctx.reply_safe("<:melonpan:815857424996630548> `You don't have enough BreadCoin to build a new oven.`")
+            await config.reply(ctx, "<:melonpan:815857424996630548> `You don't have enough BreadCoin to build a new oven.`")
             return
 
         config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -cost, 'oven_count': 1}})
-        await ctx.reply_safe("<:melonpan:815857424996630548> You have built a new oven! View it with `pan bakery`.")
+        await config.reply(ctx, "<:melonpan:815857424996630548> You have built a new oven! View it with `pan bakery`.")
 
-    @commands.command()
-    async def expand(self, ctx):
+    async def expand_command(self, ctx):
         user = config.get_user(ctx.author.id)
 
         # if user.get('inventory_capacity', 25) >= 100:
-        #     await ctx.reply_safe("<:melonpan:815857424996630548> `You have expanded your storage capacity to the max!`")
+        #     await config.reply(ctx, "<:melonpan:815857424996630548> `You have expanded your storage capacity to the max!`")
         #     return
 
         cost = int((user.get('inventory_capacity', 25)/config.expand_amount) * config.expand_cost)
 
         if user['money'] < cost:
-            await ctx.reply_safe("<:melonpan:815857424996630548> `You don't have enough BreadCoin to expand your storage capacity.`")
+            await config.reply(ctx, "<:melonpan:815857424996630548> `You don't have enough BreadCoin to expand your storage capacity.`")
             return
 
         if 'inventory_capacity' in user.keys():
             config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -cost, 'inventory_capacity': config.expand_amount}})
         else:
             config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -cost}, '$set': {'inventory_capacity': 25 + config.expand_amount}})
-        await ctx.reply_safe(f"<:melonpan:815857424996630548> You have expanded your inventory capacity by `{config.expand_amount}` slots. You can now store `{user.get('inventory_capacity', 25) + config.expand_amount}` items.")
+        await config.reply(ctx, f"<:melonpan:815857424996630548> You have expanded your inventory capacity by `{config.expand_amount}` slots. You can now store `{user.get('inventory_capacity', 25) + config.expand_amount}` items.")
 
-    @commands.command(aliases=['ba'])
-    async def bakeall(self, ctx, *, bread:str=None):
+    async def bakeall_command(self, ctx, bread):
         user = config.get_user(ctx.author.id)
 
         active = 0
@@ -160,11 +156,9 @@ class Bakery(commands.Cog):
             user['baked'][str(bake_obj['index'])] = user['baked'].get(str(bake_obj['index']), 0) + amount
 
             config.USERS.update_one({'id': user['id']}, {'$set': {'ovens': user['ovens'], 'baked': user['baked']}})
-            await ctx.reply_safe(f"{config.stove_burning[True]} {amount} **{selected.get('plural_name', selected['name']) if amount > 1 else selected['name']}** {'are' if amount > 1 else 'is'} now baking! use `pan bakery` to check on {'them' if amount > 1 else 'it'}, and `pan plate` to take {'them' if amount > 1 else 'it'} out when {'they are' if amount > 1 else 'it is'} done.")
+            await config.reply(ctx, f"{config.stove_burning[True]} {amount} **{selected.get('plural_name', selected['name']) if amount > 1 else selected['name']}** {'are' if amount > 1 else 'is'} now baking! use `pan bakery` to check on {'them' if amount > 1 else 'it'}, and `pan plate` to take {'them' if amount > 1 else 'it'} out when {'they are' if amount > 1 else 'it is'} done.")
 
-
-    @commands.command()
-    async def bake(self, ctx, *, bread:str=None):
+    async def bake_command(self, ctx, bread):
         user = config.get_user(ctx.author.id)
 
         active = 0
@@ -217,10 +211,9 @@ class Bakery(commands.Cog):
             extra = ""
             if config.get_avg_commands(minutes=0.1, user=ctx.author.id, command=ctx.command.name) >= 0.6:
                 extra = "\n\n**TIP:** Use `pan bakeall <bread>` to fill all of your empty ovens!"
-            await ctx.reply_safe(f"{config.stove_burning[True]} Your **{bake_obj['name']}** is now baking! use `pan bakery` to check on it, and `pan plate` to take it out when it's done.{extra}")
+            await config.reply(ctx, f"{config.stove_burning[True]} Your **{bake_obj['name']}** is now baking! use `pan bakery` to check on it, and `pan plate` to take it out when it's done.{extra}")
 
-    @commands.command(aliases=['p'])
-    async def plate(self, ctx):
+    async def plate_command(self, ctx):
         user = config.get_user(ctx.author.id)
 
         ending = ""
@@ -295,14 +288,77 @@ class Bakery(commands.Cog):
         if not ending == "No bread was plated.":
             embed.set_footer(text="react with 💲 to sell these breads")
 
-        msg = await ctx.reply_safe(embed=embed)
+        msg = await config.reply(ctx, embed=embed)
         if not ending == "No bread was plated.":
             config.SELL_BREAD_CACHE.append((msg, user, to_add))
             await msg.add_reaction("💲")
 
+    @cog_ext.cog_slash(name="bakery",
+        description="Show your bakery.")
+    async def bakery_slash(self, ctx: SlashContext):
+        await self.bakery_command(ctx)
 
+    @cog_ext.cog_slash(name="build",
+        description="Build a new oven.")
+    async def build_slash(self, ctx: SlashContext):
+        await self.build_command(ctx)
 
+    @cog_ext.cog_slash(name="expand",
+        description="Expand your inventory space.")
+    async def expand_slash(self, ctx: SlashContext):
+        await self.expand_command(ctx)
 
+    @cog_ext.cog_slash(name="bake",
+        description="Bake some bread!",
+        options=[
+            create_option(
+              name="bread",
+              description="The bread to bake.",
+              option_type=3,
+              required=True,
+              choices = config.bread_choices
+            ),
+            create_option(
+                name="all",
+                description="Fill all empty ovens with this bread?",
+                option_type=5,
+                required=False
+            )
+        ])
+    async def bake_slash(self, ctx: SlashContext, bread:str, all:bool=False):
+        if all:
+            await self.bakeall_command(ctx, bread)
+        else:
+            await self.bake_command(ctx, bread)
+
+    @cog_ext.cog_slash(name="plate",
+        description="Take bread out of the oven.")
+    async def plate_slash(self, ctx: SlashContext):
+        await self.plate_command(ctx)
+
+    @commands.command()
+    async def bakery(self, ctx):
+        await self.bakery_command(ctx)
+
+    @commands.command()
+    async def build(self, ctx):
+        await self.build_command(ctx)
+
+    @commands.command()
+    async def expand(self, ctx):
+        await self.expand_command(ctx)
+
+    @commands.command(aliases=['ba'])
+    async def bakeall(self, ctx, *, bread:str=None):
+        await self.bakeall_command(ctx, bread)
+
+    @commands.command()
+    async def bake(self, ctx, *, bread:str=None):
+        await self.bake_command(ctx, bread)
+
+    @commands.command(aliases=['p'])
+    async def plate(self, ctx):
+        await self.plate_command(ctx)
 
 
 

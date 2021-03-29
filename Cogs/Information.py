@@ -77,15 +77,7 @@ class Information(commands.Cog):
         config.TIMERS.update_many({'_id': {'$in': list(x['_id'] for x in expired_timers)}}, {'$set': {'expired': True}})
         config.TIMERS.update_many({'_id': {'$in': list(x['_id'] for x in sent_timers)}}, {'$set': {'sent': True}})
 
-    @commands.command(aliases=['list', 'bread', 'all', 'breadlist', 'listbread', 'allbread'])
-    async def breads(self, ctx):
-        embed = discord.Embed(title="All Items", color=config.MAINCOLOR, description = "*use `pan shop <bread>` to get more specific price info about an item.*\n\n")
-        for bread in config.breads:
-            embed.description += f"> {bread['emoji']} **{bread['name']}**\n"
-        await ctx.reply_safe(embed=embed)
-
-    @commands.command(aliases=['i', 'inv', 'items', 'in', 'bag'])
-    async def inventory(self, ctx):
+    async def inventory_command(self, ctx):
         user = config.get_user(ctx.author.id)
         desc = ""
         if len(user['inventory']) < 1:
@@ -101,8 +93,7 @@ class Information(commands.Cog):
             pages = menus.MenuPages(source=InventoryMenu(user['inventory'], max=user.get('inventory_capacity', 25)), clear_reactions_after=True)
             await pages.start(ctx)
 
-    @commands.command(aliases=['timer', 'time', 'r', 'remindme', 'rm'])
-    async def remind(self, ctx, *, args:str=None):
+    async def remind_command(self, ctx, args):
         user = config.get_user(ctx.author.id)
 
         if args is None:
@@ -137,8 +128,7 @@ class Information(commands.Cog):
 
         await ctx.reply_safe(embed=embed)
 
-    @commands.command(aliases=['timers'])
-    async def reminders(self, ctx):
+    async def reminders_command(self, ctx):
         timers = config.TIMERS.find({'owner': ctx.author.id, 'expired': False})
 
         desc = ""
@@ -159,8 +149,7 @@ class Information(commands.Cog):
 
         await ctx.reply_safe(embed=embed)
 
-    @commands.command(aliases=['money', 'balance', 'm', 'wallet', 'breadcoin', 'coin', 'coins'])
-    async def bal(self, ctx, member : discord.Member = None):
+    async def bal_command(self, ctx, member):
         if member is None:
             member = ctx.author
 
@@ -181,8 +170,7 @@ class Information(commands.Cog):
 
         await ctx.reply_safe(embed=embed)
 
-    @commands.command(aliases=['about'])
-    async def info(self, ctx):
+    async def info_command(self, ctx):
         embed = discord.Embed(title="Melonpan Bot Info", color=config.MAINCOLOR, timestamp=datetime.datetime.utcnow())
         embed.set_thumbnail(url=str(self.bot.user.avatar_url))
 
@@ -202,8 +190,7 @@ class Information(commands.Cog):
         embed.set_footer(text=f"discord.py v{discord.__version__}")
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=['stat', 'profile', 'user'])
-    async def stats(self, ctx, member : discord.Member = None):
+    async def stats_command(self, ctx, member):
         if member is None:
             member = ctx.author
 
@@ -245,6 +232,76 @@ class Information(commands.Cog):
         embed.add_field(name="Baking Stats", value=f"Favorite Bread: **{fav['name']}** ({fav['amount']} bakes)\nBreads Baked: **{total}**\nBreadCoin: **{user['money']}** <:BreadCoin:815842873937100800>\nOvens: **{user['oven_count']}**\nInventory Capacity: **{user.get('inventory_capacity', 25)}**")
 
         await ctx.send(embed=embed)
+
+    @cog_ext.cog_slash(name="inventory",
+        description="Show your inventory.")
+    async def inventory_slash(self, ctx: SlashContext):
+        await self.inventory_command(ctx)
+
+    @cog_ext.cog_slash(name="remind",
+        description="Set a reminder for a specific time in the future.",
+        options=[
+            create_option(
+                name="time",
+                description="specific duration, e.g. (5h 32m 23s) (leave blank to check reminders)",
+                option_type=3,
+                required=False
+            )
+        ])
+    async def remind_slash(self, ctx: SlashContext, time:str=None):
+        if time is None:
+            await self.reminders_command(ctx)
+        else:
+            await self.remind_command(ctx, time)
+
+    @cog_ext.cog_slash(name="balance",
+        description="Show your BreadCoin balance.")
+    async def bal_slash(self, ctx: SlashContext):
+        await self.bal_command(ctx)
+
+    @cog_ext.cog_slash(name="stats",
+        description="Show stats for yourself or another baker.",
+        options=[
+            create_option(
+                name="member",
+                description="The member to show stats for.",
+                option_type=6,
+                required=False
+            )
+        ])
+    async def stats_slash(self, ctx: SlashContext, member=None):
+        await self.stats_command(ctx, member)
+
+    @commands.command(aliases=['list', 'bread', 'all', 'breadlist', 'listbread', 'allbread'])
+    async def breads(self, ctx):
+        embed = discord.Embed(title="All Items", color=config.MAINCOLOR, description = "*use `pan shop <bread>` to get more specific price info about an item.*\n\n")
+        for bread in config.breads:
+            embed.description += f"> {bread['emoji']} **{bread['name']}**\n"
+        await ctx.reply_safe(embed=embed)
+
+    @commands.command(aliases=['i', 'inv', 'items', 'in', 'bag'])
+    async def inventory(self, ctx):
+        await self.inventory_command(ctx)
+
+    @commands.command(aliases=['timer', 'time', 'r', 'remindme', 'rm'])
+    async def remind(self, ctx, *, args:str=None):
+        await self.remind_command(ctx, args)
+
+    @commands.command(aliases=['timers'])
+    async def reminders(self, ctx):
+        await self.reminders_command(ctx)
+
+    @commands.command(aliases=['money', 'balance', 'm', 'wallet', 'breadcoin', 'coin', 'coins'])
+    async def bal(self, ctx, member : discord.Member = None):
+        await self.bal_command(ctx, member)
+
+    @commands.command(aliases=['about'])
+    async def info(self, ctx):
+        await self.info_command(ctx)
+
+    @commands.command(aliases=['stat', 'profile', 'user'])
+    async def stats(self, ctx, member : discord.Member = None):
+        await self.stats_command(ctx, member)
 
 def setup(bot):
     bot.add_cog(Information(bot))

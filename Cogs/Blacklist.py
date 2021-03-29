@@ -14,13 +14,12 @@ class Blacklist(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=['bl'], ignore_extra=True)
-    async def blacklist(self, ctx, channel:discord.TextChannel=None):
+    async def blacklist_command(self, ctx, channel):
         if ctx.guild is None:
-            await ctx.reply_safe("<:melonpan:815857424996630548> `This command can only be used in a guild.`")
+            await config.reply(ctx, "<:melonpan:815857424996630548> `This command can only be used in a guild.`")
             return
         if not ctx.author.guild_permissions.manage_guild:
-            await ctx.reply_safe("<:melonpan:815857424996630548> `You must have the 'manage guild' permission to use this command.`")
+            await config.reply(ctx, "<:melonpan:815857424996630548> `You must have the 'manage guild' permission to use this command.`")
             return
         server = config.get_server(ctx.guild.id)
         if channel is None:
@@ -32,19 +31,36 @@ class Blacklist(commands.Cog):
             if desc == "":
                 desc = "No blacklisted channels. Add/Remove one with `pan blacklist <channel>`"
             embed = discord.Embed(title="Blacklisted Channels", color=config.MAINCOLOR, description=desc)
-            await ctx.reply_safe(embed=embed)
+            await config.reply(ctx, embed=embed)
         else:
             if channel.id in server.blacklist:
                 server.update({'$pull': {'blacklist': channel.id}})
-                await ctx.reply_safe(f"{channel.mention} was unblacklisted. Commands **will** work there once again.")
+                await config.reply(ctx, f"{channel.mention} was unblacklisted. Commands **will** work there once again.")
             else:
                 server.update({'$push': {'blacklist': channel.id}})
-                await ctx.reply_safe(f"{channel.mention} was blacklisted. Commands will **no longer** work there.")
+                await config.reply(ctx, f"{channel.mention} was blacklisted. Commands will **no longer** work there.")
+
+    @commands.command(aliases=['bl'], ignore_extra=True)
+    async def blacklist(self, ctx, channel:discord.TextChannel=None):
+        await self.blacklist_command(ctx, channel)
+
+    @cog_ext.cog_slash(name="blacklist",
+        description="Limit where text commands can be used. (Use permissions to limit slash commands)",
+        options=[
+            create_option(
+                name="channel",
+                description="The channel to toggle blacklisting.",
+                option_type=7,
+                required=False
+            )
+        ])
+    async def blacklist_slash(self, ctx: SlashContext, channel=None):
+        await self.blacklist_command(ctx, channel)
 
     @blacklist.error
     async def blacklist_error(self, ctx, error):
         if isinstance(error, commands.errors.UserInputError):
-            await ctx.reply_safe("You must specify a channel.")
+            await config.reply(ctx, "You must specify a channel.")
         else:
             raise error
 

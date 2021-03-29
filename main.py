@@ -30,25 +30,18 @@ slash = SlashCommand(bot, sync_commands=True)
 # Remove default help command
 bot.remove_command("help")
 
-class CustomContext(commands.Context):
-    async def reply_safe(self, content=None, **kwargs):
-        try:
-            return await self.reply(content=content, **kwargs)
-        except discord.errors.HTTPException:
-            return await self.send(content=content, **kwargs)
-
 @bot.event
 async def on_message(message):
     if message.content.lower().startswith("pan sell all"):
         message.content = "pan sellall" + message.content[12:]
-    ctx = await bot.get_context(message, cls=CustomContext)
+    ctx = await bot.get_context(message)
     await bot.invoke(ctx)
 
 @bot.event
 async def on_message_edit(before, after):
     if after.content.lower().startswith("pan sell all"):
         after.content = "pan sellall" + after.content[12:]
-    ctx = await bot.get_context(after, cls=CustomContext)
+    ctx = await bot.get_context(after)
     await bot.invoke(ctx)
 
 @bot.command(aliases=['settings', 'h'])

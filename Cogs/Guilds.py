@@ -11,8 +11,7 @@ class Guilds(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=['server', 'g', 'discord', 'company', 'com', 'group', 'clan'])
-    async def guild(self, ctx):
+    async def guild_command(self, ctx):
         if ctx.guild is None:
             await ctx.send("<:melonpan:815857424996630548> `This isn't a guild, silly.`")
             return
@@ -28,6 +27,16 @@ class Guilds(commands.Cog):
             embed.description = f"`{server.money_until_next_level} BreadCoin until server upgrade.`"
 
         await ctx.send(embed=embed)
+
+    @commands.command(aliases=['server', 'g', 'discord', 'company', 'com', 'group', 'clan'])
+    async def guild(self, ctx):
+        await self.guild_command(ctx)
+
+    @cog_ext.cog_slash(name="guild",
+        description="View guild info.")
+    async def guild_slash(self, ctx: SlashContext):
+        await self.guild_command(ctx)
+
 
 
 def setup(bot):
