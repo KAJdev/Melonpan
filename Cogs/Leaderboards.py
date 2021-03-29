@@ -39,7 +39,7 @@ class Leaderboards(commands.Cog):
                 user['user_object'] = found
                 self.user_cache[user['id']] = found
             # x.add_row([f"#{amount}", user['user_object'].name, f"{user['money']} BreadCoin"])
-            desc += f"`#{amount}` • **{user['money']:,}** {side} • {user['user_object'].name}{' ' if len(user.get('badges', [])) > 0 else ''}{''.join(config.badges[x]['emoji'] for x in user.get('badges', []))}\n"
+            desc += f"`#{amount}` • **{user[field]:,}** {side} • {user['user_object'].name}{' ' if len(user.get('badges', [])) > 0 else ''}{''.join(config.badges[x]['emoji'] for x in user.get('badges', []))}\n"
             amount += 1
 
         # x.header = False
