@@ -88,7 +88,7 @@ class Information(commands.Cog):
                 description=desc
             )
             embed.set_footer(text=f"Showing 0/0")
-            await ctx.reply_safe(embed=embed)
+            await config.reply(ctx, embed=embed)
         else:
             pages = menus.MenuPages(source=InventoryMenu(user['inventory'], max=user.get('inventory_capacity', 25)), clear_reactions_after=True)
             await pages.start(ctx)
@@ -97,7 +97,7 @@ class Information(commands.Cog):
         user = config.get_user(ctx.author.id)
 
         if args is None:
-            await ctx.reply_safe("<:melonpan:815857424996630548> `Please tell me the timer length and note: e.g. 'pan remind 1h 2m 4s take out the bread'`")
+            await config.reply(ctx, "<:melonpan:815857424996630548> `Please tell me the timer length and note: e.g. 'pan remind 1h 2m 4s take out the bread'`")
             return
 
         splitted = args.split(" ")
@@ -113,7 +113,7 @@ class Information(commands.Cog):
                 message.append(word)
         length = datetime.timedelta(days=time['d'], hours=time['h'], minutes=time['m'], seconds=time['s'])
         if length.total_seconds() < 1:
-            await ctx.reply_safe("<:melonpan:815857424996630548> `Please tell me the timer length and note: e.g. 'pan remind 1h 2m 4s take out the bread'`")
+            await config.reply(ctx, "<:melonpan:815857424996630548> `Please tell me the timer length and note: e.g. 'pan remind 1h 2m 4s take out the bread'`")
             return
         remind_time = datetime.datetime.utcnow() + length
         message = " ".join(message)
@@ -126,7 +126,7 @@ class Information(commands.Cog):
 
         config.TIMERS.insert_one({'owner': ctx.author.id, 'link': ctx.message.jump_url, 'time': remind_time, 'created': datetime.datetime.utcnow(), 'message': message, 'id': ctx.message.id, 'sent': False, 'expired': False})
 
-        await ctx.reply_safe(embed=embed)
+        await config.reply(ctx, embed=embed)
 
     async def reminders_command(self, ctx):
         timers = config.TIMERS.find({'owner': ctx.author.id, 'expired': False})
@@ -147,7 +147,7 @@ class Information(commands.Cog):
 
         embed = discord.Embed(color=config.MAINCOLOR, title="Timers", description = desc)
 
-        await ctx.reply_safe(embed=embed)
+        await config.reply(ctx, embed=embed)
 
     async def bal_command(self, ctx, member):
         if member is None:
@@ -168,7 +168,7 @@ class Information(commands.Cog):
             color=config.MAINCOLOR
         )
 
-        await ctx.reply_safe(embed=embed)
+        await config.reply(ctx, embed=embed)
 
     async def info_command(self, ctx):
         embed = discord.Embed(title="Melonpan Bot Info", color=config.MAINCOLOR, timestamp=datetime.datetime.utcnow())
@@ -277,7 +277,7 @@ class Information(commands.Cog):
         embed = discord.Embed(title="All Items", color=config.MAINCOLOR, description = "*use `pan shop <bread>` to get more specific price info about an item.*\n\n")
         for bread in config.breads:
             embed.description += f"> {bread['emoji']} **{bread['name']}**\n"
-        await ctx.reply_safe(embed=embed)
+        await config.reply(ctx, embed=embed)
 
     @commands.command(aliases=['i', 'inv', 'items', 'in', 'bag'])
     async def inventory(self, ctx):
