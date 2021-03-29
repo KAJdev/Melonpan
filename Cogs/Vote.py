@@ -31,9 +31,8 @@ class Vote(commands.Cog):
             logger.info('Posted server count ({})'.format(self.dblpy.guild_count()))
         except Exception as e:
             logger.exception('Failed to post server count\n{}: {}'.format(type(e).__name__, e))
-
-    @commands.command(aliases=['v', 'topgg', 'rewards'])
-    async def vote(self, ctx):
+     
+    async def vote_command(self, ctx):
         user = config.get_user(ctx.author.id)
         vote_string = ""
         can_vote = False
@@ -57,6 +56,14 @@ class Vote(commands.Cog):
         embed.set_footer(text="You can vote every 12 hours.")
         await config.reply(ctx, embed=embed)
 
+    @commands.command(aliases=['v', 'topgg', 'rewards'])
+    async def vote(self, ctx):
+        await self.vote_command(ctx)
+        
+    @cog_ext.cog_slash(name="vote",
+        description="Vote for Melonpan!")
+    async def vote_slash(self, ctx: SlashContext):
+        await self.vote_command(ctx)
 
     @commands.Cog.listener()
     async def on_dbl_vote(self, data):
