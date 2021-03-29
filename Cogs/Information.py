@@ -164,7 +164,7 @@ class Information(commands.Cog):
 
         embed=discord.Embed(
             title="Baker Balance",
-            description=f"**Pocket**: `{user['money']}` <:BreadCoin:815842873937100800>\n**Bread Worth**: `{assets}` <:BreadCoin:815842873937100800> [<:BreadWarning:815842874226245643>]({ctx.message.jump_url} \"This value is based on the market and will change.\")\n**Total Assets**: `{user['money'] + assets}` <:BreadCoin:815842873937100800>",
+            description=f"**Pocket**: `{user['money']}` <:BreadCoin:815842873937100800>\n**Bread Worth**: `{assets}` <:BreadCoin:815842873937100800>\n**Total Assets**: `{user['money'] + assets}` <:BreadCoin:815842873937100800>",
             color=config.MAINCOLOR
         )
 
