@@ -279,7 +279,7 @@ class Bakery(commands.Cog):
                 special_string = f" `{special_string}`"
             else:
                 special_string = ""
-            ending += f"+ {config.breads[index]['emoji']} **{config.breads[index]['name']}**{special_string}\n"
+            ending += f"+ {config.breads[b['index']]['emoji']} **{config.breads[b['index']]['name']}**{special_string}\n"
         for b in special_burned:
             special_string = b.get('special', None)
             if special_string is not None:
