@@ -472,7 +472,7 @@ class Trading(commands.Cog):
                 return
             print("TRADE: checking")
             if await self.check_reactions(trade_obj):
-                ptint("TRADE: counting_down")
+                print("TRADE: counting_down")
                 await self.countdown(trade_obj)
             else:
                 print("TRADE: reactions_not_matching")
