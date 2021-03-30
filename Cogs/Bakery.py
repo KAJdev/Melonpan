@@ -57,7 +57,7 @@ class CustomMenuManager(menus.MenuPages):
         """
         page = await self._source.get_page(0)
         kwargs = await self._get_kwargs_from_page(page)
-        return await config.reply(**kwargs)
+        return await config.reply(ctx, **kwargs)
 
 class Bakery(commands.Cog):
 
