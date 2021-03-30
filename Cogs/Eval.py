@@ -5,6 +5,8 @@ import traceback
 import datetime
 
 from discord.ext import commands, tasks
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option, create_choice
 
 class Eval(commands.Cog):
 
@@ -59,6 +61,13 @@ class Eval(commands.Cog):
     @commands.Cog.listener()
     async def on_command(self, ctx):
         config.log("CMD:", ctx.message.content, " - ", ctx.author)
+        config.COMMANDS_LOG.append((ctx, datetime.datetime.utcnow()))
+        if len(config.COMMANDS_LOG) > 1000:
+            config.COMMANDS_LOG.pop(0)
+
+    @commands.Cog.listener()
+    async def on_slash_command(self, ctx: SlashContext):
+        config.log("SLASH_CMD:", ctx.command, " - ", ctx.author)
         config.COMMANDS_LOG.append((ctx, datetime.datetime.utcnow()))
         if len(config.COMMANDS_LOG) > 1000:
             config.COMMANDS_LOG.pop(0)
