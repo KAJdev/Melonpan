@@ -57,9 +57,11 @@ class Trading(commands.Cog):
                 users = await _.users().flatten()
 
         if users is None:
+            print("TRADE: reaction_not_found")
             return False
 
         only_ids = list(x.id for x in users)
+        print("TRADE:", only_ids)
         return trade['member'].id in only_ids and trade['author'].id in only_ids
 
     async def countdown(self, trade):
