@@ -60,7 +60,7 @@ async def help(ctx):
         inline=False
     ).add_field(
         name="Market",
-        value="`sell`, `sellall`, `buy`, `shop`, `donate`",
+        value="`sell`, `sellall`, `buy`, `shop`, `donate`, `trade`",
         inline=False
     ).add_field(
         name="Misc",
