@@ -37,7 +37,7 @@ class InventoryMenu(menus.ListPageSource):
         embed.add_field(name="<:BreadStaff:815484321590804491> Storage Expansion", value=f"`pan expand`\nCost: `{e_cost}` <:BreadCoin:815842873937100800>\n*+{config.expand_amount} slots*")
         embed.set_footer(text=f"Showing {menu.current_page + 1}/{menu._source.get_max_pages()} | Storage Capacity: {len(self.og)}/{self.max}")
         return embed
-    
+
 class CustomMenuManager(menus.MenuPages):
     async def send_initial_message(self, ctx, channel):
         """|coro|
@@ -47,7 +47,7 @@ class CustomMenuManager(menus.MenuPages):
         """
         page = await self._source.get_page(0)
         kwargs = await self._get_kwargs_from_page(page)
-        return await ctx.send(**kwargs)
+        return await config.reply(**kwargs)
 
 class Information(commands.Cog):
 
@@ -138,7 +138,7 @@ class Information(commands.Cog):
 
         config.TIMERS.insert_one({'owner': ctx.author.id, 'link': msg.jump_url, 'time': remind_time, 'created': datetime.datetime.utcnow(), 'message': message, 'id': ctx.message.id, 'sent': False, 'expired': False})
 
-        
+
 
     async def reminders_command(self, ctx):
         timers = config.TIMERS.find({'owner': ctx.author.id, 'expired': False})

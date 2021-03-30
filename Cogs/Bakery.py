@@ -57,7 +57,7 @@ class CustomMenuManager(menus.MenuPages):
         """
         page = await self._source.get_page(0)
         kwargs = await self._get_kwargs_from_page(page)
-        return await ctx.send(**kwargs)
+        return await config.reply(**kwargs)
 
 class Bakery(commands.Cog):
 
@@ -77,7 +77,7 @@ class Bakery(commands.Cog):
                 x = user['ovens'][_]
             except IndexError:
                 user['ovens'].append(None)
-                        
+
         menuClass = BakeryMenu(user['ovens'], user['oven_count'], baking, user)
         pages = CustomMenuManager(source=menuClass, clear_reactions_after=True)
         await pages.start(ctx)
