@@ -463,11 +463,12 @@ class Trading(commands.Cog):
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
+        print("EVENT: raw_reaction_add")
         if str(payload.emoji) == "<a:check:824804284398698496>":
             trade_obj = self.active_trades.get(payload.message_id, None)
             if trade_obj is None:
                 return
-
+            print("TRADE: checking")
             if await self.check_reactions(trade_obj):
                 await self.countdown(trade_obj)
         if str(payload.emoji) == "<:xx:824842660106731542>":
