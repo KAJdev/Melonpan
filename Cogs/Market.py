@@ -523,7 +523,7 @@ class Market(commands.Cog):
         ])
     async def sell_slash(self, ctx: SlashContext, item:str, amount:int=1):
         await self.sell_command(ctx, str(amount), item)
-        
+
     @cog_ext.cog_slash(name="shop",
         description="View shop information.",
         options=[
@@ -537,7 +537,7 @@ class Market(commands.Cog):
         ])
     async def shop_slash(self, ctx: SlashContext, item:str=None):
         await self.shop_command(ctx, item, False)
-    
+
     @cog_ext.cog_slash(name="sellall",
         description="Sell everything in your inventory.",
         options=[
@@ -624,13 +624,13 @@ class Market(commands.Cog):
                 embed.timestamp=datetime.datetime.utcnow()
                 embed.set_footer()
                 await event[0].edit(embed=embed)
-                await event[0].clear_reactions()
+                #await event[0].clear_reactions()
             else:
                 embed = event[0].embeds[0]
                 embed.set_footer()
                 embed.description += "\n\n<:melonpan:815857424996630548> `There was nothing sellable in your inventory.`"
                 await event[0].edit(embed=embed)
-                await event[0].clear_reactions()
+                #await event[0].clear_reactions()
 
 
     @commands.command(aliases=['sa'])
