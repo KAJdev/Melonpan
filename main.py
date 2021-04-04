@@ -50,7 +50,7 @@ async def on_message_edit(before, after):
 async def help(ctx):
     await ctx.send(embed=discord.Embed(
         title="Melonpan Commands",
-        color=config.MAINCOLOR
+        color=config.MAINCOLOR,
         description=f"[Invite]({bot_invite}) | [Support](https://discord.gg/ueYyZVJGcf) | [Vote](https://top.gg/bot/815835732979220501/vote) | [Patreon](https://www.patreon.com/MelonpanBot)"
     ).add_field(
         name="Information",
