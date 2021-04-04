@@ -151,8 +151,8 @@ class Trading(commands.Cog):
             elif _['tradee']['id'] == id:
                 trade = ('tradee', _)
         return trade
-    
-    
+
+
     async def offer_command(self, ctx, amount, item):
         user = config.get_user(ctx.author.id)
         trade = self.get_trade(ctx.author.id)
@@ -177,7 +177,7 @@ class Trading(commands.Cog):
             if special is not None:
                 if special in trade[1][trade[0] + "_offers"]:
                     return "<:xx:824842660106731542> `This item is already being offered.`"
-                    
+
                 checking = config.get_user(trade[1][other]['id'])
                 if len(checking['inventory']) + len(trade[1][trade[0] + "_offers"]) < checking.get('inventory_capacity', 25):
                     trade[1][trade[0] + "_offers"].append(special)
@@ -254,7 +254,7 @@ class Trading(commands.Cog):
                     return "<:check2:824842637381992529> `Offer placed.`"
                 else:
                     return "<:xx:824842660106731542> `The other party would not have enough storage to hold these items.`"
-                                  
+
     async def unoffer_command(self, ctx, amount, item):
         user = config.get_user(ctx.author.id)
         trade = self.get_trade(ctx.author.id)
@@ -342,8 +342,8 @@ class Trading(commands.Cog):
                 for _ in unoffering:
                     trade[1][trade[0] + "_offers"].remove(_)
                 await self.update_trade(trade[1])
-                return "<:check2:824842637381992529> `Offers removed.`"      
-                                   
+                return "<:check2:824842637381992529> `Offers removed.`"
+
     async def trade_command(self, ctx, member):
         if member is None or member == ctx.author:
             await ctx.send("<:melonpan:815857424996630548> `You must mention someone to trade bread with!`")
@@ -380,8 +380,8 @@ class Trading(commands.Cog):
         self.active_trades[msg.id] = trade_obj
 
         await msg.add_reaction("<a:check:824804284398698496>")
-        await msg.add_reaction("<:xx:824842660106731542>")                           
-                        
+        await msg.add_reaction("<:xx:824842660106731542>")
+
     @commands.command(aliases=['o'])
     async def offer(self, ctx, amount:str=None, *, item:str=None):
         e = await self.offer_command(ctx, amount, item)
@@ -405,8 +405,8 @@ class Trading(commands.Cog):
     @commands.command(aliases=['give'])
     async def trade(self, ctx, member:discord.Member=None):
         await self.trade_command(ctx, member)
-                                   
-                                   
+
+
     @cog_ext.cog_slash(name="trade",
         description="Trade with another baker.",
         options=[
@@ -418,8 +418,8 @@ class Trading(commands.Cog):
             )
         ])
     async def trade_slash(self, ctx: SlashContext, member:discord.User):
-        await self.trade_command(ctx, member)   
-                                   
+        await self.trade_command(ctx, member)
+
     @cog_ext.cog_slash(name="offer",
         description="Offer an item while in a trade.",
         options=[
@@ -440,8 +440,8 @@ class Trading(commands.Cog):
     async def offer_slash(self, ctx: SlashContext, item:str, amount:int=1):
         e = await self.offer_command(ctx, str(amount), item)
         await ctx.send(e, hidden=True)
-                                   
-                                   
+
+
     @cog_ext.cog_slash(name="unoffer",
         description="Remove an offer from a trade.",
         options=[
@@ -461,11 +461,10 @@ class Trading(commands.Cog):
         ])
     async def unoffer_slash(self, ctx: SlashContext, item:str, amount:int=1):
         e = await self.unoffer_command(ctx, str(amount), item)
-        await ctx.send(e, hidden=True)                                  
+        await ctx.send(e, hidden=True)
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
-        print("EVENT: raw_reaction_add")
         if str(payload.emoji) == "<a:check:824804284398698496>":
             trade_obj = self.active_trades.get(payload.message_id, None)
             if trade_obj is None:
