@@ -16,6 +16,8 @@ import inspect
 
 logging.basicConfig(level = logging.INFO, format="Melonpan [%(levelname)s] | %(message)s")
 
+bot_invite = "https://discord.com/api/oauth2/authorize?client_id=815835732979220501&permissions=314433&scope=bot%20applications.commands"
+
 async def get_prefix(bot, message):
     li = ['pan ', 'Pan ', 'PaN ', 'pAn ', 'paN ', 'PAn ', 'PaN ', 'PAn ', 'PAN ']
     return commands.when_mentioned_or(*li)(bot, message)
@@ -49,7 +51,7 @@ async def help(ctx):
     await ctx.send(embed=discord.Embed(
         title="Melonpan Commands",
         color=config.MAINCOLOR
-        #description="If you need help getting started, type `pan howto` to start the quick tutorial."
+        description=f"[Invite]({bot_invite}) | [Support](https://discord.gg/ueYyZVJGcf) | [Vote](https://top.gg/bot/815835732979220501/vote) | [Patreon](https://www.patreon.com/MelonpanBot)"
     ).add_field(
         name="Information",
         value="`inventory`, `stats`, `bal`, `badges`, `breads`, `guild`",
@@ -70,7 +72,11 @@ async def help(ctx):
 
 @bot.command(aliases = ['join'])
 async def invite(ctx):
-    await ctx.send(embed=discord.Embed(description="[**Invite Link**](https://discord.com/api/oauth2/authorize?client_id=815835732979220501&permissions=314433&scope=bot%20applications.commands) 🔗", color = config.MAINCOLOR))
+    await ctx.send(embed=discord.Embed(description=f"[**Invite Link**]({bot_invite}) 🔗", color = config.MAINCOLOR))
+
+@slash.slash(name = "invite", description="Invite Melonpan to your server.")
+async def invite_slash(ctx):
+    await ctx.send(embed=discord.Embed(description=f"[**Invite Link**]({bot_invite}) 🔗", color = config.MAINCOLOR))
 
 # Cogs
 cogs = ["Eval", "Information", "Market", "Bakery", "StatCord", "Leaderboards", "Badges", "Blacklist", "Drops", "LootBoxes", "Vote", "Guilds", "Trading"]
@@ -136,6 +142,8 @@ async def on_guild_remove(guild):
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         pass
+    elif isinstance(error, discord.errors.Forbidden):
+        logging.error("Forbidden action: " + str(error))
     elif isinstance(error, commands.errors.CheckFailure):
         pass
     elif isinstance(error, commands.errors.UserInputError):
