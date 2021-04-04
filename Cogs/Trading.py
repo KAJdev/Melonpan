@@ -472,8 +472,10 @@ class Trading(commands.Cog):
                 return
             print("TRADE: checking")
             if await self.check_reactions(trade_obj):
-                ptint("TRADE: counting_down")
+                print("TRADE: counting_down")
                 await self.countdown(trade_obj)
+            else:
+                print("TRADE: reactions_not_matching")
         if str(payload.emoji) == "<:xx:824842660106731542>":
             trade_obj = self.active_trades.get(payload.message_id, None)
             if trade_obj is None:
