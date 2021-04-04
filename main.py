@@ -16,7 +16,7 @@ import inspect
 
 logging.basicConfig(level = logging.INFO, format="Melonpan [%(levelname)s] | %(message)s")
 
-bot_invite = "https://discord.com/api/oauth2/authorize?client_id=815835732979220501&permissions=314433&scope=bot%20applications.commands"
+bot_invite = "https://discord.com/api/oauth2/authorize?client_id=815835732979220501&permissions=314433&redirect_uri=https%3A%2F%2Fdiscord.gg%2FueYyZVJGcf&scope=bot%20applications.commands"
 
 async def get_prefix(bot, message):
     li = ['pan ', 'Pan ', 'PaN ', 'pAn ', 'paN ', 'PAn ', 'PaN ', 'PAn ', 'PAN ']
