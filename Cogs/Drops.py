@@ -37,7 +37,7 @@ class Drops(commands.Cog):
             if user.id == self.bot.user.id:
                 return False
             if reaction.message.id == msg.id and str(reaction.emoji) == "<:BreatHunter:815484321573896212>":
-                u = config.get_user(user.id)
+                u = self.bot.mongo.get_user(user.id)
                 if len(u['inventory']) < u.get('inventory_capacity', 25):
                     return True
                 return False
@@ -54,9 +54,9 @@ class Drops(commands.Cog):
         except:
             pass
 
-        winner = config.get_user(member.id)
-        print(f"DROP_CLAIM: #{message.channel.name} ({member})")
-        config.USERS.update_one({'id': member.id}, {'$push': {'inventory': actual_bread}})
+        winner = self.bot.mongo.get_user(member.id)
+        self.bot.log.info(f"DROP_CLAIM: #{message.channel.name} ({member})")
+        self.bot.mongo.users.update_one({'id': member.id}, {'$push': {'inventory': actual_bread}})
         embed.set_footer(text="This bread has already been claimed.\n\nDisable commands/drops with pan blacklist")
         embed.description = f"{member.mention} has claimed the **{drop['name']}**!"
         embed.color = 0x2f3136
@@ -65,12 +65,12 @@ class Drops(commands.Cog):
     @commands.command()
     async def forcedrop(self, ctx):
         if ctx.author.id in config.OWNERIDS:
-            await self.send_drop_message(ctx.message, config.get_server(ctx.guild.id))
+            await self.send_drop_message(ctx.message, self.bot.mongo.get_server(ctx.guild.id))
 
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.guild is not None:
-            server = config.get_server(message.guild.id)
+            server = self.bot.mongo.get_server(message.guild.id)
             if message.channel.id in server.blacklist:
                 return
         else:

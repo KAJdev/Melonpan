@@ -11,7 +11,6 @@ default = (
     "Logging",
     "LootBoxes",
     "Market",
-    "Prefix",
     "StatCord",
     "Trading",
     "Tutorial",

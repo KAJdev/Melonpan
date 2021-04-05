@@ -15,7 +15,7 @@ class Guilds(commands.Cog):
         if ctx.guild is None:
             await ctx.send("<:melonpan:815857424996630548> `This isn't a guild, silly.`")
             return
-        server = config.get_server(ctx.guild.id)
+        server = self.bot.mongo.get_server(ctx.guild.id)
         embed = discord.Embed(title="Server Info", color=config.MAINCOLOR)
         embed.set_author(icon_url=str(ctx.guild.icon_url), name=str(ctx.guild.name))
         embed.add_field(name=server.name, value=f"BreadCoin Value: **{server.money:,}**\nTax: **{round(server.tax*100, 2)}%**\nUnique Chance: **{round(server.one_of_a_kind_bread_chance*100, 2)}%**\nDrop Cooldown: **{server.drop_cooldown_min} min.**")

@@ -31,9 +31,9 @@ class Vote(commands.Cog):
             logger.info('Posted server count ({})'.format(self.dblpy.guild_count()))
         except Exception as e:
             logger.exception('Failed to post server count\n{}: {}'.format(type(e).__name__, e))
-     
+
     async def vote_command(self, ctx):
-        user = config.get_user(ctx.author.id)
+        user = self.bot.mongo.get_user(ctx.author.id)
         vote_string = ""
         can_vote = False
         if user.get('last_vote', None) is None:
@@ -59,7 +59,7 @@ class Vote(commands.Cog):
     @commands.command(aliases=['v', 'topgg', 'rewards'])
     async def vote(self, ctx):
         await self.vote_command(ctx)
-        
+
     @cog_ext.cog_slash(name="vote",
         description="Vote for Melonpan!")
     async def vote_slash(self, ctx: SlashContext):
@@ -67,7 +67,7 @@ class Vote(commands.Cog):
 
     @commands.Cog.listener()
     async def on_dbl_vote(self, data):
-        user = config.get_user(int(data['user']))
+        user = self.bot.mongo.get_user(int(data['user']))
         print(f"VOTE: {data['user']}")
         amount = 1 if data['isWeekend'] else 2
 
@@ -81,7 +81,7 @@ class Vote(commands.Cog):
             to_add.append(config.create_bread(config.create_drop()))
 
 
-        config.USERS.update_one({'id': user['id']}, {'$inc': {'money': amount * 100}, '$push': {'inventory': {'$each': to_add}}, '$set': {'last_vote': datetime.datetime.utcnow()}})
+        self.bot.mongo.users.update_user(user, {'$inc': {'money': amount * 100}, '$push': {'inventory': {'$each': to_add}}, '$set': {'last_vote': datetime.datetime.utcnow()}})
 
 
 def setup(bot):

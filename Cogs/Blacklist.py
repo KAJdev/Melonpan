@@ -21,7 +21,7 @@ class Blacklist(commands.Cog):
         if not ctx.author.guild_permissions.manage_guild:
             await config.reply(ctx, "<:melonpan:815857424996630548> `You must have the 'manage guild' permission to use this command.`")
             return
-        server = config.get_server(ctx.guild.id)
+        server = self.bot.mongo.get_server(ctx.guild.id)
         if channel is None:
             desc = ""
             for entry in server.blacklist:

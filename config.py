@@ -10,13 +10,13 @@ import string
 from discord_slash.utils.manage_commands import create_option, create_choice
 
 ## MongoDB
-myclient = pymongo.MongoClient(os.environ.get("MELONPAN_MONGO"))
+# myclient = pymongo.MongoClient(os.environ.get("MELONPAN_MONGO"))
 
 BOT_TOKEN = os.environ.get("MELONPAN_TOKEN")
 
-USERS = myclient["main"]['users']
-SERVERS = myclient["main"]["servers"]
-TIMERS = myclient["main"]["timers"]
+# USERS = myclient["main"]['users']
+# SERVERS = myclient["main"]["servers"]
+# TIMERS = myclient["main"]["timers"]
 
 # Owner IDS (People who have access to restart the bot)
 OWNERIDS = [684155404078415890,
@@ -106,49 +106,6 @@ def get_cached_member(id):
             return member
     return None
 
-def get_prefix(id):
-    server = PREFIXES.find_one({'id': id})
-    if server is None:
-        server = {'id': id, 'prefix': "pan "}
-    return server
-
-def get_user(id):
-    user = USERS.find_one({'id': id})
-    if user is None:
-        user = {
-            'id': id,
-            'inventory': [],
-            'inventory_capacity': 25,
-            'money': 0,
-            'baked': {},
-            'ovens': [],
-            'oven_count': 2,
-            'badges': [],
-            'last_vote': None
-        }
-        USERS.insert_one(user)
-    return user
-
-def get_server(id):
-    cached = SERVER_CACHE.get(id, None)
-    if cached is not None:
-        return cached
-
-    server = SERVERS.find_one({'id': id})
-    if server is None:
-        random.seed()
-        server = {
-            'id': id,
-            'blacklist': [],
-            'prefix': 'pan ',
-            'tax': round(random.random() * 0.2, 2),
-            'money': 0
-        }
-        SERVERS.insert_one(server)
-    server = Server(server)
-    SERVER_CACHE[id] = server
-    return server
-
 def create_bread(bread):
     random.seed()
     bread = {
@@ -206,53 +163,6 @@ guild_money_levels = [
         "drop_cooldown": drop_cooldown_min - 3
     }
 ]
-
-class Server():
-    def __init__(self, server):
-        for k,v in server.items():
-            setattr(self, k, v)
-        self.id = server.get('id', None)
-        self.blacklist = server.get('blacklist', [])
-        self.prefix = server.get('prefix', 'pan ')
-        self.tax = server.get('tax', round(random.random() * 0.2, 2))
-        self.money = server.get('money', 0)
-        level = self.get_level()
-        self.name = level.get('name', None)
-        self.one_of_a_kind_bread_chance = level.get('one_of_a_kind_droprate', one_of_a_kind_bread_chance)
-        self.tax *= level.get('tax_ratio', 1)
-        self.drop_cooldown_min = level.get('drop_cooldown', drop_cooldown_min)
-        i = guild_money_levels.index(level)
-        if i >= len(guild_money_levels) - 1:
-            self.money_until_next_level = None
-            self.next_level = None
-        else:
-            self.money_until_next_level = level['max'] - self.money
-            self.next_level = guild_money_levels[i + 1]
-
-    def update(self, change):
-        after = SERVERS.find_one_and_update({'id': self.id}, change, return_document=pymongo.ReturnDocument.AFTER)
-        self.__init__(after)
-
-    def get_level(self):
-        for _ in guild_money_levels:
-            if self.money < _['max']:
-                return _
-        return guild_money_levels[len(guild_money_levels) - 1]
-
-    def add_money(self, amount):
-        self.update({'$inc': {'money': amount}})
-
-    def create_bread(self, bread):
-        random.seed()
-        bread = {
-            'index': breads.index(bread),
-            'quality': random.randint(1, 5),
-            'created': datetime.datetime.utcnow(),
-            'uuid': str(uuid.uuid4())
-        }
-        if random.random() <= self.one_of_a_kind_bread_chance:
-            bread['special'] = gen_bread_id()
-        return bread
 
 current_collectables = [
     {'index': 6, 'price': 1500},

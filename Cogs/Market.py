@@ -21,8 +21,8 @@ class Market(commands.Cog):
         self.bot = bot
 
     async def buy_command(self, ctx, amount, item):
-        user = config.get_user(ctx.author.id)
-        server = config.get_server(ctx.guild.id)
+        user = self.bot.mongo.get_user(ctx.author.id)
+        server = self.bot.mongo.get_server(ctx.guild.id)
 
         if amount is None:
             amount = "1"
@@ -68,7 +68,7 @@ class Market(commands.Cog):
                 for _ in range(amount):
                     new_relics.append(server.create_bread(selected))
 
-                config.USERS.update_one({'id': ctx.author.id}, {'$push': {'inventory': {'$each': new_relics}}, '$inc': {'money': -today_price * amount}})
+                self.bot.mongo.users.update_one({'id': ctx.author.id}, {'$push': {'inventory': {'$each': new_relics}}, '$inc': {'money': -today_price * amount}})
 
                 total = amount * today_price
 
@@ -82,8 +82,8 @@ class Market(commands.Cog):
                 ))
 
     async def donate_command(self, ctx, amount, item):
-        user = config.get_user(ctx.author.id)
-        server = config.get_server(ctx.guild.id)
+        user = self.bot.mongo.get_user(ctx.author.id)
+        server = self.bot.mongo.get_server(ctx.guild.id)
 
         if amount is None:
             amount = "1"
@@ -138,7 +138,7 @@ class Market(commands.Cog):
 
                 server.add_money(total)
 
-                config.USERS.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}})
+                self.bot.mongo.users.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}})
 
                 desc = f"```**********\nDONATE RECEIPT\n**********\nDescription\n- {amount}x {selected['name']}\n\nTHANK YOU!```"
 
@@ -153,8 +153,8 @@ class Market(commands.Cog):
         if ctx.guild is None:
             await ctx.send("<:melonpan:815857424996630548> `This command cannot be used in Direct Messages.`")
             return
-        user = config.get_user(ctx.author.id)
-        server = config.get_server(ctx.guild.id)
+        user = self.bot.mongo.get_user(ctx.author.id)
+        server = self.bot.mongo.get_server(ctx.guild.id)
         selected = None
 
         if amount is None:
@@ -178,7 +178,7 @@ class Market(commands.Cog):
 
                 server.add_money(tax)
 
-                config.USERS.update_one({'id': ctx.author.id}, {'$pull': {'inventory': special}, '$inc': {'money': today_price}})
+                self.bot.mongo.users.update_one({'id': ctx.author.id}, {'$pull': {'inventory': special}, '$inc': {'money': today_price}})
 
                 desc = f"```************\nSOLD RECEIPT\n************\nDescription\n- 1x {__['name']}\n\n============\nTOTAL AMOUNT: {int(today_price)} BreadCoin\nTAX: {int(tax)} BreadCoin\n============\nTHANK YOU!```"
 
@@ -254,7 +254,7 @@ class Market(commands.Cog):
 
                 server.add_money(tax)
 
-                config.USERS.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
+                self.bot.mongo.users.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
 
                 desc = f"```************\nSOLD RECEIPT\n************\nDescription\n- {amount}x {selected['name']}\n\n============\nTOTAL AMOUNT: {int(total)} BreadCoin\nTAX: {int(tax)} BreadCoin\n============\nTHANK YOU!```"
 
@@ -269,8 +269,8 @@ class Market(commands.Cog):
         if ctx.guild is None:
             await ctx.send("<:melonpan:815857424996630548> `This command cannot be used in Direct Messages.`")
             return
-        user = config.get_user(ctx.author.id)
-        server = config.get_server(ctx.guild.id)
+        user = self.bot.mongo.get_user(ctx.author.id)
+        server = self.bot.mongo.get_server(ctx.guild.id)
 
         if item is None:
             today = datetime.datetime.now().timetuple().tm_yday
@@ -305,7 +305,7 @@ class Market(commands.Cog):
 
                 server.add_money(tax)
 
-                config.USERS.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
+                self.bot.mongo.users.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
 
                 desc += f"\n\n============\nTOTAL AMOUNT: {int(total)} BreadCoin\nTAX: {int(tax)} BreadCoin\n============\nTHANK YOU!```"
 
@@ -356,7 +356,7 @@ class Market(commands.Cog):
 
                 server.add_money(tax)
 
-                config.USERS.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
+                self.bot.mongo.users.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
 
                 desc = f"```************\nSOLD RECEIPT\n************\nDescription\n- {len(selling)}x {selected['name']}\n\n============\nTOTAL AMOUNT: {int(total)} BreadCoin\nTAX: {int(tax)} BreadCoin\n============\nTHANK YOU!```"
 
@@ -373,7 +373,7 @@ class Market(commands.Cog):
             random.seed(today)
             display = random.sample(config.breads, k=9)
             if ctx.guild is not None:
-                server_tax = str(int(round(config.get_server(ctx.guild.id).tax*100))) + "%"
+                server_tax = str(int(round(self.bot.mongo.get_server(ctx.guild.id).tax*100))) + "%"
             else:
                 server_tax = "N/A"
 
@@ -575,8 +575,8 @@ class Market(commands.Cog):
             if event is None:
                 return
             config.SELL_BREAD_CACHE.remove(event)
-            user = config.get_user(payload.user_id)
-            server = config.get_server(payload.guild_id)
+            user = self.bot.mongo.get_user(payload.user_id)
+            server = self.bot.mongo.get_server(payload.guild_id)
             today = datetime.datetime.now().timetuple().tm_yday
             random.seed(today)
             display = random.sample(config.breads, k=9)
@@ -616,7 +616,7 @@ class Market(commands.Cog):
 
                 server.add_money(tax)
 
-                config.USERS.update_one({'id': payload.user_id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
+                self.bot.mongo.users.update_one({'id': payload.user_id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
 
                 desc += f"\n\n============\nTOTAL AMOUNT: {int(total)} BreadCoin\nTAX: {int(tax)} BreadCoin\n============\nTHANK YOU!```"
                 embed = event[0].embeds[0]

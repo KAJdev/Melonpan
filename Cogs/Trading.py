@@ -100,8 +100,8 @@ class Trading(commands.Cog):
             del self.active_trades[trade['message'].id]
 
     async def complete_trade(self, trade):
-        trader = config.get_user(trade['author'].id)
-        tradee = config.get_user(trade['member'].id)
+        trader = self.bot.mongo.get_user(trade['author'].id)
+        tradee = self.bot.mongo.get_user(trade['member'].id)
 
         if (not all(list(x in trader['inventory'] for x in trade['trader_offers']))) or (not all(list(x in tradee['inventory'] for x in trade['tradee_offers']))) or (trade['trader_coins'] > trader['money']) or (trade['tradee_coins'] > tradee['money']):
             embed = discord.Embed(title="Trade Failed", color=config.ERRORCOLOR, description="Some or all items and BreadCoins offered by one or both parties were not found.")
@@ -131,8 +131,8 @@ class Trading(commands.Cog):
                 del self.active_trades[trade['message'].id]
             return
 
-        config.USERS.update_one({'id': trader['id']}, {'$set': {'inventory': trader['inventory'], 'money': trader['money']}})
-        config.USERS.update_one({'id': tradee['id']}, {'$set': {'inventory': tradee['inventory'], 'money': tradee['money']}})
+        self.bot.mongo.update_user(trader, {'$set': {'inventory': trader['inventory'], 'money': trader['money']}})
+        self.bot.mongo.update_user(tradee, {'$set': {'inventory': tradee['inventory'], 'money': tradee['money']}})
 
         embed = self.create_trade_embed(trade)
         embed.color = 0x22cc12
@@ -154,7 +154,7 @@ class Trading(commands.Cog):
 
 
     async def offer_command(self, ctx, amount, item):
-        user = config.get_user(ctx.author.id)
+        user = self.bot.mongo.get_user(ctx.author.id)
         trade = self.get_trade(ctx.author.id)
         if trade is None:
             return "<:melonpan:815857424996630548> `You are not trading with anyone. Start trading with 'pan trade <member>'`"
@@ -178,7 +178,7 @@ class Trading(commands.Cog):
                 if special in trade[1][trade[0] + "_offers"]:
                     return "<:xx:824842660106731542> `This item is already being offered.`"
 
-                checking = config.get_user(trade[1][other]['id'])
+                checking = self.bot.mongo.get_user(trade[1][other]['id'])
                 if len(checking['inventory']) + len(trade[1][trade[0] + "_offers"]) < checking.get('inventory_capacity', 25):
                     trade[1][trade[0] + "_offers"].append(special)
                     await self.update_trade(trade[1])
@@ -247,7 +247,7 @@ class Trading(commands.Cog):
                     if _ not in trade[1][trade[0] + "_offers"]:
                         final_offering.append(_)
 
-                checking = config.get_user(trade[1][other]['id'])
+                checking = self.bot.mongo.get_user(trade[1][other]['id'])
                 if len(checking['inventory']) + len(final_offering) <= checking.get('inventory_capacity', 25):
                     trade[1][trade[0] + "_offers"].extend(final_offering)
                     await self.update_trade(trade[1])
@@ -256,7 +256,7 @@ class Trading(commands.Cog):
                     return "<:xx:824842660106731542> `The other party would not have enough storage to hold these items.`"
 
     async def unoffer_command(self, ctx, amount, item):
-        user = config.get_user(ctx.author.id)
+        user = self.bot.mongo.get_user(ctx.author.id)
         trade = self.get_trade(ctx.author.id)
         if trade is None:
             return "<:melonpan:815857424996630548> `You are not trading with anyone. Start trading with 'pan trade <member>'`"
@@ -353,8 +353,8 @@ class Trading(commands.Cog):
             await ctx.send("<:melonpan:815857424996630548> `You are already trading somewhere else!`")
             return
 
-        trader = config.get_user(ctx.author.id)
-        tradee = config.get_user(member.id)
+        trader = self.bot.mongo.get_user(ctx.author.id)
+        tradee = self.bot.mongo.get_user(member.id)
 
         trader_offers = []
         tradee_offers = []

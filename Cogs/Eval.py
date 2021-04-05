@@ -47,8 +47,8 @@ class Eval(commands.Cog):
             elif amount is None:
                 await ctx.send("must supply amount.")
             else:
-                u = config.get_user(user.id)
-                config.USERS.update_one({'id': u['id']}, {'$inc': {'money': amount}})
+                u = self.bot.mongo.get_user(user.id)
+                self.bot.mongo.users.update_one({'id': u['id']}, {'$inc': {'money': amount}})
                 await ctx.send(f"BreadCoins updated for {user}. User now has {u['money'] + amount} BreadCoins.")
 
     @commands.command()
@@ -60,14 +60,14 @@ class Eval(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command(self, ctx):
-        config.log("CMD:", ctx.message.content, " - ", ctx.author)
+        self.bot.log.info("CMD:", ctx.message.content, " - ", ctx.author)
         config.COMMANDS_LOG.append((ctx, datetime.datetime.utcnow()))
         if len(config.COMMANDS_LOG) > 1000:
             config.COMMANDS_LOG.pop(0)
 
     @commands.Cog.listener()
     async def on_slash_command(self, ctx: SlashContext):
-        config.log("SLASH_CMD:", ctx.command, " - ", ctx.author)
+        self.bot.log.info("SLASH_CMD:", ctx.command, " - ", ctx.author)
         config.COMMANDS_LOG.append((ctx, datetime.datetime.utcnow()))
         if len(config.COMMANDS_LOG) > 1000:
             config.COMMANDS_LOG.pop(0)

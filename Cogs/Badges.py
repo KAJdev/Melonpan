@@ -29,7 +29,7 @@ class Badges(commands.Cog):
         await ctx.send(embed=embed)
 
     async def badges_buy_command(self, ctx, index):
-        user = config.get_user(ctx.author.id)
+        user = self.bot.mongo.get_user(ctx.author.id)
 
         try:
             index = int(index)
@@ -57,7 +57,7 @@ class Badges(commands.Cog):
             await config.reply(ctx, "<:melonpan:815857424996630548> `You already have this badge.`")
             return
 
-        config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -chosen['price']}, '$push': {'badges': index}})
+        self.bot.mongo.users.update_user(user, {'$inc': {'money': -chosen['price']}, '$push': {'badges': index}})
 
         chosen_badge = config.badges[index]
 

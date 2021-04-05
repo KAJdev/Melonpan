@@ -58,7 +58,7 @@ class ClusterBot(commands.AutoShardedBot):
             f'[Cluster#{self.cluster_name}] {kwargs["shard_ids"]}, {kwargs["shard_count"]}'
         )
 
-        self.slash = SlashCommand(self, sync_commands=True)
+        self.slash = SlashCommand(self, sync_commands=False)
 
         self.loop.create_task(self.do_startup_tasks())
         self.run(kwargs["token"])
@@ -67,6 +67,10 @@ class ClusterBot(commands.AutoShardedBot):
     @property
     def log(self):
         return self.get_cog("Logging").log
+
+    @property
+    def mongo(self):
+        return self.get_cog("Mongo")
 
     @property
     def enabled(self):

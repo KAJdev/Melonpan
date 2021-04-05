@@ -17,7 +17,7 @@ class LootBoxes(commands.Cog):
         self.bot = bot
 
     async def open_command(self, ctx):
-        user = config.get_user(ctx.author.id)
+        user = self.bot.mongo.get_user(ctx.author.id)
 
         box = None
         for i in user['inventory']:
@@ -32,8 +32,8 @@ class LootBoxes(commands.Cog):
 
         await asyncio.sleep(1.5)
 
-        user = config.get_user(ctx.author.id)
-        server = config.get_server(ctx.guild.id)
+        user = self.bot.mongo.get_user(ctx.author.id)
+        server = self.bot.mongo.get_server(ctx.guild.id)
 
         box = None
         for i in user['inventory']:
@@ -70,8 +70,8 @@ class LootBoxes(commands.Cog):
             desc += f"+ {_['emoji']} **{_['name']}**{special_string}\n"
             to_add.append(b)
 
-        config.USERS.update_one({'id': user['id']}, {'$push': {'inventory': {'$each': to_add}}})
-        config.USERS.update_one({'id': user['id']}, {'$pull': {'inventory': box}})
+        self.bot.mongo.users.update_user(user, {'$push': {'inventory': {'$each': to_add}}})
+        self.bot.mongo.users.update_user(user, {'$pull': {'inventory': box}})
 
         embed = discord.Embed(title="BreadBox", color=config.MAINCOLOR, description=desc)
         embed.set_footer(text="react with 💲 to sell these breads")

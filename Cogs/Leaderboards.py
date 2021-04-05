@@ -19,7 +19,7 @@ class Leaderboards(commands.Cog):
         self.user_cache = {}
 
     async def top_command(self, ctx, field="money", side="<:BreadCoin:815842873937100800>", title="Richest Bakers"):
-        top_global = list(config.USERS.find({}).sort(field, pymongo.DESCENDING).limit(15))
+        top_global = list(self.bot.mongo.users.find({}).sort(field, pymongo.DESCENDING).limit(15))
 
         to_remove = []
         amount = 1

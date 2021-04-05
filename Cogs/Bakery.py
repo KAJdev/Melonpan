@@ -65,7 +65,7 @@ class Bakery(commands.Cog):
         self.bot = bot
 
     async def bakery_command(self, ctx):
-        user = config.get_user(ctx.author.id)
+        user = self.bot.mongo.get_user(ctx.author.id)
 
         baking = len(user['ovens'])
         for o in user['ovens']:
@@ -83,7 +83,7 @@ class Bakery(commands.Cog):
         await pages.start(ctx)
 
     async def build_command(self, ctx):
-        user = config.get_user(ctx.author.id)
+        user = self.bot.mongo.get_user(ctx.author.id)
 
         # if user['oven_count'] >= 24:
         #     await config.reply(ctx, "<:melonpan:815857424996630548> `You have built the maximum amount of ovens!`")
@@ -95,11 +95,11 @@ class Bakery(commands.Cog):
             await config.reply(ctx, "<:melonpan:815857424996630548> `You don't have enough BreadCoin to build a new oven.`")
             return
 
-        config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -cost, 'oven_count': 1}})
+        self.bot.mongo.update_user(user, {'$inc': {'money': -cost, 'oven_count': 1}})
         await config.reply(ctx, "<:melonpan:815857424996630548> You have built a new oven! View it with `pan bakery`.")
 
     async def expand_command(self, ctx):
-        user = config.get_user(ctx.author.id)
+        user = self.bot.mongo.get_user(ctx.author.id)
 
         # if user.get('inventory_capacity', 25) >= 100:
         #     await config.reply(ctx, "<:melonpan:815857424996630548> `You have expanded your storage capacity to the max!`")
@@ -112,13 +112,13 @@ class Bakery(commands.Cog):
             return
 
         if 'inventory_capacity' in user.keys():
-            config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -cost, 'inventory_capacity': config.expand_amount}})
+            self.bot.mongo.update_user(user, {'$inc': {'money': -cost, 'inventory_capacity': config.expand_amount}})
         else:
-            config.USERS.update_one({'id': user['id']}, {'$inc': {'money': -cost}, '$set': {'inventory_capacity': 25 + config.expand_amount}})
+            self.bot.mongo.update_user(user, {'$inc': {'money': -cost}, '$set': {'inventory_capacity': 25 + config.expand_amount}})
         await config.reply(ctx, f"<:melonpan:815857424996630548> You have expanded your inventory capacity by `{config.expand_amount}` slots. You can now store `{user.get('inventory_capacity', 25) + config.expand_amount}` items.")
 
     async def bakeall_command(self, ctx, bread):
-        user = config.get_user(ctx.author.id)
+        user = self.bot.mongo.get_user(ctx.author.id)
 
         active = 0
         for o in user['ovens']:
@@ -167,11 +167,11 @@ class Bakery(commands.Cog):
 
             user['baked'][str(bake_obj['index'])] = user['baked'].get(str(bake_obj['index']), 0) + amount
 
-            config.USERS.update_one({'id': user['id']}, {'$set': {'ovens': user['ovens'], 'baked': user['baked']}})
+            self.bot.mongo.update_user(user, {'$set': {'ovens': user['ovens'], 'baked': user['baked']}})
             await config.reply(ctx, f"{config.stove_burning[True]} {amount} **{selected.get('plural_name', selected['name']) if amount > 1 else selected['name']}** {'are' if amount > 1 else 'is'} now baking! use `pan bakery` to check on {'them' if amount > 1 else 'it'}, and `pan plate` to take {'them' if amount > 1 else 'it'} out when {'they are' if amount > 1 else 'it is'} done.")
 
     async def bake_command(self, ctx, bread):
-        user = config.get_user(ctx.author.id)
+        user = self.bot.mongo.get_user(ctx.author.id)
 
         active = 0
         for o in user['ovens']:
@@ -219,14 +219,14 @@ class Bakery(commands.Cog):
 
             user['baked'][str(bake_obj['index'])] = user['baked'].get(str(bake_obj['index']), 0) + 1
 
-            config.USERS.update_one({'id': user['id']}, {'$set': {'ovens': user['ovens']}})
+            self.bot.mongo.update_user(user, {'$set': {'ovens': user['ovens']}})
             extra = ""
             if config.get_avg_commands(minutes=0.1, user=ctx.author.id, command=str(ctx.command)) >= 0.6:
                 extra = "\n\n**TIP:** Use `pan bakeall <bread>` to fill all of your empty ovens!"
             await config.reply(ctx, f"{config.stove_burning[True]} Your **{bake_obj['name']}** is now baking! use `pan bakery` to check on it, and `pan plate` to take it out when it's done.{extra}")
 
     async def plate_command(self, ctx):
-        user = config.get_user(ctx.author.id)
+        user = self.bot.mongo.get_user(ctx.author.id)
 
         ending = ""
         cutoff = False
@@ -288,7 +288,7 @@ class Bakery(commands.Cog):
                 special_string = ""
             ending += f"+ {config.breads[12]['emoji']} **Burned {config.breads[index]['name']}** (Charcoal){special_string}\n"
 
-        config.USERS.update_one({'id': user['id']}, {'$set': {'inventory': user['inventory'], 'ovens': user['ovens']}})
+        self.bot.mongo.update_user(user, {'$set': {'inventory': user['inventory'], 'ovens': user['ovens']}})
 
         if ending == "":
             ending = "No bread was plated."
