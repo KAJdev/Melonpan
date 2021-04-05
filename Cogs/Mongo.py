@@ -9,6 +9,10 @@ import random
 from discord.ext import commands, tasks
 from discord_slash import cog_ext, SlashContext
 from discord_slash.utils.manage_commands import create_option, create_choice
+import os
+import uuid
+from random_word import RandomWords
+import string
 
 class Server():
     def __init__(self, server):
