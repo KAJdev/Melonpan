@@ -15,9 +15,10 @@ class Vote(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.token = os.environ.get("MELONPAN_TOPGG") # set this to your DBL token
-        self.dblpy = dbl.DBLClient(self.bot, self.token, webhook_path='/webhook-melon', webhook_auth=os.environ.get("MELONPAN_TOPGGSECRET"), webhook_port=25565)
-        #self.update_stats.start()
+        if bot.current_shard_id == 0:
+            self.token = os.environ.get("MELONPAN_TOPGG") # set this to your DBL token
+            self.dblpy = dbl.DBLClient(self.bot, self.token, webhook_path='/webhook-melon', webhook_auth=os.environ.get("MELONPAN_TOPGGSECRET"), webhook_port=25565)
+            #self.update_stats.start()
 
     def cog_unload(self):
         self.update_stats.cancel()

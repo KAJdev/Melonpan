@@ -286,7 +286,7 @@ class Bakery(commands.Cog):
                 special_string = f" `{special_string}`"
             else:
                 special_string = ""
-            ending += f"+ {config.breads[12]['emoji']} **Burned {config.breads[index]['name']}** (Charcoal){special_string}\n"
+            ending += f"+ {config.breads[12]['emoji']} **Burned {config.breads[b['index']]['name']}** (Charcoal){special_string}\n"
 
         self.bot.mongo.update_user(user, {'$set': {'inventory': user['inventory'], 'ovens': user['ovens']}})
 
