@@ -98,7 +98,7 @@ class ClusterBot(commands.AutoShardedBot):
     async def on_ready(self):
         self.log.info(f"[Cluster#{self.cluster_name}] Ready called.")
 
-    async def on_command_error(ctx, error):
+    async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
             pass
         elif isinstance(error, discord.errors.Forbidden):
