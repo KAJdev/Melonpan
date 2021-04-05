@@ -25,7 +25,6 @@ def is_enabled(ctx):
 class ClusterBot(commands.AutoShardedBot):
 
     def __init__(self, **kwargs):
-        self.remove_command("help")
         self.cluster_name = kwargs.pop("cluster_name")
         self.cluster_idx = kwargs.pop("cluster_idx")
         self.config = config
@@ -36,6 +35,7 @@ class ClusterBot(commands.AutoShardedBot):
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         super().__init__(**kwargs, loop=loop, command_prefix=determine_prefix)
+        self.remove_command("help")
 
         # Load extensions
         for i in Cogs.default:
