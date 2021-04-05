@@ -57,11 +57,9 @@ class Trading(commands.Cog):
                 users = await _.users().flatten()
 
         if users is None:
-            print("TRADE: reaction_not_found")
             return False
 
         only_ids = list(x.id for x in users)
-        print("TRADE:", only_ids)
         return trade['member'].id in only_ids and trade['author'].id in only_ids
 
     async def countdown(self, trade):
@@ -74,7 +72,6 @@ class Trading(commands.Cog):
                 await trade['message'].edit(embed=embed)
             except:
                 del self.active_trades[trade['message'].id]
-                print("aborting")
             await asyncio.sleep(1)
         if await self.check_reactions(trade):
             try:
@@ -469,12 +466,9 @@ class Trading(commands.Cog):
             trade_obj = self.active_trades.get(payload.message_id, None)
             if trade_obj is None:
                 return
-            print("TRADE: checking")
             if await self.check_reactions(trade_obj):
-                print("TRADE: counting_down")
                 await self.countdown(trade_obj)
             else:
-                print("TRADE: reactions_not_matching")
         if str(payload.emoji) == "<:xx:824842660106731542>":
             trade_obj = self.active_trades.get(payload.message_id, None)
             if trade_obj is None:

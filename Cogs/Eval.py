@@ -60,14 +60,14 @@ class Eval(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command(self, ctx):
-        self.bot.log.info("CMD:", ctx.message.content, " - ", ctx.author)
+        self.bot.log.info("CMD:", str(ctx.message.content), " - ", str(ctx.author))
         config.COMMANDS_LOG.append((ctx, datetime.datetime.utcnow()))
         if len(config.COMMANDS_LOG) > 1000:
             config.COMMANDS_LOG.pop(0)
 
     @commands.Cog.listener()
     async def on_slash_command(self, ctx: SlashContext):
-        self.bot.log.info("SLASH_CMD:", ctx.command, " - ", ctx.author)
+        self.bot.log.info("SLASH_CMD:", str(ctx.command), " - ", str(ctx.author))
         config.COMMANDS_LOG.append((ctx, datetime.datetime.utcnow()))
         if len(config.COMMANDS_LOG) > 1000:
             config.COMMANDS_LOG.pop(0)
