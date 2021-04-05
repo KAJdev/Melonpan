@@ -12,6 +12,9 @@ import requests
 
 from bot import ClusterBot
 
+from discord_slash import SlashCommand, SlashContext
+import discord_slash
+
 log = logging.getLogger("Cluster#Launcher")
 log.setLevel(logging.INFO)
 hdlr = logging.StreamHandler()

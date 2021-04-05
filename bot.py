@@ -5,6 +5,8 @@ import config
 import discord
 import uvloop
 from discord.ext import commands
+from discord_slash import SlashCommand, SlashContext
+import discord_slash
 
 import Cogs
 
