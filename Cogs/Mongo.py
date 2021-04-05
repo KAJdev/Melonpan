@@ -25,27 +25,27 @@ class Server():
         self.money = server.get('money', 0)
         level = self.get_level()
         self.name = level.get('name', None)
-        self.one_of_a_kind_bread_chance = level.get('one_of_a_kind_droprate', one_of_a_kind_bread_chance)
+        self.one_of_a_kind_bread_chance = level.get('one_of_a_kind_droprate', config.one_of_a_kind_bread_chance)
         self.tax *= level.get('tax_ratio', 1)
-        self.drop_cooldown_min = level.get('drop_cooldown', drop_cooldown_min)
+        self.drop_cooldown_min = level.get('drop_cooldown', config.drop_cooldown_min)
         i = guild_money_levels.index(level)
-        if i >= len(guild_money_levels) - 1:
+        if i >= len(config.guild_money_levels) - 1:
             self.money_until_next_level = None
             self.next_level = None
         else:
             self.money_until_next_level = level['max'] - self.money
-            self.next_level = guild_money_levels[i + 1]
+            self.next_level = config.guild_money_levels[i + 1]
 
     def get_level(self):
-        for _ in guild_money_levels:
+        for _ in config.guild_money_levels:
             if self.money < _['max']:
                 return _
-        return guild_money_levels[len(guild_money_levels) - 1]
+        return config.guild_money_levels[len(config.guild_money_levels) - 1]
 
     def create_bread(self, bread):
         random.seed()
         bread = {
-            'index': breads.index(bread),
+            'index': config.breads.index(bread),
             'quality': random.randint(1, 5),
             'created': datetime.datetime.utcnow(),
             'uuid': str(uuid.uuid4())
