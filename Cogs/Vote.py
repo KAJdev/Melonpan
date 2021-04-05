@@ -82,7 +82,7 @@ class Vote(commands.Cog):
             to_add.append(config.create_bread(config.create_drop()))
 
 
-        self.bot.mongo.db.update_user(user, {'$inc': {'money': amount * 100}, '$push': {'inventory': {'$each': to_add}}, '$set': {'last_vote': datetime.datetime.utcnow()}})
+        self.bot.mongo.update_user(user, {'$inc': {'money': amount * 100}, '$push': {'inventory': {'$each': to_add}}, '$set': {'last_vote': datetime.datetime.utcnow()}})
 
 
 def setup(bot):

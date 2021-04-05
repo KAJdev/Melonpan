@@ -56,7 +56,7 @@ class Drops(commands.Cog):
 
         winner = self.bot.mongo.get_user(member.id)
         self.bot.log.info(f"DROP_CLAIM: #{message.channel.name} ({member})")
-        self.bot.mongo.db.users.update_one({'id': member.id}, {'$push': {'inventory': actual_bread}})
+        self.bot.mongo.update_user(member.id, {'$push': {'inventory': actual_bread}})
         embed.set_footer(text="This bread has already been claimed.\n\nDisable commands/drops with pan blacklist")
         embed.description = f"{member.mention} has claimed the **{drop['name']}**!"
         embed.color = 0x2f3136

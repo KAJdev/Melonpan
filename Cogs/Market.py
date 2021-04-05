@@ -68,7 +68,7 @@ class Market(commands.Cog):
                 for _ in range(amount):
                     new_relics.append(server.create_bread(selected))
 
-                self.bot.mongo.db.users.update_one({'id': ctx.author.id}, {'$push': {'inventory': {'$each': new_relics}}, '$inc': {'money': -today_price * amount}})
+                self.bot.mongo.update_user(ctx.author.id, {'$push': {'inventory': {'$each': new_relics}}, '$inc': {'money': -today_price * amount}})
 
                 total = amount * today_price
 
@@ -138,7 +138,7 @@ class Market(commands.Cog):
 
                 self.bot.mongo.add_money_to_server(server, total)
 
-                self.bot.mongo.db.users.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}})
+                self.bot.mongo.update_user(ctx.author.id, {'$set': {'inventory': user['inventory']}})
 
                 desc = f"```**********\nDONATE RECEIPT\n**********\nDescription\n- {amount}x {selected['name']}\n\nTHANK YOU!```"
 
@@ -178,7 +178,7 @@ class Market(commands.Cog):
 
                 self.bot.mongo.add_money_to_server(server, tax)
 
-                self.bot.mongo.db.users.update_one({'id': ctx.author.id}, {'$pull': {'inventory': special}, '$inc': {'money': today_price}})
+                self.bot.mongo.update_user(ctx.author.id, {'$pull': {'inventory': special}, '$inc': {'money': today_price}})
 
                 desc = f"```************\nSOLD RECEIPT\n************\nDescription\n- 1x {__['name']}\n\n============\nTOTAL AMOUNT: {int(today_price)} BreadCoin\nTAX: {int(tax)} BreadCoin\n============\nTHANK YOU!```"
 
@@ -254,7 +254,7 @@ class Market(commands.Cog):
 
                 self.bot.mongo.add_money_to_server(server, tax)
 
-                self.bot.mongo.db.users.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
+                self.bot.mongo.update_user(ctx.author.id, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
 
                 desc = f"```************\nSOLD RECEIPT\n************\nDescription\n- {amount}x {selected['name']}\n\n============\nTOTAL AMOUNT: {int(total)} BreadCoin\nTAX: {int(tax)} BreadCoin\n============\nTHANK YOU!```"
 
@@ -305,7 +305,7 @@ class Market(commands.Cog):
 
                 self.bot.mongo.add_money_to_server(server, tax)
 
-                self.bot.mongo.db.users.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
+                self.bot.mongo.update_user(ctx.author.id, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
 
                 desc += f"\n\n============\nTOTAL AMOUNT: {int(total)} BreadCoin\nTAX: {int(tax)} BreadCoin\n============\nTHANK YOU!```"
 
@@ -356,7 +356,7 @@ class Market(commands.Cog):
 
                 self.bot.mongo.add_money_to_server(server, tax)
 
-                self.bot.mongo.db.users.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
+                self.bot.mongo.update_user(ctx.author.id, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
 
                 desc = f"```************\nSOLD RECEIPT\n************\nDescription\n- {len(selling)}x {selected['name']}\n\n============\nTOTAL AMOUNT: {int(total)} BreadCoin\nTAX: {int(tax)} BreadCoin\n============\nTHANK YOU!```"
 
@@ -616,7 +616,7 @@ class Market(commands.Cog):
 
                 self.bot.mongo.add_money_to_server(server, tax)
 
-                self.bot.mongo.db.users.update_one({'id': payload.user_id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
+                self.bot.mongo.update_user(payload.user_id, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
 
                 desc += f"\n\n============\nTOTAL AMOUNT: {int(total)} BreadCoin\nTAX: {int(tax)} BreadCoin\n============\nTHANK YOU!```"
                 embed = event[0].embeds[0]

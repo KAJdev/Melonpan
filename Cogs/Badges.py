@@ -57,7 +57,7 @@ class Badges(commands.Cog):
             await config.reply(ctx, "<:melonpan:815857424996630548> `You already have this badge.`")
             return
 
-        self.bot.mongo.db.users.update_user(user, {'$inc': {'money': -chosen['price']}, '$push': {'badges': index}})
+        self.bot.mongo.update_user(user, {'$inc': {'money': -chosen['price']}, '$push': {'badges': index}})
 
         chosen_badge = config.badges[index]
 

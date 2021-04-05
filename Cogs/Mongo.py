@@ -110,8 +110,12 @@ class Mongo(commands.Cog):
         server.__init__(after)
 
     def update_user(self, user, change):
-        after = self.db.users.find_one_and_update({'id': user['id']}, change, return_document=pymongo.ReturnDocument.AFTER)
-        self.USER_CACHE[user['id']] = after
+        if isinstance(user, int):
+            id = user
+        elif isinstance(user, dict):
+            id = user['id']
+        after = self.db.users.find_one_and_update({'id': id}, change, return_document=pymongo.ReturnDocument.AFTER)
+        self.USER_CACHE[id] = after
 
     def add_money_to_server(self, server, amount):
         self.update_server(server, {'$inc': {'money': amount}})
