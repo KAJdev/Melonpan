@@ -99,7 +99,7 @@ class Drops(commands.Cog):
                 self.cache[message.channel.id] = ([], datetime.datetime.utcnow())
                 guild = "NO GUILD"
                 if message.guild is not None: guild = message.guild.name
-                print(f"DROP: #{message.channel.name} ({guild})")
+                self.bot.log.info(f"DROP: #{message.channel.name} ({guild})")
                 await self.send_drop_message(message, server)
 
 def setup(bot):

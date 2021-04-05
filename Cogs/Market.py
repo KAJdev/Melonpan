@@ -607,7 +607,7 @@ class Market(commands.Cog):
             for selling_item in selling:
                 user['inventory'].remove(selling_item)
 
-            print(f"QUICK SELL: ({event[1]['id']})")
+            self.bot.log.info(f"QUICK SELL: ({event[1]['id']})")
 
             if len(selling) > 0:
                 tax = round(total * server.tax)
