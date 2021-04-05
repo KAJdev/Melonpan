@@ -96,6 +96,7 @@ class ClusterBot(commands.AutoShardedBot):
 
     async def on_shard_ready(self, shard_id):
         self.log.info(f"[Cluster#{self.cluster_name}] Shard {shard_id} ready")
+        await self.change_presence(activity = discord.Activity(type=discord.ActivityType.watching, name="pan help"))
 
     async def on_message(self, message: discord.Message):
         message.content = (
