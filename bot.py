@@ -3,6 +3,7 @@ from importlib import reload
 import config
 
 import discord
+import uvloop
 from discord.ext import commands
 
 import Cogs
