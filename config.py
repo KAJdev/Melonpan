@@ -12,6 +12,8 @@ from discord_slash.utils.manage_commands import create_option, create_choice
 ## MongoDB
 myclient = pymongo.MongoClient(os.environ.get("MELONPAN_MONGO"))
 
+BOT_TOKEN = os.environ.get("MELONPAN_TOKEN")
+
 USERS = myclient["main"]['users']
 SERVERS = myclient["main"]["servers"]
 TIMERS = myclient["main"]["timers"]

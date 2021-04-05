@@ -16,8 +16,6 @@ import inspect
 
 logging.basicConfig(level = logging.INFO, format="Melonpan [%(levelname)s] | %(message)s")
 
-bot_invite = "https://discord.com/api/oauth2/authorize?client_id=815835732979220501&permissions=314433&redirect_uri=https%3A%2F%2Fdiscord.gg%2FueYyZVJGcf&scope=bot%20applications.commands"
-
 async def get_prefix(bot, message):
     li = ['pan ', 'Pan ', 'PaN ', 'pAn ', 'paN ', 'PAn ', 'PaN ', 'PAn ', 'PAN ']
     return commands.when_mentioned_or(*li)(bot, message)
@@ -46,48 +44,12 @@ async def on_message_edit(before, after):
     ctx = await bot.get_context(after)
     await bot.invoke(ctx)
 
-@bot.command(aliases=['settings', 'h'])
-async def help(ctx):
-    await ctx.send(embed=discord.Embed(
-        title="Melonpan Commands",
-        color=config.MAINCOLOR,
-        description=f"[Invite]({bot_invite}) | [Support](https://discord.gg/ueYyZVJGcf) | [Vote](https://top.gg/bot/815835732979220501/vote) | [Patreon](https://www.patreon.com/MelonpanBot)"
-    ).add_field(
-        name="Information",
-        value="`inventory`, `stats`, `bal`, `badges`, `breads`, `guild`",
-        inline=False
-    ).add_field(
-        name="Bakery",
-        value="`bakery`, `bake`, `bakeall`, `plate`, `build`, `expand`, `open`",
-        inline=False
-    ).add_field(
-        name="Market",
-        value="`sell`, `sellall`, `buy`, `shop`, `donate`, `trade`",
-        inline=False
-    ).add_field(
-        name="Misc",
-        value="`help`, `info`, `invite`, `top`, `remind`, `reminders`, `blacklist`, `vote`",
-        inline=False
-    ).set_thumbnail(url=bot.user.avatar_url))
-
-@bot.command(aliases = ['join'])
-async def invite(ctx):
-    await ctx.send(embed=discord.Embed(description=f"[**Invite Link**]({bot_invite}) 🔗", color = config.MAINCOLOR))
-
-@slash.slash(name = "invite", description="Invite Melonpan to your server.")
-async def invite_slash(ctx):
-    await ctx.send(embed=discord.Embed(description=f"[**Invite Link**]({bot_invite}) 🔗", color = config.MAINCOLOR))
-
 # Cogs
-cogs = ["Eval", "Information", "Market", "Bakery", "StatCord", "Leaderboards", "Badges", "Blacklist", "Drops", "LootBoxes", "Vote", "Guilds", "Trading"]
+cogs = ["Eval", "Information", "Market", "Bakery", "StatCord", "Leaderboards", "Badges", "Blacklist", "Drops", "LootBoxes", "Vote", "Guilds", "Trading", "Core"]
 
 # Starts all cogs
 for cog in cogs:
     bot.load_extension("Cogs." + cog)
-
-# Check to see if the user invoking the command is in the OWNERIDS config
-def owner(ctx):
-    return int(ctx.author.id) in config.OWNERIDS
 
 @bot.check
 def check_for_blacklist(ctx):
@@ -96,38 +58,6 @@ def check_for_blacklist(ctx):
         return not (ctx.channel.id in server.blacklist)
     else:
         return True
-
-# Restarts and reloads all cogs
-@bot.command()
-@commands.check(owner)
-async def restart(ctx):
-    """
-    Restart the bot.
-    """
-    restarting = discord.Embed(
-        title = "Restarting...",
-        color = config.MAINCOLOR
-    )
-    msg = await ctx.send(embed = restarting)
-    for cog in cogs:
-        bot.reload_extension("Cogs." + cog)
-        restarting.add_field(name = f"{cog}", value = "✅ Restarted!")
-        await msg.edit(embed = restarting)
-    restarting.title = "Bot Restarted"
-    await msg.edit(embed = restarting)
-    logging.info(f"Bot has been restarted succesfully in {len(bot.guilds)} server(s) with {len(bot.users)} users by {ctx.author.name}#{ctx.author.discriminator} (ID - {ctx.author.id})!")
-    await msg.delete(delay = 3)
-    if ctx.guild != None:
-        await ctx.message.delete(delay = 3)
-
-# Kills the bot
-@bot.command()
-@commands.check(owner)
-async def kill(ctx):
-    """
-    kill the bot.
-    """
-    sys.exit(0)
 
 @bot.event
 async def on_guild_join(guild):
