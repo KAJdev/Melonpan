@@ -86,10 +86,10 @@ class ClusterBot(commands.AutoShardedBot):
         self.log.info(f"Logged in as {self.user}")
 
     async def on_guild_join(self, guild):
-        self.log.info(f"JOINED guild {guild.name} ({guild.member_count} members) | current guilds: {len(bot.guilds)}")
+        self.log.info(f"JOINED guild {guild.name} ({guild.member_count} members) | current guilds: {len(self.guilds)}")
 
     async def on_guild_remove(self, guild):
-        self.log.info(f"LEFT guild {guild.name} ({guild.member_count} members) | current guilds: {len(bot.guilds)}")
+        self.log.info(f"LEFT guild {guild.name} ({guild.member_count} members) | current guilds: {len(self.guilds)}")
 
     async def on_ready(self):
         self.log.info(f"[Cluster#{self.cluster_name}] Ready called.")
