@@ -98,6 +98,26 @@ class ClusterBot(commands.AutoShardedBot):
     async def on_ready(self):
         self.log.info(f"[Cluster#{self.cluster_name}] Ready called.")
 
+    async def on_command_error(ctx, error):
+        if isinstance(error, commands.CommandNotFound):
+            pass
+        elif isinstance(error, discord.errors.Forbidden):
+            self.log.error("Forbidden action: " + str(error))
+        elif isinstance(error, commands.errors.CheckFailure):
+            pass
+        elif isinstance(error, commands.errors.UserInputError):
+            pass
+        elif isinstance(error, commands.errors.MemberNotFound):
+            embed = discord.Embed(
+                title = "User not found",
+                #description = f"An error has occured while executing this command, please join the support server and report the issue!",
+                color = config.ERRORCOLOR
+            )
+            await ctx.send(embed = embed)
+        else:
+            await ctx.send(content="An error has occured while executing this command.\nPlease join the support server and report the issue!\ndiscord.gg/rMgtgdavPh")
+            raise error
+
     async def on_shard_ready(self, shard_id):
         self.log.info(f"[Cluster#{self.cluster_name}] Shard {shard_id} ready")
         self.current_shard_id = shard_id
