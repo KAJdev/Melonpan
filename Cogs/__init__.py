@@ -11,6 +11,7 @@ default = (
     "Logging",
     "LootBoxes",
     "Market",
+    "Mongo",
     "StatCord",
     "Trading",
     "Tutorial",
