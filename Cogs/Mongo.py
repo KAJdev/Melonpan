@@ -28,7 +28,7 @@ class Server():
         self.one_of_a_kind_bread_chance = level.get('one_of_a_kind_droprate', config.one_of_a_kind_bread_chance)
         self.tax *= level.get('tax_ratio', 1)
         self.drop_cooldown_min = level.get('drop_cooldown', config.drop_cooldown_min)
-        i = guild_money_levels.index(level)
+        i = config.guild_money_levels.index(level)
         if i >= len(config.guild_money_levels) - 1:
             self.money_until_next_level = None
             self.next_level = None

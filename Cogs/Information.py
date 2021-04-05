@@ -65,7 +65,7 @@ class Information(commands.Cog):
     async def timer_loop(self):
         sent_timers = []
         expired_timers = []
-        for timer in self.bot.mongo.timers.find({'time': {'$lte': datetime.datetime.utcnow()}, 'expired': False}):
+        for timer in self.bot.mongo.db.timers.find({'time': {'$lte': datetime.datetime.utcnow()}, 'expired': False}):
             expired_timers.append(timer)
             user = self.bot.get_user(timer['owner'])
             if user is None:
@@ -85,8 +85,8 @@ class Information(commands.Cog):
                 sent_timers.append(timer)
             except:
                 continue
-        self.bot.mongo.timers.update_many({'_id': {'$in': list(x['_id'] for x in expired_timers)}}, {'$set': {'expired': True}})
-        self.bot.mongo.timers.update_many({'_id': {'$in': list(x['_id'] for x in sent_timers)}}, {'$set': {'sent': True}})
+        self.bot.mongo.db.timers.update_many({'_id': {'$in': list(x['_id'] for x in expired_timers)}}, {'$set': {'expired': True}})
+        self.bot.mongo.db.timers.update_many({'_id': {'$in': list(x['_id'] for x in sent_timers)}}, {'$set': {'sent': True}})
 
     async def inventory_command(self, ctx):
         user = self.bot.mongo.get_user(ctx.author.id)
@@ -136,12 +136,12 @@ class Information(commands.Cog):
         embed.set_footer(text=f"I will remind you about {message} at >")
         msg = await config.reply(ctx, embed=embed)
 
-        self.bot.mongo.timers.insert_one({'owner': ctx.author.id, 'link': msg.jump_url, 'time': remind_time, 'created': datetime.datetime.utcnow(), 'message': message, 'id': ctx.message.id, 'sent': False, 'expired': False})
+        self.bot.mongo.db.timers.insert_one({'owner': ctx.author.id, 'link': msg.jump_url, 'time': remind_time, 'created': datetime.datetime.utcnow(), 'message': message, 'id': ctx.message.id, 'sent': False, 'expired': False})
 
 
 
     async def reminders_command(self, ctx):
-        timers = self.bot.mongo.timers.find({'owner': ctx.author.id, 'expired': False})
+        timers = self.bot.mongo.db.timers.find({'owner': ctx.author.id, 'expired': False})
 
         desc = ""
         for timer in timers:

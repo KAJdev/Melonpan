@@ -48,7 +48,7 @@ class Eval(commands.Cog):
                 await ctx.send("must supply amount.")
             else:
                 u = self.bot.mongo.get_user(user.id)
-                self.bot.mongo.users.update_one({'id': u['id']}, {'$inc': {'money': amount}})
+                self.bot.mongo.db.users.update_one({'id': u['id']}, {'$inc': {'money': amount}})
                 await ctx.send(f"BreadCoins updated for {user}. User now has {u['money'] + amount} BreadCoins.")
 
     @commands.command()

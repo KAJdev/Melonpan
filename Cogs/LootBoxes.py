@@ -70,8 +70,8 @@ class LootBoxes(commands.Cog):
             desc += f"+ {_['emoji']} **{_['name']}**{special_string}\n"
             to_add.append(b)
 
-        self.bot.mongo.users.update_user(user, {'$push': {'inventory': {'$each': to_add}}})
-        self.bot.mongo.users.update_user(user, {'$pull': {'inventory': box}})
+        self.bot.mongo.db.users.update_user(user, {'$push': {'inventory': {'$each': to_add}}})
+        self.bot.mongo.db.users.update_user(user, {'$pull': {'inventory': box}})
 
         embed = discord.Embed(title="BreadBox", color=config.MAINCOLOR, description=desc)
         embed.set_footer(text="react with 💲 to sell these breads")
