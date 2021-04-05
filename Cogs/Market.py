@@ -136,7 +136,7 @@ class Market(commands.Cog):
 
                     user['inventory'].remove(selling_item)
 
-                server.add_money(total)
+                self.bot.mongo.add_money_to_server(server, total)
 
                 self.bot.mongo.db.users.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}})
 
@@ -176,7 +176,7 @@ class Market(commands.Cog):
                 today_price -= tax
                 today_price = round(today_price)
 
-                server.add_money(tax)
+                self.bot.mongo.add_money_to_server(server, tax)
 
                 self.bot.mongo.db.users.update_one({'id': ctx.author.id}, {'$pull': {'inventory': special}, '$inc': {'money': today_price}})
 
@@ -252,7 +252,7 @@ class Market(commands.Cog):
                 for selling_item in selling:
                     user['inventory'].remove(selling_item)
 
-                server.add_money(tax)
+                self.bot.mongo.add_money_to_server(server, tax)
 
                 self.bot.mongo.db.users.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
 
@@ -303,7 +303,7 @@ class Market(commands.Cog):
                 total -= tax
                 total = round(total)
 
-                server.add_money(tax)
+                self.bot.mongo.add_money_to_server(server, tax)
 
                 self.bot.mongo.db.users.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
 
@@ -354,7 +354,7 @@ class Market(commands.Cog):
                 total -= tax
                 total = round(total)
 
-                server.add_money(tax)
+                self.bot.mongo.add_money_to_server(server, tax)
 
                 self.bot.mongo.db.users.update_one({'id': ctx.author.id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
 
@@ -614,7 +614,7 @@ class Market(commands.Cog):
                 total -= tax
                 total = round(total)
 
-                server.add_money(tax)
+                self.bot.mongo.add_money_to_server(server, tax)
 
                 self.bot.mongo.db.users.update_one({'id': payload.user_id}, {'$set': {'inventory': user['inventory']}, '$inc': {'money': total}})
 
