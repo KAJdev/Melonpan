@@ -38,6 +38,8 @@ class ClusterBot(commands.AutoShardedBot):
         asyncio.set_event_loop(loop)
         super().__init__(**kwargs, loop=loop, command_prefix=determine_prefix)
         self.remove_command("help")
+        
+        self.slash = SlashCommand(self, sync_commands=0 in self.shard_ids)
 
         # Load extensions
         for i in Cogs.default:
@@ -57,8 +59,6 @@ class ClusterBot(commands.AutoShardedBot):
         self.log.info(
             f'[Cluster#{self.cluster_name}] {kwargs["shard_ids"]}, {kwargs["shard_count"]}'
         )
-
-        self.slash = SlashCommand(self, sync_commands=False)
 
         self.loop.create_task(self.do_startup_tasks())
         self.run(kwargs["token"])
