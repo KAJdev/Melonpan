@@ -186,7 +186,7 @@ class Information(commands.Cog):
         embed = discord.Embed(title="Melonpan Bot Info", color=config.MAINCOLOR, timestamp=datetime.datetime.utcnow())
         embed.set_thumbnail(url=str(self.bot.user.avatar_url))
 
-        embed.description = f"[Github Repo](https://github.com/kajdev/melonpan)\n[Bread Server](https://discord.gg/bread)\n[Support Server](https://discord.gg/ueYyZVJGcf)\n[Top.gg Page](https://top.gg/bot/815835732979220501)\n[Patreon](https://www.patreon.com/MelonpanBot)"
+        embed.description = f"[Github Repo](https://github.com/kajdev/melonpan)\n[Bread Server](https://discord.gg/bread)\n[Support Server](https://discord.gg/ueYyZVJGcf)\n[Patreon](https://www.patreon.com/MelonpanBot)"
 
         u = 0
         for g in self.bot.guilds:
