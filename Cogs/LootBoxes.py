@@ -75,9 +75,15 @@ class LootBoxes(commands.Cog):
 
         embed = discord.Embed(title="BreadBox", color=config.MAINCOLOR, description=desc)
         embed.set_footer(text="react with 💲 to sell these breads")
-        await msg.edit(embed=embed)
+
         config.SELL_BREAD_CACHE.append((msg, user, to_add))
-        await msg.add_reaction("💲")
+        try:
+            self.bot.loop.create_task(msg.add_reaction("💲"))
+        except:
+            pass
+        
+        await msg.edit(embed=embed)
+
 
     @commands.command()
     async def open(self, ctx):
