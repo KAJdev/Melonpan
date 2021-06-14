@@ -171,12 +171,16 @@ class Bakery(commands.Cog):
             await config.reply(ctx, f"{config.stove_burning[True]} {amount} **{selected.get('plural_name', selected['name']) if amount > 1 else selected['name']}** {'are' if amount > 1 else 'is'} now baking! use `pan bakery` to check on {'them' if amount > 1 else 'it'}, and `pan plate` to take {'them' if amount > 1 else 'it'} out when {'they are' if amount > 1 else 'it is'} done.")
 
     async def bake_command(self, ctx, bread):
+        # get user from DB/cache
         user = self.bot.mongo.get_user(ctx.author.id)
 
         active = 0
+        # count ovens with bread in them
         for o in user['ovens']:
             if o is not None:
                 active += 1
+        
+        # stop the command if there are no open ovens
         if active >= user['oven_count']:
             await ctx.send("<:melonpan:815857424996630548> `You have bread in all of your ovens already!`")
             return
@@ -185,6 +189,17 @@ class Bakery(commands.Cog):
             await ctx.send("<:melonpan:815857424996630548> `You must tell me an item you wish to bake: e.g. 'pan bake baguette'`")
             return
 
+        # try to parse an integer at the end of the string. a.k.a `pan bake bread 5`
+        try:
+            amount = int(bread.split(" ")[-1])
+        except (IndexError, ValueError):
+            amount = 1
+
+        # make sure it's under the current open oven count
+        if amount > user['oven_count'] - active:
+            amount = user['oven_count'] - active
+
+        # find the actual bread object from config
         selected = None
         for r in config.breads:
             if bread.lower() in r['name'].lower():
@@ -202,28 +217,32 @@ class Bakery(commands.Cog):
         elif not selected['bakeable']:
             await ctx.send("<:melonpan:815857424996630548> `You can't bake this.`")
         else:
+            # insert each bread with UUID into user obj
             bake_obj = {
                 'name': selected['name'],
                 'index': config.breads.index(selected),
                 'done': datetime.datetime.utcnow() + datetime.timedelta(minutes=selected['bake_time']),
                 'burn': datetime.datetime.utcnow() + datetime.timedelta(minutes=selected['bake_time'] * config.burn_time_multipier)
             }
-            entered = False
+            entered = amount
             for o in user['ovens']:
                 if o is None:
                     user['ovens'][user['ovens'].index(o)] = bake_obj
-                    entered = True
-                    break
-            if not entered:
-                user['ovens'].append(bake_obj)
+                    entered -= 1
+                    if entered == 0: break
+            if entered > 0:
+                for _ in range(entered):
+                    user['ovens'].append(bake_obj)
 
-            user['baked'][str(bake_obj['index'])] = user['baked'].get(str(bake_obj['index']), 0) + 1
+            # count stats
+            user['baked'][str(bake_obj['index'])] = user['baked'].get(str(bake_obj['index']), 0) + amount
 
+            # save data
             self.bot.mongo.update_user(user, {'$set': {'ovens': user['ovens']}})
             extra = ""
-            if config.get_avg_commands(minutes=0.1, user=ctx.author.id, command=str(ctx.command)) >= 0.6:
+            if config.get_avg_commands(minutes=0.2, user=ctx.author.id, command=str(ctx.command)) >= 0.6:
                 extra = "\n\n**TIP:** Use `pan bakeall <bread>` to fill all of your empty ovens!"
-            await config.reply(ctx, f"{config.stove_burning[True]} Your **{bake_obj['name']}** is now baking! use `pan bakery` to check on it, and `pan plate` to take it out when it's done.{extra}")
+            await config.reply(ctx, f"{config.stove_burning[True]} {amount} **{selected.get('plural_name', selected['name']) if amount > 1 else selected['name']}** {'are' if amount > 1 else 'is'} now baking! use `pan bakery` to check on {'them' if amount > 1 else 'it'}, and `pan plate` to take {'them' if amount > 1 else 'it'} out when {'they are' if amount > 1 else 'it is'} done.")
 
     async def plate_command(self, ctx):
         user = self.bot.mongo.get_user(ctx.author.id)
@@ -331,17 +350,27 @@ class Bakery(commands.Cog):
               choices = config.bread_choices
             ),
             create_option(
-                name="all",
-                description="Fill all empty ovens with this bread?",
-                option_type=5,
+                name="amount",
+                description="The amount of bread to bake.",
+                option_type=4,
                 required=False
             )
         ])
-    async def bake_slash(self, ctx: SlashContext, bread:str, all:bool=False):
-        if all:
-            await self.bakeall_command(ctx, bread)
-        else:
-            await self.bake_command(ctx, bread)
+    async def bake_slash(self, ctx: SlashContext, bread:str, amount:int=1):
+        await self.bake_command(ctx, bread + " " + str(amount))
+
+    @cog_ext.cog_subcommand(base="bake", name="all", description="Bake all the bread!",
+        options=[
+            create_option(
+              name="bread",
+              description="The bread to bake.",
+              option_type=3,
+              required=True,
+              choices = config.bread_choices
+            )
+        ])
+    async def bakeall_slash(self, ctx: SlashContext, bread:str):
+        await self.bakeall_command(ctx, bread)
 
     @cog_ext.cog_slash(name="plate",
         description="Take bread out of the oven.")
