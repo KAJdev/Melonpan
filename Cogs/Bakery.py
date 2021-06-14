@@ -359,7 +359,7 @@ class Bakery(commands.Cog):
     async def bake_slash(self, ctx: SlashContext, bread:str, amount:int=1):
         await self.bake_command(ctx, bread + " " + str(amount))
 
-    @cog_ext.cog_subcommand(base="bake", name="all", description="Bake all the bread!",
+    @cog_ext.cog_slash(name="bakeall", description="Bake all the bread!",
         options=[
             create_option(
               name="bread",
