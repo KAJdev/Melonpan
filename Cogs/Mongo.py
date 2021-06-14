@@ -75,6 +75,7 @@ class Mongo(commands.Cog):
         self.db = self.cluster.main
         self.SERVER_CACHE = {}
         self.USER_CACHE = {}
+        global mongo_instance
         mongo_instance = self
 
     def get_user(self, id):
