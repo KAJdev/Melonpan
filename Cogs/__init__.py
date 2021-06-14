@@ -14,6 +14,5 @@ default = (
     "Mongo",
     "StatCord",
     "Trading",
-    "Tutorial",
-    "Vote",
+    "Tutorial"
 )
