@@ -126,6 +126,8 @@ class Eval(commands.Cog):
             exec(compile(parsed, filename="<ast>", mode="exec"), env)
 
             result = (await eval(f"{fn_name}()", env))
+            if result in (None, ""):
+                result = "Evaluation returned NoneType."
             await ctx.send(result)
         except Exception as e:
             await ctx.send(f"Error occured while running eval:\n```{str(traceback.format_exc())}```")
