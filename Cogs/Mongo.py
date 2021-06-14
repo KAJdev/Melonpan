@@ -14,10 +14,13 @@ import uuid
 from random_word import RandomWords
 import string
 
+mongo_instance = None
+
 class Server():
     def __init__(self, server):
         for k,v in server.items():
             setattr(self, k, v)
+        self.mongo = mongo_instance
         self.id = server.get('id', None)
         self.blacklist = server.get('blacklist', [])
         self.prefix = server.get('prefix', 'pan ')
@@ -54,6 +57,16 @@ class Server():
             bread['special'] = config.gen_bread_id()
         return bread
 
+    def update(self, change):
+        """
+        Updates a discord server object in the MongoDB and stores result in the cache
+        """
+        if self.mongo is not None:
+            after = self.mongo.db.servers.find_one_and_update({'id': self.id}, change, return_document=pymongo.ReturnDocument.AFTER)
+            self.__init__(after)
+        else:
+            raise NameError("Mongo instance has not been Initialized yet.")
+
 class Mongo(commands.Cog):
 
     def __init__(self, bot):
@@ -62,6 +75,7 @@ class Mongo(commands.Cog):
         self.db = self.cluster.main
         self.SERVER_CACHE = {}
         self.USER_CACHE = {}
+        mongo_instance = self
 
     def get_user(self, id):
         cached = self.USER_CACHE.get(id, None)
