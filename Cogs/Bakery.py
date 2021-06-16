@@ -198,7 +198,7 @@ class Bakery(commands.Cog):
             amount = int(parsed)
 
             # remove amount from bread string
-            bread = bread[:len(bread) - (len(parsed) - 1)]
+            bread = bread[:len(bread) - (len(parsed) + 2)]
         except (IndexError, ValueError):
             amount = 1
 
