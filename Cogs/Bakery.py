@@ -191,7 +191,14 @@ class Bakery(commands.Cog):
 
         # try to parse an integer at the end of the string. a.k.a `pan bake bread 5`
         try:
-            amount = int(bread.split(" ")[-1])
+            # get the end
+            parsed = bread.split(" ")[-1]
+
+            # try to int parse
+            amount = int(parsed)
+
+            # remove amount from bread string
+            bread = bread[:len(bread) - (len(parsed) - 1)]
         except (IndexError, ValueError):
             amount = 1
 
